@@ -1,0 +1,43 @@
+#define THRESHOLD   40
+#define THRESHOLD_B 40
+
+#define MOT_R       OUT_B
+#define MOT_L       OUT_A
+#define MOTOR       OUT_AB
+#define LEFT        IN_1
+#define CENTER      IN_2
+#define RIGHT       IN_3
+//*
+
+task main(){
+  SetSensorLight(LEFT);
+  SetSensorLight(RIGHT);
+  SetSensorLight(CENTER);
+  
+  OnFwd(MOTOR, 75);
+  while(true){
+    if(Sensor(CENTER) > THRESHOLD){ //out of line
+      
+      if( Sensor(RIGHT) > THRESHOLD_B && Sensor(LEFT) > THRESHOLD_B ){
+	Off(MOTOR);
+      }else if(Sensor(RIGHT) > THRESHOLD_B ){
+	Off(MOTOR);
+	Wait(100);
+	OnFwd(MOT_L, 50);
+	OnFwd(MOT_R, 75);
+	Wait(100);
+	OnFwd(MOTOR,75);
+      } else if(Sensor(LEFT) > THRESHOLD_B) {
+	Off(MOTOR);
+	Wait(100);
+	OnFwd(MOT_R, 50);
+	OnFwd(MOT_L, 75);
+	Wait(100);
+	OnFwd(MOTOR,75);
+      } else {
+	Off(MOTOR);
+      }
+    }
+  }
+}
+//*/
