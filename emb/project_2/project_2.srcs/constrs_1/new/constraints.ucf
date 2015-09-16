@@ -1,8 +1,0 @@
-NET "clk"    LOC = "P60";
-NET "led<0>" LOC = "P44";
-NET "led<1>" LOC = "P45";
-NET "led<2>" LOC = "P49";
-NET "led<3>" LOC = "P50";
-NET "led<4>" LOC = "P51";
-NET "led<5>" LOC = "P54";
-NET "btn"    LOC = "P57";
