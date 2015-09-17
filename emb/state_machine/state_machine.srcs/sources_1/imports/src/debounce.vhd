@@ -3,7 +3,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity debounce is
     Port (
-            clk          : in  std_logic;
             ms_clk       : in  std_logic;
             btn          : in  std_logic;
             btn_pushed   : out std_logic_vector(1 downto 0)
@@ -14,7 +13,6 @@ architecture Behavioral of debounce is
 
 type btn_state_t is (pressed, released,semi_released,double_press);
 signal btn_state         : btn_state_t := released;
-
 
 constant btn_released    : std_logic_vector(1 downto 0) := "00";
 constant long_press      : std_logic_vector(1 downto 0) := "01";
