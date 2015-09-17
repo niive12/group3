@@ -47,6 +47,7 @@ end component;
 component debounce is
     Port (
             clk          : in  std_logic;
+            ms_clk       : in  std_logic;
             btn          : in  std_logic;
             btn_pushed   : out std_logic
     );
@@ -62,7 +63,8 @@ millisec: slow_clock
 
 btn_controller: debounce
     port map(
-            clk          => slow_clk       ,
+            clk          => clk            ,
+            ms_clk       => slow_clk       ,
             btn          => btn            ,
             btn_pushed   => button_pushed
     );

@@ -4,6 +4,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity debounce is
     Port (
             clk          : in  std_logic;
+            ms_clk       : in  std_logic;
             btn          : in  std_logic;
             btn_pushed   : out std_logic
     );
@@ -23,9 +24,9 @@ begin
 
 btn_pushed <= button_event;
 
-continuity_check: process(clk)
+continuity_check: process(ms_clk)
 begin
-if rising_edge(clk) then
+if rising_edge(ms_clk) then
     if continuity_vector = complete_empty then
         btn_status <= '1';
     elsif continuity_vector = complete_full then
@@ -35,7 +36,8 @@ if rising_edge(clk) then
 end if;
 end process;
 
-button_state_machine: process(clk, btn_status)
+button_state_machine: process(clk)
+-- variable sec_delay : integer range 1 to 1000 := 0;
 begin
 if rising_edge(clk) then
     if btn_state = pressed then
