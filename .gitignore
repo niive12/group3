@@ -1,4 +1,6 @@
 #These should be added manually:
+*.xsl
+*.xwbt
 *.sh
 *.bat
 *.rst
