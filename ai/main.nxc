@@ -1,51 +1,64 @@
 //sort = 35-45
 //hvid = 55-65
-#define EXPECTED_SENSOR_ERROR 1 //mismatch i lys fra rummet.
 
 #define MOT_R       OUT_B  //B
 #define MOT_L       OUT_A  //A
 #define MOTOR       OUT_AB //C
 #define LEFT        IN_1
-#define CENTER      IN_2
 #define RIGHT       IN_3
+
+void follow_line(char basespeed);
+void turn_right();
+void turn_left();
 
 task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
-  SetSensorLight(CENTER);
-  
+
   OnFwd(MOTOR, 75);
   
-  int left_error;
-  int right_error;
+//   follow_line(50);   Wait(1000);
+//   turn_left();       Wait(1000);
+//   follow_line(50);   Wait(1000);
+//   turn_right();      Wait(1000);
+//   follow_line(50);   Wait(1000);
+//   turn_right();      Wait(1000);
+  follow_line(-50);  Wait(5000);
+   
+}
+
+
+void follow_line(char basespeed = 50){
+  const char EXPECTED_SENSOR_ERROR = 1; //mismatch i lys fra rummet.
+  
+  char left_error;
   char left_speed;
   char right_speed;
   char left_previous_error = 0;
   float P, I;
   int   D;
   float kP = 1.4;
-  float kI = 0.01;
+  float kI = 0.02;
   float kD = 0.01;
-  char position = 0;
+  if(basespeed < 0){
+    kP = 0.1;
+    kI = 0.01;
+    kD = 0.01;
+  }
   int correction = 0;
-  while(true){
+  bool line_has_ended = false;
+  while(!line_has_ended){
     TextOut(1,8,  "left");
-    TextOut(40,8,  "cent");
     TextOut(75,8,  "right");
     TextOut(1,1,  NumToStr(Sensor(LEFT)));
-    TextOut(45,1, NumToStr(Sensor(CENTER)));
     TextOut(85,1, NumToStr(Sensor(RIGHT)));
     
     if( Sensor(LEFT)   < 55 &&
-        Sensor(CENTER) < 55 &&
         Sensor(RIGHT)  < 55
     ){
       Off(MOTOR);
       TextOut(40,24,  "KRYDS");
-      Wait(1000);
-      OnFwd(MOT_L, left_speed);
-      OnFwd(MOT_R, right_speed);
-      Wait(100);
+      line_has_ended = true;
     } else {
       TextOut(40,24,  "     ");
       TextOut(1,16, NumToStr(left_speed));
@@ -71,11 +84,33 @@ task main(){
       } else if(correction < -25){
 	correction = -25;
       }
-      
-      left_speed =  50 + correction;
-      right_speed = 50 - correction;
+      left_speed =  basespeed + correction;
+      right_speed = basespeed - correction;
       OnFwd(MOT_L, left_speed);
       OnFwd(MOT_R, right_speed);
     }   
-  }   
+  }
+}
+
+void turn(byte chosen_motor, byte sensor){
+  OnFwd(chosen_motor, 60);
+  Wait(1000);
+  bool turn_completed = false;
+  while(!turn_completed){
+    if(Sensor(sensor) < 55)
+      turn_completed = true;
+  }
+  Off(chosen_motor);
+}
+
+void turn_right(){
+  TextOut(40,24,  "Turn R");
+  Off(MOT_R);
+  turn(MOT_L, LEFT);
+}
+
+void turn_left(){
+  TextOut(40,24,  "Turn L");
+  Off(MOT_L);
+  turn(MOT_R,RIGHT);
 }
