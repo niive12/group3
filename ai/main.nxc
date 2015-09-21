@@ -1,13 +1,13 @@
-#define THRESHOLD   40
-#define THRESHOLD_B 40
+//sort = 35-45
+//hvid = 55-65
+#define EXPECTED_SENSOR_ERROR 1 //mismatch i lys fra rummet.
 
-#define MOT_R       OUT_B
-#define MOT_L       OUT_A
-#define MOTOR       OUT_AB
+#define MOT_R       OUT_B  //B
+#define MOT_L       OUT_A  //A
+#define MOTOR       OUT_AB //C
 #define LEFT        IN_1
 #define CENTER      IN_2
 #define RIGHT       IN_3
-//*
 
 task main(){
   SetSensorLight(LEFT);
@@ -15,29 +15,67 @@ task main(){
   SetSensorLight(CENTER);
   
   OnFwd(MOTOR, 75);
+  
+  int left_error;
+  int right_error;
+  char left_speed;
+  char right_speed;
+  char left_previous_error = 0;
+  float P, I;
+  int   D;
+  float kP = 1.4;
+  float kI = 0.01;
+  float kD = 0.01;
+  char position = 0;
+  int correction = 0;
   while(true){
-    if(Sensor(CENTER) > THRESHOLD){ //out of line
-      
-      if( Sensor(RIGHT) > THRESHOLD_B && Sensor(LEFT) > THRESHOLD_B ){
-	Off(MOTOR);
-      }else if(Sensor(RIGHT) > THRESHOLD_B ){
-	Off(MOTOR);
-	Wait(100);
-	OnFwd(MOT_L, 50);
-	OnFwd(MOT_R, 75);
-	Wait(100);
-	OnFwd(MOTOR,75);
-      } else if(Sensor(LEFT) > THRESHOLD_B) {
-	Off(MOTOR);
-	Wait(100);
-	OnFwd(MOT_R, 50);
-	OnFwd(MOT_L, 75);
-	Wait(100);
-	OnFwd(MOTOR,75);
+    TextOut(1,8,  "left");
+    TextOut(40,8,  "cent");
+    TextOut(75,8,  "right");
+    TextOut(1,1,  NumToStr(Sensor(LEFT)));
+    TextOut(45,1, NumToStr(Sensor(CENTER)));
+    TextOut(85,1, NumToStr(Sensor(RIGHT)));
+    
+    if( Sensor(LEFT)   < 55 &&
+        Sensor(CENTER) < 55 &&
+        Sensor(RIGHT)  < 55
+    ){
+      Off(MOTOR);
+      TextOut(40,24,  "KRYDS");
+      Wait(1000);
+      OnFwd(MOT_L, left_speed);
+      OnFwd(MOT_R, right_speed);
+      Wait(100);
+    } else {
+      TextOut(40,24,  "     ");
+      TextOut(1,16, NumToStr(left_speed));
+      TextOut(80,16, NumToStr(right_speed));
+      left_error = Sensor(LEFT) - Sensor(RIGHT);
+      // lighting mismatch correction
+      if(left_error > EXPECTED_SENSOR_ERROR){
+	left_error -= EXPECTED_SENSOR_ERROR;
+      } else if(left_error < -EXPECTED_SENSOR_ERROR){
+	left_error += EXPECTED_SENSOR_ERROR;
       } else {
-	Off(MOTOR);
+	left_error = 0;
       }
-    }
-  }
+      P = left_error;
+      I = I + left_error;
+      D = left_error - left_previous_error;
+      left_previous_error = left_error;
+      correction = P * kP + I * kI + D * kD;
+      
+      //roundoff to avoid mayhem
+      if(correction > 25 ){
+	correction = 25;
+      } else if(correction < -25){
+	correction = -25;
+      }
+      
+      left_speed =  50 + correction;
+      right_speed = 50 - correction;
+      OnFwd(MOT_L, left_speed);
+      OnFwd(MOT_R, right_speed);
+    }   
+  }   
 }
-//*/
