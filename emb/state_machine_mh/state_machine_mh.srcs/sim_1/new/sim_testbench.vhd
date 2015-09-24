@@ -36,7 +36,7 @@ entity sim_testbench is
 end sim_testbench;
 
 architecture Behavioral of sim_testbench is     
-
+  
 COMPONENT main
 PORT(
             clk          :  in  std_logic;
@@ -48,13 +48,17 @@ end COMPONENT;
 signal      clk          :  std_logic:= '0';
 signal      btn          :  std_logic:='0';
 signal      led          :  std_logic_vector(5 downto 0);
+signal      small_led_red    :  std_logic:='0';
+signal      small_led_yellow :  std_logic:='0';
 
 begin
 
 uut: main PORT MAP (
             clk => clk,
             btn => btn,
-            led => led
+            led => led,
+            system_yellow=>small_led_yellow,
+            system_red=>small_led_red
             );
                 
 clock_process: process
@@ -68,15 +72,15 @@ end process;
 
 stim_proc: process
 begin
-wait for 100 ms;
 
-wait for 10 ns;
+wait for 100 ms;
 btn <= '1';
-wait for  50 ns;
+wait for  50 ms;
 btn <= '0';
-wait for 50 ns;
+
+wait for 500 ms;
 btn <= '1';
-wait for 50 ns;
+wait for 500 ms;
 btn <= '0'; 
 
 wait;
