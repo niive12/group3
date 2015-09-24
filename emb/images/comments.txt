@@ -1,0 +1,20 @@
+#button debounce
+    When a physical button is pressed, the contacts have an undefined period where there it will go back and forth between a connection and a brake. If this is viewed on an oscilloscope it will look like the signal is bouncing. 
+    To debounce the signal a continuity check is performed. If the signal is consistent then the button status will be changed.
+    button_bouncing.png
+    button_normal.png
+#button states
+    To turn the button status into a pulse, a state machine is devised.
+    To detect single press a button must be pressed and released.
+    To expand the functionality, long press and double press was implemented.
+    Long press occurs when the button is not released within 500 ms and a timeout occurs.
+    Double press occurs when a button is pressed, released and pressed again within 150 ms.
+    state_machine_button.png
+    single_press.png
+    long_press.png
+    double_press.png
+#state machine
+    kort beskrivelse...
+    state_machine_leds.png
+    state_machine_toggle.png
+    video.webm
