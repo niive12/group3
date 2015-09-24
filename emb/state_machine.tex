@@ -13,6 +13,7 @@
  \node[state,right of=led1,    name=led_i]   {...};
  \node[state,right of=led_i,   name=led6]    {led6};
  
+ 
  \draw (off)   edge[loop above] (off)  ;
  \draw (led1)  edge[loop above] (led1) ;
  \draw (led_i) edge[loop above] (led_i);
@@ -22,28 +23,32 @@
  \draw[->] (led1)  to[out=20, in=160]   node[midway,above] {btn\_press}  (led_i)  ;
  \draw[->] (led_i) to[out=20, in=160]   node[midway,above] {btn\_press}  (led6)   ;
  \draw[->] (led6)  to[out=200,in=340]   node[midway,below] {btn\_press}  (led1)   ;
+ 
+ \node[name = reset, below of=off,yshift=1.5cm] {btn\_event = double\_press \textbf{or} long\_press };
+ \draw[->] (reset) to (off);
+ 
 \end{tikzpicture}
 \caption{Main state machine}
 \end{figure}
 
 \begin{figure}
 \begin{tikzpicture}[node distance=6cm]
- \node[initial,accepting,state,       name=released ]         {released}; 
- \node[state,right of=released,       name=pressed]           {pressed};
- \node[state,below of=pressed,        name=semi-released]     {semi\_rel};
- \node[state,left of=semi-released,  name=double-pressed]    {double\_p};
+ \node[initial,accepting,state,       name=ready ]         {ready}; 
+ \node[state,right of=ready,          name=pressed]        {pressed};
+ \node[state,below of=pressed,        name=semi-released]  {semi\_rel};
+ \node[state,left of=semi-released,   name=released]       {released};
  
- \draw (released)        edge[loop above] (released)       ;
+ \draw (ready)           edge[loop above] (ready)       ;
  \draw (pressed)         edge[loop above] (pressed)        ;
  \draw (semi-released)   edge[loop above] (semi-released)  ;
- \draw (double-pressed)  edge[loop above] (double-pressed) ;
+ \draw (released)        edge[loop above] (released) ;
  
- \draw[->] (released)       to[out=20, in=160] node[midway,above]           {btn = '1'/btn\_event = released}         (pressed)  ;
- \draw[->] (pressed)        to[out=200,in=340] node[midway,below]           {1s timeout/btn\_event = long\_press}     (released) ;
- \draw[->] (pressed)        to[out=340, in=20] node[midway,below,rotate=90] {btn = '0'/btn\_event = pressed}          (semi-released) ;
- \draw[->] (semi-released)  to[out=130,in=270] node[midway,below,rotate=-25]           {0.5s timeout/btn\_event = released}      (released) ;
- \draw[->] (semi-released)  to[out=200,in=340] node[midway,below]           {btn = '1'/btn\_event = double\_pressed}  (double-pressed) ;
- \draw[->] (double-pressed) to[out=150,in=200] node[midway,above,rotate=90] {btn = '0'/btn\_event = released}         (released) ;
+ \draw[->] (ready)          to[out=20, in=160] node[midway,above]               {btn = '1'/btn\_event = released}         (pressed)  ;
+ \draw[->] (pressed)        to[out=340,in=20 ] node[midway,below,rotate=90]     {btn = '0'/btn\_event = pressed}          (semi-released) ;
+ \draw[->] (pressed)        to[out=270,in=40 ] node[near start,below,rotate=45] {timeout/btn\_event = long\_press}        (released) ;
+ \draw[->] (semi-released)  to[out=140,in=270] node[near end,below,rotate=-45]  {timeout/btn\_event = released}           (ready) ;
+ \draw[->] (semi-released)  to[out=200,in=340] node[midway,below]               {btn = '1'/btn\_event = double\_pressed}  (released) ;
+ \draw[->] (released)       to[out=150,in=200] node[midway,above,rotate=90]     {btn = '0'/btn\_event = released}         (ready) ;
 \end{tikzpicture}
 \caption{Button state machine}
 \end{figure}
