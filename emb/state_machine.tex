@@ -43,7 +43,7 @@
  \draw (semi-released)   edge[loop above] (semi-released)  ;
  \draw (released)        edge[loop above] (released) ;
  
- \draw[->] (ready)          to[out=20, in=160] node[midway,above]               {btn = '1'/btn\_event = released}         (pressed)  ;
+ \draw[->] (ready)          to[out=20, in=160] node[midway,above]               {btn = '1'/}         (pressed)  ;
  \draw[->] (pressed)        to[out=340,in=20 ] node[midway,below,rotate=90]     {btn = '0'/btn\_event = pressed}          (semi-released) ;
  \draw[->] (pressed)        to[out=270,in=40 ] node[near start,below,rotate=45] {timeout/btn\_event = long\_press}        (released) ;
  \draw[->] (semi-released)  to[out=140,in=270] node[near end,below,rotate=-45]  {timeout/btn\_event = released}           (ready) ;

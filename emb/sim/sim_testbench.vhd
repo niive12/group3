@@ -74,12 +74,60 @@ end process;
 
 stim_proc: process
 begin
-    btn <= '1'; --1 = pressed
-    wait for 10 ms;
-    btn <= '0'; --0 = released
-    wait for 10 ms;
-    btn <= '1';
-    wait for 50 ms;
+--     ------ button states -------
+       btn <= '1';
+       wait for 1 ms;
+       btn <= '0';
+       wait for 4 ms; -- single press
+       btn <= '1';
+       wait for 151 ms; -- single press
+       
+       btn <= '0';
+       wait for 505 ms; -- long press
+       btn <= '1';
+       wait for 5 ms;
+       
+       btn <= '0';
+       wait for 4 ms; -- single press
+       btn <= '1';
+       wait for 4 ms; -- double press
+       btn <= '0';
+       wait for 4 ms; -- double press
+       btn <= '1';
+       wait; 
+       
+--     ------ expected case -------
+--     btn <= '1'; --1 = released
+--     wait for 1 ms;
+--     btn <= '0'; --0 = pressed
+--     wait for 10 ms;
+--     btn <= '1';
+--     wait for 50 ms;
+--     -- simulate debouncing signal --
+--     btn <= '0';
+--     wait for 50 us;
+--     btn <= '1';
+--     wait for 50 us;
+--     btn <= '0';
+--     wait for 50 us;
+--     btn <= '1';
+--     wait for 50 us;
+--     btn <= '0';
+--     wait for 50 us;
+--     btn <= '1';
+--     wait for 50 us;
+--     btn <= '0';
+--     wait for 50 us;
+--     btn <= '1';
+--     wait for 50 us;
+--     btn <= '0';
+--     wait for 2 ms;
+--     btn <= '1';
+--     wait for 100 us;
+--     btn <= '0';
+--     wait for 5 ms;
+--     btn <= '1';
+--     wait for 50 ms;
 end process;
  
 end Behavioral;
