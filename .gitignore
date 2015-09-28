@@ -1,3 +1,7 @@
+#qtcreator
+*.pri
+*.user
+
 #These should be added manually:
 *.xsl
 *.xwbt
