@@ -36,29 +36,31 @@ entity sim_testbench is
 end sim_testbench;
 
 architecture Behavioral of sim_testbench is     
-  
+
 COMPONENT main
 PORT(
             clk          :  in  std_logic;
             btn          :  in  std_logic;
+            system_red   : out  std_logic;
+            system_yellow: out  std_logic;
             led          : out  std_logic_vector(5 downto 0)
             );
 end COMPONENT;
 
-signal      clk          :  std_logic:= '0';
-signal      btn          :  std_logic:='0';
+signal      clk          :  std_logic:='0';
+signal      btn          :  std_logic:='1';
 signal      led          :  std_logic_vector(5 downto 0);
-signal      small_led_red    :  std_logic:='0';
-signal      small_led_yellow :  std_logic:='0';
+signal      system_red   :  std_logic;
+signal      system_yellow:  std_logic;
 
 begin
 
-uut: main PORT MAP (
+uut: main port map (
             clk => clk,
             btn => btn,
-            led => led,
-            system_yellow=>small_led_yellow,
-            system_red=>small_led_red
+            system_red => system_red,   
+            system_yellow => system_yellow,
+            led => led
             );
                 
 clock_process: process
@@ -70,20 +72,41 @@ begin
 end process;
 
 
-stim_proc: process
+debounce: process
 begin
-
-wait for 100 ms;
-btn <= '1';
-wait for  50 ms;
-btn <= '0';
-
-wait for 500 ms;
-btn <= '1';
-wait for 500 ms;
-btn <= '0'; 
-
-wait;
+    ------ expected case -------
+    btn <= '1'; --1 = released
+    wait for 1 ms;
+    btn <= '0'; --0 = pressed
+    wait for 10 ms;
+    btn <= '1';
+    wait for 50 ms;
+    -- simulate debouncing signal --
+    btn <= '0';
+    wait for 50 us;
+    btn <= '1';
+    wait for 50 us;
+    btn <= '0';
+    wait for 50 us;
+    btn <= '1';
+    wait for 50 us;
+    btn <= '0';
+    wait for 50 us;
+    btn <= '1';
+    wait for 50 us;
+    btn <= '0';
+    wait for 50 us;
+    btn <= '1';
+    wait for 50 us;
+    btn <= '0';
+    wait for 2 ms;
+    btn <= '1';
+    wait for 100 us;
+    btn <= '0';
+    wait for 5 ms;
+    btn <= '1';
+    wait for 50 ms;
 end process;
  
 end Behavioral;
+
