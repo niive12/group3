@@ -6,6 +6,7 @@
 #include <queue>
 #include <sstream>
 #include "position_t.h"
+#include "node.h"
 
 #define DIAMOND  2
 #define OBSTACLE 1
@@ -21,7 +22,8 @@ private:
     bool boundry_check(const pos_t &pos);
 public:
     //data:
-    int width, height, n_diamonds;
+    int width, height;
+    char n_diamonds;
     std::vector<pos_t> diamond_pos;
     pos_t man;
     //functions:
@@ -31,11 +33,11 @@ public:
     unsigned char get(const pos_t &pos);
 
     unsigned char wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &diamonds); //stored in wavefront.cpp
-    char diamonds_placed();
+    bool game_complete(node test);
     char valid_move(pos_t diamond); //sees a diamond is movable
     bool locked_in(pos_t diamond); //sees if a diamond is locked into a corner.
     std::queue<node> add_all_possible_paths(node &N, Map &copy);
-
+    node *bff_search(node start, Map &copy);
 
     //operator overloads
     Map& operator=(const Map& other );
