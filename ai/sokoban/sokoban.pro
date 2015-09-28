@@ -6,7 +6,8 @@ CONFIG -= qt
 SOURCES += main.cpp \
     map.cpp \
     wavefront.cpp \
-    moving_rules.cpp
+    moving_rules.cpp \
+    node.cpp
 
 QMAKE_CXXFLAGS += -std=c++11
 

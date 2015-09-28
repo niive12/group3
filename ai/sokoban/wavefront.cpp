@@ -23,14 +23,20 @@ std::queue<pos_t> Map::wave_color(pos_t pos, int previous_color, Map &wave_map){
     return colored_positions;
 }
 
-unsigned char Map::wave(Map &wave_map, pos_t start){
-    unsigned char color = 3;                // this means distance is (color - 2)
+unsigned char Map::wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &diamonds){
+    //place all diamonds
+    wave_map = *this;
+    for(auto n : diamonds){
+        wave_map.set(n, DIAMOND);
+    }
+
+    unsigned char color = 3;                // this means distance is (color - 3)
 
     std::queue<pos_t> search_list;         //list of pixels to search for.
     std::queue<pos_t> surrounding_points;
     std::queue<pos_t> colored_list;        //list of pixels colored by a single color.
-    wave_map.set(start, color);             //set first value
-    search_list.push(start);           //set first target
+    wave_map.set(man_pos, color);             //set first value
+    search_list.push(man_pos);           //set first target
 
     bool wave_complete = false;
     pos_t current_pos;

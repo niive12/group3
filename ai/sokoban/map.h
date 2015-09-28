@@ -14,27 +14,27 @@
 class Map {
 private:
     //data:
-    std::vector<pos_t> goals; //constant
     unsigned char **data;
     std::queue<pos_t> wave_color( pos_t pos, int previous_color, Map &wave_map); //stored in wavefront.cpp
+    std::vector<pos_t> goals; //constant
 
     bool boundry_check(const pos_t &pos);
 public:
     //data:
+    int width, height, n_diamonds;
     std::vector<pos_t> diamond_pos;
     pos_t man;
-    int width, height, n_diamonds; //constant
-
     //functions:
     void read_file(std::string file_name);
     void print();
     void set(const pos_t &pos, const unsigned char &value);
     unsigned char get(const pos_t &pos);
 
-    unsigned char wave(Map &wave_map, pos_t start); //stored in wavefront.cpp
+    unsigned char wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &diamonds); //stored in wavefront.cpp
     char diamonds_placed();
     char valid_move(pos_t diamond); //sees a diamond is movable
     bool locked_in(pos_t diamond); //sees if a diamond is locked into a corner.
+    std::queue<node> add_all_possible_paths(node &N, Map &copy);
 
 
     //operator overloads
@@ -50,3 +50,4 @@ public:
         delete[] data;
     }
 };
+

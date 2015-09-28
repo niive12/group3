@@ -4,11 +4,10 @@
 class node {
 private:
     //data:
-    Map map;
-    int cost;
-    node *parent;
-    std::vector<node*> paths;
+    std::vector<node> paths;
 public:
-    void add_path();
-    void prune();
+    std::vector<pos_t> diamonds;
+    pos_t man;
+    void add_path(node next);
+    node(const pos_t &man, const std::vector<pos_t> &diamonds_pos);
 };

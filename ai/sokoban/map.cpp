@@ -51,7 +51,7 @@ void Map::read_file(std::string file_name){
                         data[x][y] = OBSTACLE;
                         break;
                     case 'J':
-                        data[x][y] = DIAMOND;
+                        data[x][y] = FREE;
                         diamond_pos.push_back(pos_t(x,y));
                         break;
                     case '.':
