@@ -3,16 +3,23 @@
 #include "position_t.h"
 #include "node.h"
 
+#include <unistd.h>
 using namespace std;
 
 int main()
 {
-//    Map map("map_one.txt");
-    Map map("map_easy.txt");
+    Map map("map_one.txt");
+//    Map map("map_easy.txt");
     Map copy;
+//    std::cout << sizeof(std::vector<node*>) << "\n";
+//    std::cout << sizeof(std::vector<node*>) + (sizeof(node*) * 5) << "\n";
     node start(map.man,map.diamond_pos);
     node *goal;
-    goal = map.bff_search(start, copy);
-    print_path(goal);
+    goal = map.bff_search(&start, copy);
+    for(auto n : goal->diamonds){
+        std::cout << n;
+    } std::cout << "\n";
+
+    map.print_path(copy,goal);
     return 0;
 }

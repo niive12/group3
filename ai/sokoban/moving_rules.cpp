@@ -7,12 +7,12 @@ char Map::valid_move(pos_t diamond){
     A = diamond + above;
     B = diamond + below;
     //if i can move from A to B: and B does not lock the diamond, move;
-    if( (get(A) > col) && (get(B) > col || get(B) == FREE) ){ if(!locked_in(B)){ ans += south; } }
-    if( (get(B) > col) && (get(A) > col || get(A) == FREE) ){ if(!locked_in(A)){ ans += north; } }
+    if( (get(A) > col) && (get(B) > col || get(B) == FREE) ){ if(!locked_in(diamond)){ ans += south; } }
+    if( (get(B) > col) && (get(A) > col || get(A) == FREE) ){ if(!locked_in(diamond)){ ans += north; } }
     A = diamond + left;
     B = diamond + right;
-    if( (get(A) > col) && (get(B) > col || get(B) == FREE) ){ if(!locked_in(B)){ ans += east; } }
-    if( (get(B) > col) && (get(A) > col || get(A) == FREE) ){ if(!locked_in(A)){ ans += west; } }
+    if( (get(A) > col) && (get(B) > col || get(B) == FREE) ){ if(!locked_in(diamond)){ ans += east; } }
+    if( (get(B) > col) && (get(A) > col || get(A) == FREE) ){ if(!locked_in(diamond)){ ans += west; } }
     return ans;
 }
 
@@ -41,6 +41,9 @@ bool Map::game_complete(node test){
         }
     }
     if(ans == n_diamonds){
+        for(auto n : test.diamonds){
+            std::cout << n;
+        } std::cout << " WON\n";
         return true;
     } else {
         return false;
@@ -49,10 +52,12 @@ bool Map::game_complete(node test){
 
 //bool Map::game_complete(std::queue<node> )
 
-std::queue<node> Map::add_all_possible_paths(node &N, Map &copy){
-    std::queue<node> neighbohrs;
-    std::vector<pos_t> J = N.diamonds;
-    pos_t new_man = N.man;
+std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy){
+    std::queue<node*> neighbohrs;
+    std::vector<pos_t> J = N->diamonds;
+    node *par = N;
+    node *next;
+    pos_t new_man = N->man;
 
     wave(copy,new_man,J);
     char ans;
@@ -62,38 +67,38 @@ std::queue<node> Map::add_all_possible_paths(node &N, Map &copy){
             new_man = J.at(n); //manden skal stå hvor diamanten stod.
             if(ans & east){
                 //move;
-                J.at(n) = N.diamonds.at(n) + right;
-                node next(new_man,J,&N);
-                next.direction = 'R';
-                N.add_path(next);
-                J.at(n) = N.diamonds.at(n);
+                J.at(n) = N->diamonds.at(n) + right;
+                next = new node(new_man,J,par);
+//                next->direction = 'R';
+                N->add_path(next);
+                J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
             if(ans & west){
                 //move;
-                J.at(n) = N.diamonds.at(n) + left;
-                node next(new_man,J,&N);
-                next.direction = 'L';
-                N.add_path(next);
-                J.at(n) = N.diamonds.at(n);
+                J.at(n) = N->diamonds.at(n) + left;
+                next = new node(new_man,J,par);
+//                next->direction = 'L';
+                N->add_path(next);
+                J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
             if(ans & north){
                 //move;
-                J.at(n) = N.diamonds.at(n) + above;
-                node next(new_man,J,&N);
-                next.direction = 'U';
-                N.add_path(next);
-                J.at(n) = N.diamonds.at(n);
+                J.at(n) = N->diamonds.at(n) + above;
+                next = new node(new_man,J,par);
+//                next->direction = 'U';
+                N->add_path(next);
+                J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
             if(ans & south){
                 //move;
-                J.at(n) = N.diamonds.at(n) + below;
-                node next(new_man,J,&N);
-                next.direction = 'D';
-                N.add_path(next);
-                J.at(n) = N.diamonds.at(n);
+                J.at(n) = N->diamonds.at(n) + below;
+                next = new node(new_man,J,par);
+//                next->direction = 'D';
+                N->add_path(next);
+                J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
         }
@@ -101,35 +106,42 @@ std::queue<node> Map::add_all_possible_paths(node &N, Map &copy){
     return neighbohrs;
 }
 
-node* Map::bff_search(node start, Map &copy){
-    std::queue<node> search_list;         //list of current search nodes.
-    std::queue<node> neighbohrs;   //result fra add_all_possible...
-    std::queue<node> neighbohrs_neighbohrs;        //2nd list of search nodes.
+node* Map::bff_search(node *start, Map &copy_map){
+    std::queue<node*> search_list;         //list of current search nodes.
+    std::queue<node*> neighbohrs;          //result fra add_all_possible...
+    std::queue<node*> neighbohrs_neighbohrs;        //2nd list of search nodes.
     search_list.push(start);           //set first target
 
+    char runs = 0;
     bool search_complete = false;
-    node current_node(start.man,start.diamonds);
-
+    node *current_node;
     while( !search_complete ) {
+        ++runs;
         search_complete = true;
-        while( search_list.size() > 0 ) {
+        while( !search_list.empty()) {
             search_complete = false; //prevent the loop to stop when there is more pixels to search for
             current_node = search_list.front();
             search_list.pop();
-            neighbohrs = add_all_possible_paths(current_node,copy); //this gives the possible paths
-            while( neighbohrs.size() > 0 ) {                       //append these nodes to the list.
-                neighbohrs_neighbohrs.push( neighbohrs.front() );
-                if(game_complete(neighbohrs.front())){
-                    std::cout << "found the goal\n";
-                    return &neighbohrs.front(); //goal node;
-                }
+            neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
+            while( !neighbohrs.empty() ) {                       //append these nodes to the list.
+                current_node = neighbohrs.front();
                 neighbohrs.pop();
+                neighbohrs_neighbohrs.push( current_node );
+                if(game_complete(*current_node)){
+                    std::cout << (int) runs << " found the goal\n";
+//                    for(auto n : current_node->diamonds){
+//                        std::cout << n;
+//                    } std::cout << "\n";
+                    return current_node; //goal node;
+                }
             }
         }
         search_list = neighbohrs_neighbohrs;
-        while(!neighbohrs_neighbohrs.empty()){
+        std::cout << "runs: " << (int) runs << " size: " << search_list.size() << "\n";
+        while(!neighbohrs_neighbohrs.empty()){ //clear the queue
             neighbohrs_neighbohrs.pop();
         }
     }
+    return nullptr;
 }
 

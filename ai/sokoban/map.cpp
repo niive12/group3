@@ -33,7 +33,7 @@ void Map::read_file(std::string file_name){
 
         std::getline(data_file,str_value);
         n_diamonds = atoi(str_value.c_str());
-        std::cout <<"diamonds: "<< n_diamonds << "\n";
+        std::cout <<"diamonds: "<< (int) n_diamonds << "\n";
         //create array
         data = new unsigned char*[width];
         for(int w=0;w<width;++w){
@@ -150,3 +150,4 @@ void Map::set(const pos_t &pos, const unsigned char &value){
 unsigned char Map::get(const pos_t &pos){
     return data[pos.x][pos.y];
 }
+

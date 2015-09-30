@@ -16,6 +16,7 @@ class Map {
 private:
     //data:
     unsigned char **data;
+    node *current_node;
     std::queue<pos_t> wave_color( pos_t pos, int previous_color, Map &wave_map); //stored in wavefront.cpp
     std::vector<pos_t> goals; //constant
 
@@ -33,11 +34,13 @@ public:
     unsigned char get(const pos_t &pos);
 
     unsigned char wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &diamonds); //stored in wavefront.cpp
+    std::string calculate_path(Map &wave_map, node *N);                              //stored in wavefront.cpp
+    void print_path(Map &wave_map, node* path, bool first = true);
     bool game_complete(node test);
     char valid_move(pos_t diamond); //sees a diamond is movable
     bool locked_in(pos_t diamond); //sees if a diamond is locked into a corner.
-    std::queue<node> add_all_possible_paths(node &N, Map &copy);
-    node *bff_search(node start, Map &copy);
+    std::queue<node*> add_all_possible_paths(node *N, Map &copy);
+    node *bff_search(node *start, Map &copy);
 
     //operator overloads
     Map& operator=(const Map& other );

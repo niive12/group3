@@ -43,12 +43,12 @@ unsigned char Map::wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &
 
     while ( !wave_complete ) {
         wave_complete = true;
-        while ( search_list.size() > 0 ) {
+        while ( !search_list.empty() ) {
             wave_complete = false; //prevent the loop to stop when there is more pixels to search for
             current_pos = search_list.front();
             search_list.pop();
             surrounding_points = wave_color( current_pos, color, wave_map); //this gives the surrounding coordinates
-            while ( surrounding_points.size() > 0 ) {                       //append these coordinates to the list.
+            while ( !surrounding_points.empty() ) {                       //append these coordinates to the list.
                 colored_list.push( surrounding_points.front() );
                 surrounding_points.pop();
             }
@@ -60,4 +60,70 @@ unsigned char Map::wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &
         color++;
     }
     return color;
+}
+
+std::string Map::calculate_path(Map &wave_map, node *N){
+    pos_t target_position = N->man;
+    char diamond_n = 0;
+    for(size_t n=0; n < goals.size(); ++n){
+        if(!(N->parent->diamonds.at(n) == N->diamonds.at(n))){
+            target_position = N->parent->diamonds.at(n) + N->parent->diamonds.at(n) - N->diamonds.at(n);
+            diamond_n = n;
+            break;
+        }
+    }
+    //create a wavefront
+    wave(wave_map,target_position,N->parent->diamonds);
+    //follow that to destination
+    pos_t current_pos = N->parent->man;
+    unsigned char max_distance = wave_map.get(current_pos);
+    unsigned char current_distance = max_distance + 1;
+    pos_t test_pos;
+    pos_t next_move;
+    std::string ans;
+    while( !(current_pos == target_position) ){
+        for(int x = -1; x <= 1; ++x){
+            for(int y = -1; y <= 1; ++y){
+                if((x == 0) || (y == 0)){
+                    test_pos = current_pos + pos_t(x,y);
+                    current_distance = wave_map.get(test_pos);
+                    if(current_distance < max_distance && current_distance > 2 ){
+                        max_distance = current_distance;
+                        next_move = pos_t(x,y);
+                    }
+                }
+            }
+        }
+        if(next_move == above){
+            ans += "u";
+        }else if(next_move == below){
+            ans += "d";
+        }else if(next_move == right){
+            ans += "r";
+        }else if(next_move == left){
+            ans += "l";
+        }
+        current_pos = current_pos + next_move;
+    }
+    //final move
+    next_move = N->parent->diamonds.at(diamond_n) - target_position;
+    if(next_move == above){
+        ans += "U";
+    }else if(next_move == below){
+        ans += "D";
+    }else if(next_move == right){
+        ans += "R";
+    }else if(next_move == left){
+        ans += "L";
+    }
+    return ans;
+}
+
+void Map::print_path(Map &wave_map, node* path, bool first){
+    if ( path->parent != nullptr ){
+        print_path(wave_map, path->parent,false);
+        std::cout << calculate_path(wave_map,path) << std::flush;
+        if(first)
+            std::cout << "\n";
+    }
 }
