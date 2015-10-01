@@ -53,4 +53,29 @@
 \caption{Button state machine}
 \end{figure}
 
+\begin{figure}
+ \begin{tikzpicture}
+  \node[draw,rounded corners,minimum width=2cm,minimum height=1cm, name=power] {Power};
+  \node[draw,rounded corners,minimum width=2cm,minimum height=1cm, name=fpga, right=0.5cm of power] {FPGA};
+  \node[draw,rounded corners,minimum width=2cm,minimum height=1cm, name=led, right=0.5cm of fpga] {LED's};
+  \node[draw,rounded corners,minimum width=2cm,minimum height=1cm, name=receiver, right=0.5cm of led] {Receiver};
+  \node[draw,rounded corners,minimum width=2cm,minimum height=1cm, name=adc, right=0.5cm of receiver] {ADC};                                              
+  \node[draw,rounded corners,minimum width=2cm,minimum height=1cm, name=pwm, below right=1cm and 0.5cm of fpga] {PWM};
+  \node[draw,rounded corners,minimum width=2cm,minimum height=1cm, name=servo, right=0.5cm of pwm] {Servo};
+  
+  
+  \draw[->] (power)    -- (fpga);
+  \draw[->] (fpga)     -- (led);
+  \draw[->] (led)      -- (receiver);
+  \draw[->] (receiver) -- (adc);
+  \draw[<-] (fpga.south) ++(0.25,0) -- ++(0,-0.25) -| (adc);
+  
+  \draw[->] (fpga.south) ++(-0.25,0) |- (pwm); %here
+  \draw[->] (pwm) -- (servo);
+  \draw[<-] (servo.south) -- ++(0,-0.25) -| (power);
+  
+ \end{tikzpicture}
+\end{figure}
+
+
 \end{document}
