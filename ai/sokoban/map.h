@@ -36,8 +36,9 @@ public:
     unsigned char wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &diamonds); //stored in wavefront.cpp
     std::string calculate_path(Map &wave_map, node *N);                              //stored in wavefront.cpp
     void print_path(Map &wave_map, node* path, bool first = true);
-    bool game_complete(node test);
-    char valid_move(pos_t diamond); //sees a diamond is movable
+    bool game_complete(node* N);
+    char valid_push(pos_t diamond); //sees a diamond is movable
+    char valid_pull(pos_t diamond); //sees a diamond is movable
     bool locked_in(pos_t diamond); //sees if a diamond is locked into a corner.
     std::queue<node*> add_all_possible_paths(node *N, Map &copy);
     node *bff_search(node *start, Map &copy);
