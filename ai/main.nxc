@@ -14,19 +14,22 @@ void turn_left();
 task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
-
+  
   OnFwd(MOTOR, 75);
   
-//   follow_line(50);   Wait(1000);
-//   turn_left();       Wait(1000);
-//   follow_line(50);   Wait(1000);
-//   turn_right();      Wait(1000);
-//   follow_line(50);   Wait(1000);
-//   turn_right();      Wait(1000);
+  follow_line(50);   Wait(1000);
+  turn_left();       Wait(1000);
+  follow_line(50);   Wait(1000);
+  turn_right();      Wait(1000);
+  follow_line(50);   Wait(1000);
+  turn_right();      Wait(1000);
   follow_line(-50);  Wait(5000);
-   
+  
 }
 
+int sign(int a){
+  return a > 0 ? 1 : -1;
+}
 
 void follow_line(char basespeed = 50){
   const char EXPECTED_SENSOR_ERROR = 1; //mismatch i lys fra rummet.
@@ -41,78 +44,103 @@ void follow_line(char basespeed = 50){
   float kI = 0.02;
   float kD = 0.01;
   if(basespeed < 0){
-    kP = 1.2;
-    kI = 0.00;
-    kD = 0.01;
+	kP = 1.2;
+	kI = 0.00;
+	kD = 0.01;
   }
   int correction = 0;
   bool line_has_ended = false;
   while(!line_has_ended){
-    TextOut(1,8,  "left");
-    TextOut(75,8,  "right");
-    TextOut(1,1,  NumToStr(Sensor(LEFT)));
-    TextOut(85,1, NumToStr(Sensor(RIGHT)));
-    
-    if( Sensor(LEFT)   < 2 &&
-        Sensor(RIGHT)  < 2
-    ){
-      Off(MOTOR);
-      TextOut(40,24,  "KRYDS");
-      line_has_ended = true;
-    } else {
-      TextOut(40,24,  "     ");
-      TextOut(1,16, NumToStr(left_speed));
-      TextOut(80,16, NumToStr(right_speed));
-      left_error = Sensor(LEFT) - Sensor(RIGHT);
-      TextOut(30,1,"        ");
-      TextOut(40,1,NumToStr(left_error));
-      // lighting mismatch correction
-      if(left_error > EXPECTED_SENSOR_ERROR){
-	left_error -= EXPECTED_SENSOR_ERROR;
-      } else if(left_error < -EXPECTED_SENSOR_ERROR){
-	left_error += EXPECTED_SENSOR_ERROR;
-      } else {
-	left_error = 0;
-      }
-      P = left_error;
-      I = I + left_error;
-      D = left_error - left_previous_error;
-      left_previous_error = left_error;
-      correction = P * kP + I * kI + D * kD;
-      
-      //roundoff to avoid mayhem
-      if(correction > 25 ){
-	correction = 25;
-      } else if(correction < -25){
-	correction = -25;
-      }
-      left_speed =  basespeed + correction;
-      right_speed = basespeed - correction;
-      OnFwd(MOT_L, left_speed);
-      OnFwd(MOT_R, right_speed);
-    }   
+	TextOut(1,8,  "left");
+	TextOut(75,8,  "right");
+	TextOut(1,1,  NumToStr(Sensor(LEFT)));
+	TextOut(85,1, NumToStr(Sensor(RIGHT)));
+	
+	if( Sensor(LEFT)   < 2 &&
+	  Sensor(RIGHT)  < 2
+	){
+	  Off(MOTOR);
+	  TextOut(40,24,  "KRYDS");
+	  line_has_ended = true;
+	} else {
+	  TextOut(40,24,  "     ");
+	  TextOut(1,16, NumToStr(left_speed));
+	  TextOut(80,16, NumToStr(right_speed));
+	  left_error = Sensor(LEFT) - Sensor(RIGHT);
+	  TextOut(30,1,"        ");
+	  TextOut(40,1,NumToStr(left_error));
+	  // lighting mismatch correction
+	  if(left_error > EXPECTED_SENSOR_ERROR){
+		left_error -= EXPECTED_SENSOR_ERROR;
+	  } else if(left_error < -EXPECTED_SENSOR_ERROR){
+		left_error += EXPECTED_SENSOR_ERROR;
+	  } else {
+		left_error = 0;
+	  }
+	  P = left_error;
+	  I = I + left_error;
+	  D = left_error - left_previous_error;
+	  left_previous_error = left_error;
+	  correction = P * kP + I * kI + D * kD;
+	  correction *= sign(left_speed); // Når man kører baglænds skal fortegnet for correction vel vendes op? 
+	  
+	  //roundoff to avoid mayhem
+	  if(correction > 25 ){
+		correction = 25;
+	  } else if(correction < -25){
+		correction = -25;
+	  }
+	  left_speed =  basespeed + correction;
+	  right_speed = basespeed - correction;
+	  OnFwd(MOT_L, left_speed);
+	  OnFwd(MOT_R, right_speed);
+	}   
   }
 }
+/*
+ void turn(byte chosen_motor, byte sensor){
+ OnFwd(chosen_motor, 60);
+ Wait(1000);
+ bool turn_completed = false;
+ while(!turn_completed){
+   if(Sensor(sensor) < 55)
+	 turn_completed = true;
+   }
+   Off(chosen_motor);
+   }
+   
+   void turn_right(){
+   TextOut(40,24,  "Turn R");
+   Off(MOT_R);
+   turn(MOT_L, LEFT);
+   }
+   
+   void turn_left(){
+   TextOut(40,24,  "Turn L");
+   Off(MOT_L);
+   turn(MOT_R,RIGHT);
+   }*/
 
-void turn(byte chosen_motor, byte sensor){
-  OnFwd(chosen_motor, 60);
+void turn_left(){
+  OnFwd(MOT_L, 60);
+  OnFwd(MOT_R, -60);
   Wait(1000);
   bool turn_completed = false;
   while(!turn_completed){
-    if(Sensor(sensor) < 55)
-      turn_completed = true;
+	if(Sensor(LEFT) < 55)
+	  turn_completed = true;
   }
-  Off(chosen_motor);
-}
+  Off(MOTOR);
+} 
 
 void turn_right(){
-  TextOut(40,24,  "Turn R");
-  Off(MOT_R);
-  turn(MOT_L, LEFT);
-}
-
-void turn_left(){
-  TextOut(40,24,  "Turn L");
-  Off(MOT_L);
-  turn(MOT_R,RIGHT);
+  OnFwd(MOT_L, -60);
+  OnFwd(MOT_R, 60);
+  Wait(1000);
+  bool turn_completed = false;
+  while(!turn_completed){
+	if(Sensor(RIGHT) < 55)
+	  turn_completed = true;
+  }
+  Off(MOTOR);
 }
