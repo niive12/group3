@@ -7,7 +7,7 @@ private:
 public:
     //this *could* be optimized so positions are reference points in a 1D array (saves n+1)
     //and the diamonds is stored as a string, saving 23 bytes.
-    //in total going from 45 -> 16 bytes
+    //in total going from 47 -> 24 bytes
     node *parent = nullptr;      //8 bytes
     char direction;              //1 byte
     pos_t man;                   //2 bytes
@@ -25,6 +25,6 @@ public:
     }
 };
 
-std::string to_string(const std::vector<pos_t> &J, pos_t general_position);
+//std::string to_string(const std::vector<pos_t> &J, pos_t general_position);
 std::string to_string(const std::vector<pos_t> &J); //naiive
 std::vector<pos_t> to_vector(std::string diamonds);

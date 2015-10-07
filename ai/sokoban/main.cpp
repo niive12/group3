@@ -11,13 +11,11 @@ int main()
     Map map("map_one.txt");
 //    Map map("map_easy.txt");
     Map copy;
-    node start(map.man,map.diamond_pos);
+//    node start(map.man,map.diamond_pos);
+//    node end(map.man,map.goals);
     node *goal;
-    goal = map.bff_search(&start, copy);
-//    for(auto n : goal->diamonds){
-//        std::cout << n;
-//    } std::cout << "\n";
-
-    map.print_path(copy,goal);
+//    std::vector<pos_t> kaj;
+    goal = map.bff_search(copy);
+//    map.print_path(copy,goal);
     return 0;
 }

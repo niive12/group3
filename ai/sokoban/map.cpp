@@ -111,6 +111,55 @@ void Map::print(){
     data[man.x][man.y] = FREE;
 }
 
+std::vector<pos_t> Map::find_all_general_positions(Map copy, node* N){
+    pos_t res(-1,-1);
+    pos_t old_res(-1,-1);
+    pos_t L;
+    pos_t R;
+    pos_t U;
+    pos_t D;
+    std::vector<pos_t> solve_states;
+    std::vector<pos_t> general_positions;
+    for(auto J : N->diamonds){
+        L = J+left;
+        R = J+right;
+        U = J+above;
+        D = J+below;
+        if( (get(L) == FREE) && (get(L+left) == FREE)){
+            solve_states.push_back(L);
+        }
+        if( (get(R) == FREE) && (get(R+right) == FREE)){
+            solve_states.push_back(R);
+        }
+        if( (get(U) == FREE) && (get(U+above) == FREE)){
+            solve_states.push_back(U);
+        }
+        if( (get(D) == FREE) && (get(D+below) == FREE)){
+            solve_states.push_back(D);
+        }
+    }
+    for(auto pos : solve_states){
+        wave(copy,pos,N->diamonds);
+        res = copy.find_general_position();
+        if( !((res == pos_t(-1,-1)) || (res == old_res)) ){
+            general_positions.push_back(res);
+            old_res = res;
+        }
+    }
+    return general_positions;
+}
+
+pos_t Map::find_general_position(){ //should be done on a already waved map
+    for(unsigned char x=1; x<width;++x){
+        for(unsigned char y=1;y<height;++y){
+            if(get(pos_t(x,y))>2){
+                return pos_t(x,y);
+            }
+        }
+    }
+    return pos_t(-1,-1); //failure
+}
+
 Map& Map::operator=(const Map& other ) {
     if(height != other.height || width != other.width){
         for(int i = 0; i < width; ++i){
@@ -148,6 +197,9 @@ void Map::set(const pos_t &pos, const unsigned char &value){
 }
 
 unsigned char Map::get(const pos_t &pos){
-    return data[pos.x][pos.y];
+    if(boundry_check(pos))
+        return data[pos.x][pos.y];
+//    std::cout << "THIS IS AN ERROR\n";
+    return OBSTACLE;
 }
 
