@@ -1,4 +1,5 @@
 #include "map.h"
+#include <stack>
 #include <unordered_map>
 
 char Map::valid_push(pos_t diamond){
@@ -21,25 +22,26 @@ char Map::valid_push(pos_t diamond){
 }
 
 char Map::valid_pull(pos_t diamond){
-    //a diamond is pullable if the diamond if the destination is reachable
+    //a diamond is pullable if the diamond and the destination is reachable
+
     const unsigned char col = 2;
     char ans = 0;
-    if( get(diamond+below) > col) { ans += south; }
-    if( get(diamond+above) > col) { ans += north; }
-    if( get(diamond+right) > col) { ans += east; }
-    if( get(diamond+left ) > col) { ans += west; }
+    if( (get(diamond+below) > col) && (get(diamond+below+below) > col)) { ans += south; }
+    if( (get(diamond+above) > col) && (get(diamond+above+above) > col)) { ans += north; }
+    if( (get(diamond+right) > col) && (get(diamond+right+right) > col)) { ans += east; }
+    if( (get(diamond+left ) > col) && (get(diamond+left +left ) > col)) { ans += west; }
     return ans;
 }
 
 bool Map::locked_in(pos_t diamond){
     //A diamond can be locked in if the diamond is in a corner of walls or diamonds
-
     bool ans = false;
     unsigned char L = get(diamond + left);
     unsigned char R = get(diamond + right);
     unsigned char U = get(diamond + above);
     unsigned char D = get(diamond + below);
-
+    //TODO: find a way to keep track of if it is locked in by diamonds, right now they are not printed to map.
+    //print to map every time?
     if( (U == OBSTACLE  || U == DIAMOND ) && (R == OBSTACLE  || R == DIAMOND ) ){ ans = true; }
     if( (U == OBSTACLE  || U == DIAMOND ) && (L == OBSTACLE  || L == DIAMOND ) ){ ans = true; }
     if( (D == OBSTACLE  || D == DIAMOND ) && (R == OBSTACLE  || R == DIAMOND ) ){ ans = true; }
@@ -67,44 +69,63 @@ bool Map::game_complete(node* N){
 }
 
 
-std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy){
+std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction){
     std::queue<node*> neighbohrs;
     std::vector<pos_t> J = N->diamonds;
     node *par = N;
     node *next;
     pos_t new_man = N->man;
-
+    //Don't get children if there is a deadlock
+    bool dead_end = false;
+    for(size_t n=0; n < J.size(); ++n){
+        if(locked_in(J.at(n))){
+            dead_end = true;
+            for(auto g : goals){
+                if(g == J.at(n)){
+                    dead_end = false;
+                    //if a diamond is locked in a goal then it is not a deadlock.
+                }
+            }
+            if(dead_end){
+                return neighbohrs; //deadlock, no need to see what children might come of this.
+            }
+        }
+    }
     wave(copy,new_man,J);
     char ans;
     for(size_t n=0; n < J.size(); ++n){
-        ans = copy.valid_push(J.at(n)); //gets all the directions a diamond can be PUSHED
+        if(direction == DIRECTION_PUSH){
+            ans = copy.valid_push(J.at(n)); //gets all the directions a diamond can be PUSHED
+        } else {
+            ans = copy.valid_pull(J.at(n)); //gets all the directions a diamond can be PULLED
+        }
         if(ans){
             new_man = J.at(n); //New position for the man is where the diamond was
             if(ans & east){
-                J.at(n) = N->diamonds.at(n) + right;
-                next = new node(new_man,J,par);
-//                N->add_path(next);
-                J.at(n) = N->diamonds.at(n);
+                J.at(n) = N->diamonds.at(n) + right; //move diamond
+                next = new node(new_man,J,par);      //create node
+                next->general_pos = copy.find_general_position();
+                J.at(n) = N->diamonds.at(n);         //reset diamond
                 neighbohrs.push(next);
             }
             if(ans & west){
                 J.at(n) = N->diamonds.at(n) + left;
                 next = new node(new_man,J,par);
-//                N->add_path(next);
+                next->general_pos = copy.find_general_position();
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
             if(ans & north){
                 J.at(n) = N->diamonds.at(n) + above;
                 next = new node(new_man,J,par);
-//                N->add_path(next);
+                next->general_pos = copy.find_general_position();
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
             if(ans & south){
                 J.at(n) = N->diamonds.at(n) + below;
                 next = new node(new_man,J,par);
-//                N->add_path(next);
+                next->general_pos = copy.find_general_position();
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
@@ -113,13 +134,17 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy){
     return neighbohrs;
 }
 
-node* Map::bff_search(node *start, Map &copy_map){
-    std::queue<node*> search_list;         //list of current search nodes.
-    std::queue<node*> neighbohrs;          //result fra add_all_possible...
-    std::queue<node*> neighbohrs_neighbohrs;        //2nd list of search nodes.
-    search_list.push(start);           //set first target
+node* Map::bff_search(Map &copy_map){
+    std::queue<node*> search_list;                      //list of current search nodes.
+    std::queue<node*> neighbohrs;                       //result fra add_all_possible...
+    std::queue<node*> neighbohrs_neighbohrs;            //2nd list of search nodes.
+    node start(man,diamond_pos);
+    wave(copy_map,man,diamond_pos);
+    start.general_pos = copy_map.find_general_position();
+    search_list.push(&start);                            //set first target
     std::unordered_map<std::string,node*> closed_set;
     std::unordered_map<std::string,node*>::const_iterator hash_ptr;
+    closed_set.emplace(to_string(start.diamonds,start.general_pos),&start);
     char runs = 0;
     bool search_complete = false;
     node *current_node;
@@ -134,26 +159,24 @@ node* Map::bff_search(node *start, Map &copy_map){
             while( !neighbohrs.empty() ) {                       //append these nodes to the list.
                 current_node = neighbohrs.front();
                 neighbohrs.pop();
-                hash_ptr = closed_set.find(to_string(current_node->diamonds));
+                hash_ptr = closed_set.find(to_string(current_node->diamonds,current_node->general_pos)); //check is visited;
                 if( hash_ptr == closed_set.end() ) {//current_node does not exist in map
                     neighbohrs_neighbohrs.push( current_node );
-                    closed_set.emplace(to_string(current_node->diamonds),current_node);
+                    closed_set.emplace(to_string(current_node->diamonds,current_node->general_pos),current_node);
                     if(game_complete(current_node)){
-                        std::cout << (int) runs << " found the goal\n";
-    //                    for(auto n : current_node->diamonds){
-    //                        std::cout << n;
-    //                    } std::cout << "\n";
+                        std::cout << (int) runs << " found the goal. Size: " << neighbohrs_neighbohrs.size() << "\n";
                         return current_node; //goal node;
                     }
+                } else {
+                    delete current_node;
                 }
             }
         }
         search_list = neighbohrs_neighbohrs; //append to search list
-        std::cout << "runs: " << (int) runs << " size: " << search_list.size() << "\n";
+        std::cout << "runs: " << (int) runs << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n";
         while(!neighbohrs_neighbohrs.empty()){ //clear the queue
             neighbohrs_neighbohrs.pop();
         }
     }
     return nullptr;
 }
-
