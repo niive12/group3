@@ -9,22 +9,21 @@ public:
     //and the diamonds is stored as a string, saving 23 bytes.
     //in total going from 47 -> 24 bytes
     node *parent = nullptr;      //8 bytes
-    char direction;              //1 byte
+    unsigned short path_length;  //2 byte
     pos_t man;                   //2 bytes
     pos_t general_pos;           //2 bytes
     std::vector<pos_t> diamonds; //24 + 2*n (34 in this example)
-//    std::string diamonds;        //1+2*n //stored as index in the hash_table
 
     node(const pos_t &man, const std::vector<pos_t> &diamonds_pos, node *par=nullptr);
     node& operator=( const node& other ) {
         parent = other.parent;
-//        direction = other.direction;
+        path_length = other.path_length;
         diamonds = other.diamonds;
         man = other.man;
         return *this;
     }
+    bool operator<(const node& rhs) const
+    {
+        return path_length > rhs.path_length;
+    }
 };
-
-//std::string to_string(const std::vector<pos_t> &J, pos_t general_position);
-std::string to_string(const std::vector<pos_t> &J); //naiive
-std::vector<pos_t> to_vector(std::string diamonds);

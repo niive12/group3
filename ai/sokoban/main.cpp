@@ -16,6 +16,6 @@ int main()
     node *goal;
 //    std::vector<pos_t> kaj;
     goal = map.bff_search(copy);
-//    map.print_path(copy,goal);
+    map.print_path(copy,goal);
     return 0;
 }

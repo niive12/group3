@@ -80,7 +80,7 @@ std::string Map::calculate_path(Map &wave_map, node *N){
     unsigned char current_distance = max_distance + 1;
     pos_t test_pos;
     pos_t next_move;
-    std::string ans;
+    std::string ans = "AAA";
     while( !(current_pos == target_position) ){
         for(int x = -1; x <= 1; ++x){
             for(int y = -1; y <= 1; ++y){
@@ -123,6 +123,7 @@ void Map::print_path(Map &wave_map, node* path, bool first){
     if ( path->parent != nullptr ){
         print_path(wave_map, path->parent,false);
         std::cout << calculate_path(wave_map,path) << std::flush;
+//        std::cout << path->path_length << " " << path->parent->path_length << std::endl;
         if(first)
             std::cout << "\n";
     }
