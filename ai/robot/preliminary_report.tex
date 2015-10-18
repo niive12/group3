@@ -10,10 +10,10 @@
 \maketitle
 
 \section{Behaviours}
-The AI paradigm used for this robot is a behaviour based control system.
-It will be a reactionary control system, meaning that the robot should consist of small  simple components that react on an input rather than interpreting the world.
-This is a good strategy because it allows for a lot of simple components to be tested individually and then brought together.
-This means that the status of the robot is always known and the focus can be on the missing components rather than iterate over the same problems.
+% The AI paradigm used for this robot is a behaviour based control system.
+The control system of the robot will is a reactionary control system, meaning that the robot should consist of small  simple components that react on an input rather than interpreting the world.
+This is a good strategy because it allows for a lot of simple components to be tested individually and then have them brought together.
+This means that the status of the robot is always known as a component is considered finished when it is working on its own.
 
 The behaviours are split into two parts.
 The first part is the robot moves. 
@@ -33,11 +33,9 @@ In order to be able to follow a line, light sensors must be added to the robot.
 Given two identical sensors, mounted at the front of the robot, with a minimal distance, the difference, or error, is expected to be zero.
 If the robot orients in a way that makes one sensor cover more of the line than the other, the error will increase.
 To keep the robot at the line a PID controller is implemented.
-Given the error of the two light sensors, the motor speed will change proportional (P) to the error.
-The error term will be incremented over time to get the integral (I) and the change in error will give the derivative (D).
+The error term is calculated from the values of the two light sensors.
 This ensures a stable line following robot, given the P,I and D coefficients are sane values.
-
-In order to turn the robot, the same sensors can be used, turning the robot until the line is found.
+In order to turn the robot, the same sensors is be used, turning the robot until the line is found.
 
 \section{Speed and Reliability}
 The speed and reliability is determined by the PID coefficients, the default move speed and the number of moves.
