@@ -1,5 +1,7 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage{todonotes}
+\usepackage{caption}
 
 %opening
 \title{AI Robot - preliminary report}
@@ -22,6 +24,25 @@ The robot should be able to follow a line, the robot should be able to turn and 
 These are all typical reactionary modules as the robot reads on sensor values and directly outputs to the motors.
 Calling a move forward function will result in the robot moves forward until it meets an intersection, thus knowing that the robot has moved forward one field.
 
+\begin{table}[h!]
+\centering
+ \begin{tabular}{|l|}
+  \hline
+  Move set: \\
+  \hline
+   Turn left 90$^{\circ}$ \\
+   Turn right 90$^{\circ}$\\
+   Follow line forwards\\
+   Follow line backwards\\
+   Detect intersection \\
+   \hline
+ \end{tabular}
+\caption{Moveset of the robot}
+\label{tab:movset}
+\end{table}
+
+The moveset seen in Table \ref{tab:movset} are combined in order to make the functions needed for the robot to manoeuvre the map.
+
 The second part is the compass function.
 Since the solution to a Sokoban map is a series of moves done from the players perspective, the robot should be able to navigate the map.
 The compass function governs the robot moves.
@@ -34,8 +55,7 @@ Given two identical sensors, mounted at the front of the robot, with a minimal d
 If the robot orients in a way that makes one sensor cover more of the line than the other, the error will increase.
 To keep the robot at the line a PID controller is implemented.
 The error term is calculated from the values of the two light sensors.
-This ensures a stable line following robot, given the P,I and D coefficients are sane values.
-In order to turn the robot, the same sensors is be used, turning the robot until the line is found.
+This ensures a stable line following robot, given the P,I and D coefficients are reasonable values.
 
 \section{Speed and Reliability}
 The speed and reliability is determined by the PID coefficients, the default move speed and the number of moves.
@@ -55,4 +75,6 @@ The robots performance should be measured on the timing of the individual robot 
 The stability should be measured by trying combinations of robot moves that proves to be extra challenging.
 Every robot move should be optimized in a way that allows for the fastest execution as a single robot move as well as allows for quickest recovery so a series of moves will not slow down the robot.
 
+\todo[inline]{Måske en test der omhandler hvor ofte robotten sætter en dåse præcist ovenpå et kryds, og ikke skubber den for langt/stopper for tidligt}
+\todo[inline,author=Nikolaj,color=blue!20]{Sensorne er monteret 8 mm hvor dåsen vil være placeret. Den detekterer et kryds ved starten af en streg, så placeringen vil aldrig være langt fra center af krydset}
 \end{document}
