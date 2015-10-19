@@ -1,4 +1,5 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[journal,10pt]{IEEEtran} % 1 page
+% \documentclass[12pt,a4paper]{article} % 2.3 pages
 \usepackage[utf8]{inputenc}
 \usepackage{todonotes}
 \usepackage{caption}
@@ -10,6 +11,18 @@
 \begin{document}
 
 \maketitle
+
+\begin{abstract}
+In this paper a short description of the design choices of the Sokoban robot are defined and explained.
+The robot is built using a lego mindstorm kit and the diamonds the robot has to push in the Sokoban game are tomato cans.
+The Sokoban solver is not a part of the robot and the robot will receive a text file with a string of moves from the perspective of the player of the Sokoban game.
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+Sokoban, Lego robot, Design Choices.
+\end{IEEEkeywords}
+
 
 \section{Behaviours}
 % The AI paradigm used for this robot is a behaviour based control system.
@@ -56,7 +69,13 @@ If the robot orients in a way that makes one sensor cover more of the line than 
 To keep the robot at the line a PID controller is implemented.
 The error term is calculated from the values of the two light sensors.
 This ensures a stable line following robot, given the P,I and D coefficients are reasonable values.
+The prototype of the robot can be seen in figure \ref{fig:robot}.
 
+\begin{figure}
+\centering
+ \includegraphics[width=0.34\textwidth]{robot}
+ \caption{The Robot prototype}\label{fig:robot}
+\end{figure}
 \section{Speed and Reliability}
 The speed and reliability is determined by the PID coefficients, the default move speed and the number of moves.
 An increase of speed will make the system more unstable, risking the robot looses track of the line.
@@ -75,6 +94,7 @@ The robots performance should be measured on the timing of the individual robot 
 The stability should be measured by trying combinations of robot moves that proves to be extra challenging.
 Every robot move should be optimized in a way that allows for the fastest execution as a single robot move as well as allows for quickest recovery so a series of moves will not slow down the robot.
 
-\todo[inline]{Måske en test der omhandler hvor ofte robotten sætter en dåse præcist ovenpå et kryds, og ikke skubber den for langt/stopper for tidligt}
-\todo[inline,author=Nikolaj,color=blue!20]{Sensorne er monteret 8 mm hvor dåsen vil være placeret. Den detekterer et kryds ved starten af en streg, så placeringen vil aldrig være langt fra center af krydset}
+
+% \todo[inline]{Måske en test der omhandler hvor ofte robotten sætter en dåse præcist ovenpå et kryds, og ikke skubber den for langt/stopper for tidligt}
+% \todo[inline,author=Nikolaj,color=blue!20]{Sensorne er monteret 8 mm hvor dåsen vil være placeret. Den detekterer et kryds ved starten af en streg, så placeringen vil aldrig være langt fra center af krydset}
 \end{document}

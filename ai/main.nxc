@@ -1,6 +1,8 @@
 //sort = 35-45
 //hvid = 55-65
 
+#define THRESHOLD 45
+
 #define MOT_R       OUT_B  //B
 #define MOT_L       OUT_A  //A
 #define MOTOR       OUT_AB //C
@@ -19,11 +21,11 @@ task main(){
   
   follow_line(50);   Wait(1000);
   turn_left();       Wait(1000);
-  follow_line(50);   Wait(1000);
+//   follow_line(50);   Wait(1000);
   turn_right();      Wait(1000);
-  follow_line(50);   Wait(1000);
+//   follow_line(50);   Wait(1000);
   turn_right();      Wait(1000);
-  follow_line(-50);  Wait(5000);
+//   follow_line(-50);  Wait(5000);
   
 }
 
@@ -56,8 +58,8 @@ void follow_line(char basespeed = 50){
 	TextOut(1,1,  NumToStr(Sensor(LEFT)));
 	TextOut(85,1, NumToStr(Sensor(RIGHT)));
 	
-	if( Sensor(LEFT)   < 2 &&
-	  Sensor(RIGHT)  < 2
+	if( (Sensor(LEFT)  < THRESHOLD) &&
+	    (Sensor(RIGHT) < THRESHOLD)
 	){
 	  Off(MOTOR);
 	  TextOut(40,24,  "KRYDS");
@@ -82,7 +84,7 @@ void follow_line(char basespeed = 50){
 	  D = left_error - left_previous_error;
 	  left_previous_error = left_error;
 	  correction = P * kP + I * kI + D * kD;
-	  correction *= sign(left_speed); // Når man kører baglænds skal fortegnet for correction vel vendes op? 
+	  correction *= sign(left_speed); // Når man kører baglæns skal fortegnet for correction vel vendes op? 
 	  
 	  //roundoff to avoid mayhem
 	  if(correction > 25 ){
