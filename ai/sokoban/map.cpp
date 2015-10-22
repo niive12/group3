@@ -203,3 +203,11 @@ unsigned char Map::get(const pos_t &pos){
     return OBSTACLE;
 }
 
+std::string Map::to_string(const std::vector<pos_t> &J,pos_t &general_position){
+    std::string final_string;
+    final_string += general_position.x + (general_position.y * width);
+    for(auto n : J){
+        final_string += n.x + (n.y * width);
+    }
+    return final_string;
+}
