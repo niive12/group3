@@ -97,7 +97,7 @@ begin
 	wait for 1 us;
 	data_in <= "11001";
 	data_in_ready <= '1';
-	wait for 10 ns;
+	wait for 30 ns;
 	data_in_ready <= '0';
 	wait for 7*280ns;
 	MISO <= '1';
