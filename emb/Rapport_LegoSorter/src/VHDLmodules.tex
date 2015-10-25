@@ -1,0 +1,113 @@
+\section{VHDL modules}
+The VHDL code has been split up into a few smaller modules in order to heighten the level of abstraction, and to make it possible to reuse the code in other projects. The modules are as following; A top module that connects the different components, a module for serial communication with the ADC, a driver for the LED's, a PWM generator for the servo and a serial communicator to the PC using $\mu$TosNet.
+\subsection{Top Module}
+This module is only there in order to take the different components and put them together in order to make the application. This is done using components and port maps. A block diagram of the components used and how the internal signals are structured can be seen in figure \ref{fig::block_dia}.
+\begin{figure}[h]
+\centering
+ \begin{tikzpicture}[node distance=4 cm]
+ 
+ \node[module,minimum height= 5 cm,name=top] {TOP};
+ \node[module,name=tosnet,right of = top] {$\mu$TosNet};
+ \node[module,name=spi, above of = tosnet] {SPI};  
+ \node[module,name=led_control, right of = spi] {LED\_driver};
+ \node[module,name=motor,right of = tosnet] {Motor\_Control};
+ \node[rectangle,minimum width = 2 cm, minimum height = 5 cm,name=empty, left of = top] {};
+                      
+ \draw[<-] (top.100) |- node[anchor=south]{\scriptsize MOSI}  (spi.150);
+ \draw[->] (top.95)  |- node[anchor=south,xshift=0.5cm]{\scriptsize MISO} (spi.170);
+ \draw[<-] (top.90)  |- node[anchor=south,xshift=1cm]{\scriptsize SCLK} (spi.190);
+ \draw[<-] (top.85)  |- node[anchor=south,xshift=1 cm]{\scriptsize CS}   (spi.210);
+
+ \draw[vecArrow] (top.122) to node[anchor=south]{\scriptsize LED[2:0]}  (empty.58);
+ \draw[->] (top.135) to node[anchor=south]{\scriptsize pwm\_out}  (empty.45);
+ \draw[->] (top.150) to node[anchor=south]{\scriptsize MOSI}  (empty.30);
+ \draw[<-] (top.170) to node[anchor=south]{\scriptsize MISO} (empty.10);
+ \draw[->] (top.190) to node[anchor=south]{\scriptsize SCLK} (empty.350);
+ \draw[->] (top.210) to node[anchor=south]{\scriptsize CS}   (empty.330);
+ \draw[->] (top.225) to node[anchor=south]{\scriptsize Serial Out}   (empty.315);
+ \draw[<-] (top.235) to node[anchor=south]{\scriptsize Serial In}   (empty.305);
+ 
+ \draw[vecArrow] (spi.40) to node[anchor=south]{\scriptsize Data\_out[9:0]} (led_control.140);
+ \draw[vecArrow] (led_control.165) to node[anchor=south]{\scriptsize Data\_in[4:0]} (spi.15);
+ \draw[<-] (spi.345) to node[anchor=south]{\scriptsize Data\_in\_ready} (led_control.195);
+ \draw[->] (spi.325) to node[anchor=south]{\scriptsize Data\_out\_ready} (led_control.215);
+ 
+ \draw[vecArrow] (led_control) to node[anchor=west]{\scriptsize Color[3:0]} (motor); 
+ \draw[->] (tosnet.200) to node[anchor = south]{\scriptsize Serial Out} (top.340);
+ \draw[->] (top.east) to node[anchor = south] {\scriptsize Serial in} (tosnet.west);
+ \draw[->] (motor) |- node[anchor = south,xshift=-2 cm]{pwm\_out} (top.300);
+ 
+ \draw[vecArrow] (spi) to node[anchor=east]{\scriptsize Data\_out[9:0]} (tosnet);
+ \draw[vecArrow] (tosnet.east) to ++(1,0) to ++(0,1.5) -| node[anchor=south,xshift=-1.2cm]{\scriptsize Threshold[29:0]} (led_control.240);
+ 
+ \end{tikzpicture}
+ \caption{Block diagram of the system}
+ \label{fig::block_dia}
+\end{figure}
+
+
+\subsection{LED\_driver}
+This module is the brain of the project. This is where it is decided which LED should be on at the given moment, it takes the samples from the ADC, it analyzes the results of the ADC and decides which color the brick is.
+
+\subsubsection{Implementation}
+In order to make this work a state machine is implemented. A state diagram can be seen figure \ref{fig::state_led}. It starts in in idle state. In this state the red LED is turned on, and a sample from the ADC is done. If this value is bigger than a specific threshold, which mean that a brick is present at the photo diode. The state is then changed and the different LED's are flashed one at a time, and the value of the photo diode is read from the ADC. Instead of just taking one sample of each color, it was chosen to take a number of samples and take the mean in order to ensure that the choice is more reliable. In order to make the mean calculation easier, the number of samples should be a power of 2, since division with a power of 2 is just right shifting the number of times of the power, so 4 samples = 2 $\times$ rightshift. This is what is happening in the Decider state in figure \ref{fig::state_led}, note sample\_count is a counter that counts run-throughs, and not individual colors. When the decider detects a color, i.e the ADC value is bigger than a specified threshold, a bit is set in a signal corresponding to the given color. The thresholds of the colors can be set from the computer through $\mu$TosNet. 
+
+\begin{figure}[h]
+\centering
+ \begin{tikzpicture}[node distance=2.5cm]
+ 
+ \node[circle,minimum width = 7 cm,name = c]{};
+ \node[accepting,state,	name=state0, minimum width = 1.3 cm] at (c.90) {Idle}; 
+ \node[square,name=start,above of = state0,yshift=-1.2 cm] {Start};
+ \node[state,name=stateR, minimum width = 1.3 cm] at (c.18)   {Red};
+ \node[state,name=stateG, minimum width = 1.3 cm] at (c.-54)   {Green};
+ \node[state,name=stateB, minimum width = 1.3 cm] at (c.234)   {Blue};
+ \node[state,name=decide, minimum width = 1.3 cm] at (c.162)   {Decider};
+ 
+ \draw[->] (state0)   to[bend left]   node[midway,above,xshift=0.9cm,yshift=-0.5cm] {ADC data $>$ threshold}  (stateR)   ;
+ \draw[->] (stateR)   to[bend left]   node[midway,above] {sample\_done}  (stateG);
+ \draw[->] (stateG)   to[bend left]   node[midway,above] {sample\_done}  (stateB);
+ \draw[->] (stateB)   to[bend left]   node[midway,above] {sample\_done}  (decide);
+ \draw[->] (decide)   to[bend left]   node[midway,above,yshift=-0.8cm] {sample\_count $=$ 4}  (state0);
+ \draw[->] (decide)   to	      node[midway,above] {sample\_count $!=$ 4}  (stateR);
+ \draw[->] (start) to (state0);
+ 
+ \end{tikzpicture}
+ \caption{State machine of \textbf{LED\_driver}}
+ \label{fig::state_led}
+\end{figure}
+
+
+\subsection{SPI}
+The analog to digital converter (ADC) supplied by the supervisor uses a SPI protocol as it's form of communication, so a module in the FPGA needs to be set up.
+
+\subsubsection{Protocol}
+The FPGA will serve as the master and the ADC as the slave. In the VHDL module a clock is generated in order for the slave to have a signal on which to send data out, making the communication synchronous. The communication is full-duplex, and the master puts data out on it's wire (MOSI) before the falling edge of the serial clock, in order for the ADC to read it, which is done on the falling edge. The reverse is happening on the slave. It puts data out on it's wire (MISO) before the rising edge of the serial clock for the master to read on rising edge. The ADC does not sample continuously, but it has to be requested data. A request can be seen in figure \ref{time_spi_sample}. What is happening is that the master putting chip select (CS) low, and it sends a command to the ADC. The content of the command is a start bit, a configuration bit, which tells the ADC if it is running single or differential mode and 3 bits to select the channel. After this the status of the MOSI is \textit{don't care}. In order for the ADC to make the sample and hold, it needs the time of one clock cycle in order for the internal capacitor to charge, so after the last bit of the channel one clock cycle, nothing happens. After this cycle the data is clocked out. When the master has received 10 bits of data, CS is taken high and the clock is shut off.
+
+\begin{figure}[h]
+ \centering
+ \begin{tikztimingtable}
+  CLK	& H35{T}H\\
+  CS	& H35{L}H\\
+  MOSI	& LL2D{S}2D{S/D}6D{CH}25{U}\\
+  MISO	& 14{Z}22D{ADC DATA}Z\\
+ \end{tikztimingtable}
+\caption{Timing diagram of taking one sample}
+\label{time_spi_sample}
+\end{figure}
+
+\subsubsection{Implementation}
+Given the datasheet \footnote{Add reference to datasheet} the maximum clock frequency of the SPI clock is $3.6$ MHz which gives a period time of 277 ns, but since this is not possible to obtain due to the system clock period being 20 ns. Taking the nearest number that to 277 that divides evenly with 20, 280, a clock frequency of $3.571$ MHz, which should be more than sufficient. Therefore a clock is generated with this period time in this VHDL module and put out on an output pin.
+
+In order to keep the abstraction level, that this module is only for communication, it is the \textbf{LED\_driver} module that tells the \textbf{spi\_module} to initiate a sample. When a sample is received the data is just passed on to the LED\_driver, and a flag is set in order to tell the driver that new data has arrived.
+
+\subsection{MotorControl}
+In order to make the sorting happen, a servo motor with a plastic rod mounted to it is used. The colors that the \textbf{LED\_driver} has detected is fed in to the module, one wire for each color. The motor controller then decides which way the rod should point. If there are more than one color wire that is high, the rod is placed in the middle. 
+
+The servo motor is controlled by a pulse width modulated (PWM) signal. The standard for RC-servo motors\footnote{Add reference to Electronics book}, one of which was provided for this project, a pulse width of 1 ms to be on the left extreme and 2 ms for the right extreme, with a PWM period of 20 ms. Since it is not needed to go to the extremes, some new width values has to be put in. It was found out that these values should be 1.35 ms to make the bricks slide right and 1.65 ms to make them slide left.
+
+\subsection{$\mu$TosNet}
+When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometime very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a nice feature. This is where $\mu$TosNet come in to the picture. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
+
+\subsubsection{Usage}
+Since the light intensity in a room i almost never constant, it could be nice to be able to change the thresholds of the different colors from the computer, to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 

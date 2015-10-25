@@ -1,0 +1,54 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{todonotes}
+
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{tikz-timing}
+
+\usepackage{pgf}
+\usetikzlibrary{arrows,automata}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes.geometric}
+
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows, decorations.markings}
+\usetikzlibrary{automata} %state machine stuff
+\usetikzlibrary{positioning} %midway
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position
+   1 with {\arrow[semithick]{open triangle 60}}},
+   double distance=1.4pt, shorten >= 5.5pt,
+   preaction = {decorate},
+   postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+\tikzstyle{module} = [rectangle, minimum width = 2 cm,minimum height = 2 cm, draw]
+
+%opening
+\title{Brick sorter}
+\author{Nikolaj Iversen, Matthias Harald Hessels}
+
+\begin{document}
+
+\maketitle
+\vspace{2 cm}
+\begin{figure*}[h]
+\centering
+\includegraphics{img/sdu.jpg}
+\end{figure*}
+\thispagestyle{empty}
+\addtocounter{page}{-1}
+\newpage 
+
+\tableofcontents
+\thispagestyle{empty}
+\addtocounter{page}{-1}
+\newpage
+
+\input{./src/Circuits.tex}
+\newpage
+
+\input{./src/VHDLmodules.tex}
+
+\end{document}
