@@ -86,6 +86,7 @@ _xmsgs/
 # Latex
 *.dvi
 *.aux
+*.out
 *.backup
 *.log
 *.toc

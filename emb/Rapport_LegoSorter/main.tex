@@ -1,10 +1,23 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{todonotes}
-
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{wrapfig,booktabs}
 \usepackage{tikz}
 \usepackage{circuitikz}
 \usepackage{tikz-timing}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
 \usepackage{pgf}
 \usetikzlibrary{arrows,automata}
@@ -50,5 +63,8 @@
 \newpage
 
 \input{./src/VHDLmodules.tex}
+
+\newpage
+\input{src/tests.tex}
 
 \end{document}

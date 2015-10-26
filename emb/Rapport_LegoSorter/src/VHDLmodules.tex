@@ -1,4 +1,4 @@
-\section{VHDL modules}
+\section{VHDL}
 The VHDL code has been split up into a few smaller modules in order to heighten the level of abstraction, and to make it possible to reuse the code in other projects. The modules are as following; A top module that connects the different components, a module for serial communication with the ADC, a driver for the LED's, a PWM generator for the servo and a serial communicator to the PC using $\mu$TosNet.
 \subsection{Top Module}
 This module is only there in order to take the different components and put them together in order to make the application. This is done using components and port maps. A block diagram of the components used and how the internal signals are structured can be seen in figure \ref{fig::block_dia}.
