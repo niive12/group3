@@ -70,7 +70,6 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \end{figure}
 
 \nikolaj{Opdater figur, align tekst, ret D3 til 1N5817}
-\matthias{Uddyb dette afsnit hvis nødvendigt med mere teori omkring regulatorer}
 
 \subsubsection{Heat}
 One of the problems when designing the circuit, is that the linear regulators.
@@ -118,3 +117,24 @@ In this section these modules will be described.
 In order to get maximum brightness, high power diodes are used.
 A diode in red, green and blue is used in order to detect different color LEGO blocks.
 NTD5867NL mosfet was used to turn the diodes on and off.
+
+The Forward voltage on the red is 1.9 V and 3.2 V for the green and blue LED.
+\footnote{led\_datasheet, p5}
+The current is chosen at $50 mA$, based on the recommended range for 100\% duty cycle.
+\footnote{led\_application\_notes, p2}
+\begin{eqnarray}
+ R_{red} =& \frac{12-1.9}{0.05} =& 202 \Omega\\
+ R_{green} = R_{blue} =& \frac{12-3.2}{0.05} =& 176 \Omega
+\end{eqnarray}
+The green and blue LEDS are only turned on for a short amount of time so $R_{green}$ and $R_{blue}$ is rounded down to $160 \Omega$.
+The $R_{red}$ is rounded down to $200\Omega$.
+The schematic can be seen in figure \ref{fig:sch_led}.
+
+\begin{figure}[h]
+\centering
+%  \includegraphics[scale =0.8, trim={0,0,0,0},clip]{img/sch_led}
+  \caption{Schematic for LEDS.}
+  \label{fig:sch_led}
+\end{figure}
+
+
