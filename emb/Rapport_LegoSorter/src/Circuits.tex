@@ -22,7 +22,7 @@ According to the datasheet, the typical efficiency is 77\%.
 The specified tolerance is 4\% which means the tolerance is worse than required. Further testing is required to see if the configuration is good enough for the application.
 \footnote{LM2574N datasheet, p1}
 The schematic was designed following the typical application guidelines in the datasheet.
-The diode was selected as 1N5819. 
+The diode was selected as 1N5817. 
 \footnote{LM2574N datasheet, p17}
 The $C_{out}$ capacitor was chosen to be $330\mu f$ to minimize ripple voltage.
 \footnote{LM2574N datasheet, p19}
@@ -69,7 +69,7 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \label{fig::sch_power}
 \end{figure}
 
-\nikolaj{Opdater figur, align tekst, ret D3 til 1N5819}
+\nikolaj{Opdater figur, align tekst, ret D3 til 1N5817}
 \matthias{Uddyb dette afsnit hvis nødvendigt med mere teori omkring regulatorer}
 
 \subsubsection{Heat}
@@ -107,5 +107,14 @@ The pcb can be seen in figure \ref{fig::pcb_power}
 \caption{PCB design of the power supply made in Eagle} 
 \label{fig::pcb_power}
 \end{figure}
-
 \nikolaj{Update figure}
+
+\subsection{Color detection}
+In order to detect colors a block gets shined upon with different colored LEDS.
+A photo diode will give a voltage linear to the absorbed light.
+This voltage will be converted to a digital signal the PFGA can work with.
+In this section these modules will be described.
+\subsubsection{High Power Diodes}
+In order to get maximum brightness, high power diodes are used.
+A diode in red, green and blue is used in order to detect different color LEGO blocks.
+NTD5867NL mosfet was used to turn the diodes on and off.
