@@ -11,6 +11,7 @@
 \usepackage{tikz-timing}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{subcaption}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -41,6 +42,18 @@
 %opening
 \title{Brick sorter}
 \author{Nikolaj Iversen, Matthias Harald Hessels}
+
+
+%Todo notes
+\usepackage{nameref}
+\makeatletter
+\newcommand*{\currentname}{\@currentlabelname}
+\makeatother
+
+\newcommand{\nikolaj}[1]{\todo[inline,color=red!20,author=Nikolaj]{\currentname: ~ #1}}
+\newcommand{\matthias}[1]{\todo[inline,color=blue!20,author=Matthias]{\currentname: ~ #1}}
+
+
 
 \begin{document}
 
