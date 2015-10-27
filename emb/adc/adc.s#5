@@ -5434,18 +5434,6 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <busses>
 </busses>
 <nets>
-<net name="VCC" class="0">
-<segment>
-<pinref part="IC2" gate="G$1" pin="GND"/>
-<wire x1="114.3" y1="48.26" x2="109.22" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="P+32" gate="VCC" pin="VCC"/>
-</segment>
-<segment>
-<pinref part="IC1" gate="P" pin="V-"/>
-<pinref part="P+2" gate="VCC" pin="VCC"/>
-<wire x1="53.34" y1="55.88" x2="53.34" y2="58.42" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$7" class="0">
 <segment>
 <wire x1="60.96" y1="66.04" x2="66.04" y2="66.04" width="0.1524" layer="91"/>
@@ -5597,6 +5585,24 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <pinref part="R3" gate="G$1" pin="2"/>
 <wire x1="106.68" y1="96.52" x2="106.68" y2="93.98" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="IC1" gate="P" pin="V-"/>
+<pinref part="P+2" gate="VCC" pin="VCC"/>
+<wire x1="53.34" y1="55.88" x2="53.34" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="60.96" x2="35.56" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="D1" gate="1" pin="A"/>
+<wire x1="35.56" y1="60.96" x2="35.56" y2="63.5" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="A" pin="-IN"/>
+<wire x1="45.72" y1="63.5" x2="43.18" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="63.5" x2="43.18" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="60.96" x2="35.56" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="58.42" x2="53.34" y2="58.42" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="IC2" gate="G$1" pin="GND"/>
+<wire x1="114.3" y1="48.26" x2="109.22" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="P+32" gate="VCC" pin="VCC"/>
+</segment>
 </net>
 <net name="CLK" class="0">
 <segment>
@@ -5716,16 +5722,6 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <wire x1="45.72" y1="68.58" x2="43.18" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="68.58" x2="43.18" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="71.12" x2="35.56" y2="71.12" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$3" class="0">
-<segment>
-<wire x1="43.18" y1="60.96" x2="35.56" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="D1" gate="1" pin="A"/>
-<wire x1="35.56" y1="60.96" x2="35.56" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="A" pin="-IN"/>
-<wire x1="45.72" y1="63.5" x2="43.18" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="43.18" y1="63.5" x2="43.18" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="5V" class="0">

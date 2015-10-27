@@ -5122,6 +5122,23 @@ Source: http://ecommas.tycoelectronics.com .. ENG_CD_640456_W.pdf</description>
 <rectangle x1="8.636" y1="-0.254" x2="9.144" y2="0.254" layer="21"/>
 <rectangle x1="-9.144" y1="-0.254" x2="-8.636" y2="0.254" layer="21"/>
 </package>
+<package name="10X02MTA">
+<description>&lt;b&gt;AMP MTA connector&lt;/b&gt;&lt;p&gt;
+Source: http://ecommas.tycoelectronics.com .. ENG_CD_640456_W.pdf</description>
+<wire x1="-2.54" y1="-1.27" x2="-2.54" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="1.27" x2="-2.54" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-1.27" x2="2.54" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="1.27" x2="-2.54" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="1.905" x2="-2.54" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="1.905" x2="2.54" y2="1.27" width="0.1524" layer="21"/>
+<pad name="2" x="-1.27" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="1" x="1.27" y="0" drill="1.016" shape="long" rot="R90"/>
+<text x="-2.6162" y="-3.2512" size="1.27" layer="25">&gt;NAME</text>
+<text x="-2.5461" y="2.1509" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="1.016" y1="-0.254" x2="1.524" y2="0.254" layer="21"/>
+<rectangle x1="-1.524" y1="-0.254" x2="-1.016" y2="0.254" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="MTA-1_8">
@@ -5149,6 +5166,19 @@ Source: http://ecommas.tycoelectronics.com .. ENG_CD_640456_W.pdf</description>
 <pin name="7" x="7.62" y="-2.54" visible="off" length="short" direction="pas" rot="R90"/>
 <pin name="8" x="10.16" y="-2.54" visible="off" length="short" direction="pas" rot="R90"/>
 </symbol>
+<symbol name="MTA-1_2">
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-1.905" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-1.905" x2="3.81" y2="1.27" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="1.27" x2="3.81" y2="1.27" width="0.254" layer="94"/>
+<circle x="0" y="0" radius="0.635" width="0.254" layer="94"/>
+<circle x="2.54" y="0" radius="0.635" width="0.254" layer="94"/>
+<text x="5.08" y="0" size="1.778" layer="95">&gt;NAME</text>
+<text x="5.08" y="-3.81" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-2.54" y="-1.27" size="1.27" layer="95">1</text>
+<pin name="1" x="0" y="-2.54" visible="off" length="short" direction="pas" rot="R90"/>
+<pin name="2" x="2.54" y="-2.54" visible="off" length="short" direction="pas" rot="R90"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="MTA08-100" prefix="J" uservalue="yes">
@@ -5167,6 +5197,23 @@ Source: http://ecommas.tycoelectronics.com .. ENG_CD_640456_W.pdf</description>
 <connect gate="G$1" pin="6" pad="6"/>
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MTA02-100" prefix="J" uservalue="yes">
+<description>&lt;b&gt;AMP connector&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="MTA-1_2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="10X02MTA">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -5428,6 +5475,7 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <part name="R2" library="rcl" deviceset="R-US_" device="0207/10" value="7.5K"/>
 <part name="4.5V" library="supply1" deviceset="VCC" device="" value="4.5V"/>
 <part name="3.3V2" library="supply1" deviceset="VCC" device="" value="3.3V"/>
+<part name="J3" library="con-amp" deviceset="MTA02-100" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5437,6 +5485,8 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <text x="170.18" y="86.36" size="1.778" layer="91">3.2 - grøn og blå</text>
 <text x="170.18" y="83.82" size="1.778" layer="91">1.9 - rød</text>
 <text x="170.18" y="91.44" size="1.778" layer="91">forward voltage</text>
+<text x="22.86" y="43.18" size="1.778" layer="91">jumper between the two pins.
+Used to meassure current</text>
 </plain>
 <instances>
 <instance part="R1" gate="G$1" x="50.8" y="83.82" rot="R180"/>
@@ -5482,7 +5532,7 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <instance part="P+31" gate="VCC" x="86.36" y="-7.62" rot="R270"/>
 <instance part="P+32" gate="VCC" x="114.3" y="45.72" rot="R180"/>
 <instance part="P+33" gate="VCC" x="116.84" y="60.96" rot="R270"/>
-<instance part="IC1" gate="A" x="53.34" y="66.04"/>
+<instance part="IC1" gate="A" x="53.34" y="66.04" rot="MR180"/>
 <instance part="IC1" gate="P" x="53.34" y="66.04"/>
 <instance part="4.5V2" gate="VCC" x="53.34" y="78.74"/>
 <instance part="3.3V1" gate="VCC" x="121.92" y="91.44" rot="R270"/>
@@ -5493,19 +5543,20 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <instance part="R2" gate="G$1" x="106.68" y="106.68"/>
 <instance part="4.5V" gate="VCC" x="121.92" y="106.68" rot="R270"/>
 <instance part="3.3V2" gate="VCC" x="121.92" y="66.04" rot="R270"/>
+<instance part="J3" gate="G$1" x="25.4" y="55.88" rot="R90"/>
 </instances>
 <busses>
 </busses>
 <nets>
 <net name="N$7" class="0">
 <segment>
-<wire x1="60.96" y1="66.04" x2="66.04" y2="66.04" width="0.1524" layer="91"/>
 <pinref part="IC2" gate="G$1" pin="CH0"/>
-<pinref part="IC1" gate="A" pin="OUT"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="66.04" y1="66.04" x2="81.28" y2="66.04" width="0.1524" layer="91"/>
 <wire x1="55.88" y1="83.82" x2="66.04" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="66.04" y1="83.82" x2="66.04" y2="66.04" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="A" pin="OUT"/>
+<wire x1="60.96" y1="66.04" x2="66.04" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -5573,19 +5624,6 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <pinref part="P+33" gate="VCC" pin="VCC"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="P" pin="V-"/>
-<pinref part="P+2" gate="VCC" pin="VCC"/>
-<wire x1="53.34" y1="55.88" x2="53.34" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="43.18" y1="60.96" x2="35.56" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="D1" gate="1" pin="A"/>
-<wire x1="35.56" y1="60.96" x2="35.56" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="A" pin="-IN"/>
-<wire x1="45.72" y1="63.5" x2="43.18" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="43.18" y1="63.5" x2="43.18" y2="60.96" width="0.1524" layer="91"/>
-<wire x1="35.56" y1="60.96" x2="35.56" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="35.56" y1="58.42" x2="53.34" y2="58.42" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="IC2" gate="G$1" pin="GND"/>
 <wire x1="114.3" y1="48.26" x2="109.22" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="P+32" gate="VCC" pin="VCC"/>
@@ -5609,6 +5647,13 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <pinref part="R4" gate="G$1" pin="2"/>
 <pinref part="P+6" gate="VCC" pin="VCC"/>
 <wire x1="101.6" y1="91.44" x2="96.52" y2="91.44" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="IC1" gate="P" pin="V-"/>
+<pinref part="P+2" gate="VCC" pin="VCC"/>
+<pinref part="J3" gate="G$1" pin="1"/>
+<wire x1="27.94" y1="55.88" x2="53.34" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="55.88" x2="53.34" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="CLK" class="0">
@@ -5719,7 +5764,7 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <pinref part="R1" gate="G$1" pin="2"/>
 <wire x1="35.56" y1="71.12" x2="35.56" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="83.82" x2="45.72" y2="83.82" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="A" pin="+IN"/>
+<pinref part="IC1" gate="A" pin="-IN"/>
 <wire x1="45.72" y1="68.58" x2="43.18" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="68.58" x2="43.18" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="71.12" x2="35.56" y2="71.12" width="0.1524" layer="91"/>
@@ -5801,9 +5846,28 @@ Source: http://cache.national.com/ds/LM/LM158.pdf</description>
 <wire x1="53.34" y1="76.2" x2="53.34" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="N$99" class="0">
+<segment>
+<pinref part="D1" gate="1" pin="A"/>
+<wire x1="35.56" y1="63.5" x2="35.56" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="J3" gate="G$1" pin="2"/>
+<wire x1="35.56" y1="60.96" x2="35.56" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="58.42" x2="35.56" y2="58.42" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="A" pin="+IN"/>
+<wire x1="45.72" y1="63.5" x2="43.18" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="63.5" x2="43.18" y2="60.96" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="60.96" x2="35.56" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>
