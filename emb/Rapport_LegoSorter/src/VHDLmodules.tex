@@ -1,5 +1,6 @@
 \section{VHDL}
-The VHDL code has been split up into a few smaller modules in order to heighten the level of abstraction, and to make it possible to reuse the code in other projects. The modules are as following; A top module that connects the different components, a module for serial communication with the ADC, a driver for the LED's, a PWM generator for the servo and a serial communicator to the PC using $\mu$TosNet.
+The VHDL code has been split up into small modules in order to heighten the level of abstraction, and to make it possible to reuse the code in other projects. 
+The modules are as following; A top module that connects the different components, a module for serial communication with the ADC, a driver for the LED's, a PWM generator for the servo and a serial communicator to the PC using $\mu$TosNet.
 \subsection{Top Module}
 This module is only there in order to take the different components and put them together in order to make the application. This is done using components and port maps. A block diagram of the components used and how the internal signals are structured can be seen in figure \ref{fig::block_dia}.
 \begin{figure}[h]
@@ -50,27 +51,27 @@ This module is only there in order to take the different components and put them
 This module is the brain of the project. This is where it is decided which LED should be on at the given moment, it takes the samples from the ADC, it analyzes the results of the ADC and decides which color the brick is.
 
 \subsubsection{Implementation}
-In order to make this work a state machine is implemented. A state diagram can be seen figure \ref{fig::state_led}. It starts in in idle state. In this state the red LED is turned on, and a sample from the ADC is done. If this value is bigger than a specific threshold, which mean that a brick is present at the photo diode. The state is then changed and the different LED's are flashed one at a time, and the value of the photo diode is read from the ADC. Instead of just taking one sample of each color, it was chosen to take a number of samples and take the mean in order to ensure that the choice is more reliable. In order to make the mean calculation easier, the number of samples should be a power of 2, since division with a power of 2 is just right shifting the number of times of the power, so 4 samples = 2 $\times$ rightshift. This is what is happening in the Decider state in figure \ref{fig::state_led}, note sample\_count is a counter that counts run-throughs, and not individual colors. When the decider detects a color, i.e the ADC value is bigger than a specified threshold, a bit is set in a signal corresponding to the given color. The thresholds of the colors can be set from the computer through $\mu$TosNet. 
+In order to make this work a state machine is implemented. A state diagram can be seen figure \ref{fig::state_led}. It starts in in idle state. In this state the red LED is turned on, and a sample from the ADC is done. If this value is bigger than a specific threshold, which mean that a brick is present at the photo diode. The state is then changed and the different LED's are flashed one at a time, and the value of the photo diode is read from the ADC. Instead of just taking one sample of each color, it was chosen to take a number of samples and take the mean in order to ensure that the choice is more reliable. In order to make the mean calculation easier, the number of samples should be a power of 2, since division with a power of 2 is just right shifting the number of times of the power, so 4 samples = 2 $\times$ rightshift. This is what is happening in the Decider state in figure \ref{fig::state_led}, note sample\_count is a counter that counts run-throughs, and not individual colors. When the decider detects a color, i.e the ADC value is bigger than a specified threshold, a bit is set in a signal corresponding to the given color. The thresholds of the colors can be updated from the computer through $\mu$TosNet. 
 
 \begin{figure}[h]
 \centering
  \begin{tikzpicture}[node distance=2.5cm]
  
  \node[circle,minimum width = 7 cm,name = c]{};
- \node[accepting,state,	name=state0, minimum width = 1.3 cm] at (c.90) {Idle}; 
- \node[square,name=start,above of = state0,yshift=-1.2 cm] {Start};
- \node[state,name=stateR, minimum width = 1.3 cm] at (c.18)   {Red};
- \node[state,name=stateG, minimum width = 1.3 cm] at (c.-54)   {Green};
- \node[state,name=stateB, minimum width = 1.3 cm] at (c.234)   {Blue};
- \node[state,name=decide, minimum width = 1.3 cm] at (c.162)   {Decider};
+ \node[accepting,state,	name=state0, minimum width = 1.3 cm] at (c.90)    {Idle}; 
+ \node[square,name=start,above of = state0,yshift=-1.2 cm]                {Start};
+ \node[state,name=stateR, minimum width = 1.3 cm]            at (c.18)    {Red};
+ \node[state,name=stateG, minimum width = 1.3 cm]            at (c.-56)   {Green};
+ \node[state,name=stateB, minimum width = 1.3 cm]            at (c.234)   {Blue};
+ \node[state,name=decide, minimum width = 1.3 cm]            at (c.162)   {Decider};
  
- \draw[->] (state0)   to[bend left]   node[midway,above,xshift=0.9cm,yshift=-0.5cm] {ADC data $>$ threshold}  (stateR)   ;
- \draw[->] (stateR)   to[bend left]   node[midway,above] {sample\_done}  (stateG);
- \draw[->] (stateG)   to[bend left]   node[midway,above] {sample\_done}  (stateB);
- \draw[->] (stateB)   to[bend left]   node[midway,above] {sample\_done}  (decide);
- \draw[->] (decide)   to[bend left]   node[midway,above,yshift=-0.8cm] {sample\_count $=$ 4}  (state0);
- \draw[->] (decide)   to	      node[midway,above] {sample\_count $!=$ 4}  (stateR);
- \draw[->] (start) to (state0);
+ \draw[->] (state0)   edge[bend left=27] node[midway,above,fill=white,xshift=0.9cm,yshift=-0.5cm] {ADC data $>$ threshold}  (stateR);
+ \draw[->] (stateR)   edge[bend left=27] node[midway,fill=white]                                  {sample\_done}            (stateG);
+ \draw[->] (stateG)   edge[bend left=27] node[midway,below]                                       {sample\_done}            (stateB);
+ \draw[->] (stateB)   edge[bend left=27] node[midway,fill=white]                                  {sample\_done}            (decide);
+ \draw[->] (decide)   edge[bend left=27] node[midway,below,fill=white]                            {sample\_count $=$ 4}     (state0);
+ \draw[->] (decide)   to                 node[midway,above]                                       {sample\_count $!=$ 4}    (stateR);
+ \draw[->] (start)    to                                                                                                    (state0);
  
  \end{tikzpicture}
  \caption{State machine of \textbf{LED\_driver}}
@@ -97,17 +98,22 @@ The FPGA will serve as the master and the ADC as the slave. In the VHDL module a
 \end{figure}
 
 \subsubsection{Implementation}
-Given the datasheet \footnote{Add reference to datasheet} the maximum clock frequency of the SPI clock is $3.6$ MHz which gives a period time of 277 ns, but since this is not possible to obtain due to the system clock period being 20 ns. Taking the nearest number that to 277 that divides evenly with 20, 280, a clock frequency of $3.571$ MHz, which should be more than sufficient. Therefore a clock is generated with this period time in this VHDL module and put out on an output pin.
+Given the datasheet \footnote{Add reference to datasheet}
+\nikolaj{reference mangler side nummer}
+the maximum clock frequency of the SPI clock is $3.6$ MHz which gives a period time of 277 ns, but since this is not possible to obtain due to the system clock period being 20 ns. Taking the nearest number that to 277 that divides evenly with 20, 280, a clock frequency of $3.571$ MHz, which should be more than sufficient. Therefore a clock is generated with this period time in this VHDL module and put out on an output pin.
 
 In order to keep the abstraction level, that this module is only for communication, it is the \textbf{LED\_driver} module that tells the \textbf{spi\_module} to initiate a sample. When a sample is received the data is just passed on to the LED\_driver, and a flag is set in order to tell the driver that new data has arrived.
 
 \subsection{MotorControl}
-In order to make the sorting happen, a servo motor with a plastic rod mounted to it is used. The colors that the \textbf{LED\_driver} has detected is fed in to the module, one wire for each color. The motor controller then decides which way the rod should point. If there are more than one color wire that is high, the rod is placed in the middle. 
+In order to make the sorting happen, a servo motor with a mounted plastic rod is used. The colors that the \textbf{LED\_driver} has detected is fed in to the module, one wire for each color. The motor controller then decides which way the rod should point. If there are more than one color wire that is high, the rod is placed in the middle. 
 
 The servo motor is controlled by a pulse width modulated (PWM) signal. The standard for RC-servo motors\footnote{Add reference to Electronics book}, one of which was provided for this project, a pulse width of 1 ms to be on the left extreme and 2 ms for the right extreme, with a PWM period of 20 ms. Since it is not needed to go to the extremes, some new width values has to be put in. It was found out that these values should be 1.35 ms to make the bricks slide right and 1.65 ms to make them slide left.
 
 \subsection{$\mu$TosNet}
-When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometime very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a nice feature. This is where $\mu$TosNet come in to the picture. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
+When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometimes very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a nice feature. This is where $\mu$TosNet come in to the picture. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
 
 \subsubsection{Usage}
 Since the light intensity in a room i almost never constant, it could be nice to be able to change the thresholds of the different colors from the computer, to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
+\nikolaj{Er det ikke fordi det tager for lang tid at synthesize og flashe fpga'en hver gang man vil ændre en værdi?
+Ellers skal der testes om lys i rummet påvirker systemet.
+}
