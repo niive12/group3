@@ -73,12 +73,33 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \matthias{Uddyb dette afsnit hvis nødvendigt med mere teori omkring regulatorer}
 
 \subsubsection{Heat}
-One of the problems when designing the circuit, is that the linear regulators, in order to convert 15V 1A to, say 6V 1.5A, some energy has to disappear from the system, in the form of heat. With the 6V case it is $(15V - 6V)\cdot 1.5A\ =\ 13.5\ W$. In the beginning it was assumed that adding heat sinks was not necessary, however after trying to draw max current from the 6V supply, i.e 1.5A, it shut down rather quickly. Therefore it was chosen to add a heat sink. 
+One of the problems when designing the circuit, is that the linear regulators.
+The energy used in the regulator is converted into heat.
+The worst case power dissipation can be calculated in equation \ref{eq:pd6} and \ref{eq:pd12}.
+\begin{eqnarray}
+pD_{6}  =& (15V - 6V) \cdot 1.5A\ &=\ 13.5\ W \label{eq:pd6}\\
+pD_{12} =& (15V - 12V)\cdot 1.0A\ &=\ 3\ W \label{eq:pd12}
+\end{eqnarray}
+The junction to ambient resistance ($R_{ja}$) is $50^\circ C/W$%
+\footnote{L7806CV datasheet, p7}
+\footnote{LM7812C datasheet, p3}
+This means the temperature rise can be calculated in equation \ref{eq:tr6} and \ref{eq:tr12}.
+\begin{eqnarray}
+T_{r6}  =&  13.5 \cdot 50   &= 675^\circ C \label{eq:tr6}\\
+T_{r12} =&  3 \cdot 50      &= 150^\circ C \label{eq:tr12}
+\end{eqnarray}
+The maximum junction temperature is 150 for the LM7812\footnote{LM7812C p3} and 125 for the L7806CV\footnote{L7806CV, p7}, meaning the temperature for the 12 V supply is close to the maximum and the temperature for the 6 V supply is above.
+It is decided to use a heatsink on both.
 \matthias{Beskrive forhold ved belastning efter heat sinks er sat på.}
 \matthias{Lav nye test af powersupply}
 
 \subsubsection{PCB design}
-The components described above, put together as seen in the block diagram in figure \ref{fig::sch_power}, should be put on a PCB, in a reasonable way. One of the things that were taken into account when designing the PCB was, in order to save space, instead of having one capacitor on the each of the regulator input, the 15V input was put roughly in the middle of the regulators with only one input capacitor
+The components described above, put together as seen in the block diagram in figure \ref{fig::sch_power}. 
+% One of the things that were taken into account when designing the PCB was, in order to save space, instead of having one capacitor on the each of the regulator input, the 15V input was put roughly in the middle of the regulators with only one input capacitor
+The 15 V input was put between the regulators with only one input capacitor to save space.
+A ground plane was added to reduce the resistance to ground.
+This has the added benefit that it will be easier to route and faster to produce as less copper is removed.
+The pcb can be seen in figure \ref{fig::pcb_power}
 
 \begin{figure}
 \centering
@@ -86,3 +107,5 @@ The components described above, put together as seen in the block diagram in fig
 \caption{PCB design of the power supply made in Eagle} 
 \label{fig::pcb_power}
 \end{figure}
+
+\nikolaj{Update figure}
