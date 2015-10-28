@@ -100,7 +100,7 @@ The pcb can be seen in figure \ref{fig::pcb_power}
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{img/pcb_power.png}
+\begin{tikzpicture} \node[rotate=-90] {\includegraphics[scale=0.5]{img/pcb_power.png} }; \end{tikzpicture}
 \caption{PCB design of the power supply made in Eagle} 
 \label{fig::pcb_power}
 \end{figure}
@@ -129,9 +129,9 @@ The $R_{red}$ is rounded down to $200\Omega$.
 The schematic can be seen in figure \ref{fig:sch_led}.
 A pull down resistor at is used so the FPGA has to deliver a current to turn the mosfet on.
 
-\begin{figure}[h]
+\begin{figure}
 \centering
-%  \includegraphics[scale =0.8, trim={0,0,0,0},clip]{img/sch_led}
+ \includegraphics[scale=0.9,trim={2.4cm 14cm 5.1cm 9cm},clip]{img/adc_schematic.pdf}
   \caption{Schematic for LEDS.}
   \label{fig:sch_led}
 \end{figure}
@@ -157,8 +157,8 @@ It provides a 10 bit variable, sent over SPI.
 The supply is chosen to be 3.3 V, keeping the logic level the same as the FPGA.
 
 \begin{figure}[h]
-\centering
-%  \includegraphics[scale =0.8, trim={0,0,0,0},clip]{img/sch_photo_diode}
+\centering%left, bot, right, top
+ \includegraphics[scale=0.9,trim={2.4cm 20.8cm 5.1cm 2.2cm},clip]{img/adc_schematic.pdf}
   \caption{Schematic for photo diode.}
   \label{fig:sch_photo_diode}
 \end{figure}

@@ -16,6 +16,7 @@ To test if the voltage is at the expected levels, the photo diode is setup as sh
   \draw
   (gnd) to ++(0,1) to[ammeter] ++(2,0) to[pD] ++(2,0) to[R] ++(2,0)  |- (gnd)
   ;
+  \draw (0,2) node[left] {$12V$} to[short, o-] ++(2,0) to[leD,mirror] ++(2,0) to[R] ++(2,0) |- (gnd); 
   \end{circuitikz}
   \caption{Setup to measure current of photo diode.}
   \label{fig:photo_diode_current_setup}
@@ -42,13 +43,13 @@ To test if the voltage is at the expected levels, the photo diode is setup as sh
 The results of the test can be seen in table \ref{tab::test_pd}.
 \begin{table}[H]
 \centering
- \begin{tabular}{|ccccc|}
+ \begin{tabular}{|c|ccc|}
  \hline
-  & & \multicolumn{3}{c}{LED} \vline \\ 
-  & & Red & Green & Blue \\
-  \multirow{3}{*}{Brick}& Red & $16\ \mu A$ & $2\ \mu A$ & $5\ \mu A$ \\ 
-  & Green & $5\ \mu A$ & $13\ \mu A$ & $9\ \mu A$ \\
-  & Blue & $5\ \mu A$ & $6\ \mu A$ & $19\ \mu A$ \\
+ \diagbox{LED}{Brick}
+        & Red         & Green       & Blue          \\ \hline
+  Red   & $16\ \mu A$ & $2\ \mu A$  & $5\ \mu A$    \\ 
+  Green & $5\ \mu A$  & $13\ \mu A$ & $9\ \mu A$    \\
+  Blue  & $5\ \mu A$  & $6\ \mu A$  & $19\ \mu A$   \\
   \hline
  \end{tabular}
 \caption{Outcome of the test}
