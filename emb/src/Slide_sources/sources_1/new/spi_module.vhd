@@ -52,17 +52,19 @@ end spi_module;
 
 architecture Behavioral of spi_module is
 signal slow_clk           	: std_logic := '1';
-signal clock_enable       	: std_logic := '0';
+-- signal clock_enable       	: std_logic := '0';
 signal pack               	: std_logic_vector(4 downto 0) := "00000";
 signal data_from_adc      	: std_logic_vector(9 downto 0) := "0000000000";
 signal set_data_out_ready 	: std_logic_vector(1 downto 0) := "00";
+signal set_cs             	: std_logic_vector(1 downto 0) := "00";
 begin
 
 spi_clk: --Generate the spi clock signal
 process(clk)
 variable counter : integer range 0 to 6 := 0; -- 14 * 20 ns = 280 ns which gives 3.571 MHz clk
 begin
-  if rising_edge(clk) AND (clock_enable = '1') then
+--   if rising_edge(clk) AND (clock_enable = '1') then
+  if rising_edge(clk) then
     if counter = 6 then
         counter := 0;
         slow_clk <= not slow_clk;
@@ -86,33 +88,51 @@ begin
 			data_from_adc <= data_from_adc(8 downto 0) & MISO;
 		end if;
 		if counter = 17 then 
-			clock_enable <= '0';
+-- 			clock_enable <= '0';
 			data_out <= data_from_adc;
-			tmp_jbnr := std_logic_vector(unsigned(temp_jbnr)+1);
-			set_data_out_ready <= tmp_jbnr;
+			tmp_jbnr := std_logic_vector(unsigned(tmp_jbnr)+1);
+			set_data_out_ready <= tmp_jbnr; --on for 20ns
+			set_cs <= tmp_jbnr;             --on for 280ns
 			counter := 0;
-			CS <= '1';
 		else
 			counter := counter + 1;
 		end if;
 	end if;
 	if data_in_ready = '1' then
 		pack <= data_in;
-		clock_enable <= '1';
-		CS <= '0';
+-- 		clock_enable <= '1';
 	end if;
 end process;
 
 
-data_out_pule: process(clk)
+data_out_pulse: process(clk)
 variable next_jbnr : std_logic_vector (1 downto 0) := "01";
 begin
 	if rising_edge(clk) then
-		if data_set_out_ready = next_jbnr then
+		if set_data_out_ready = next_jbnr then
 			next_jbnr := std_logic_vector(unsigned(next_jbnr)+1);
 			data_out_ready <= '1';
 		else 
 			data_out_ready <= '0';
+		end if;
+	end if;
+end process;
+
+cs_disable_time: process(clk)
+variable next_jbnr : std_logic_vector (1 downto 0) := "01";
+variable disable_time : integer range 0 to 6 := 0;
+begin
+	if rising_edge(clk) then
+		if set_cs = next_jbnr then
+			next_jbnr := std_logic_vector(unsigned(next_jbnr)+1);
+			CS <= '1';
+			disable_time := 6;
+		else 
+			if disable_time = 0 then
+				CS <= '0';
+			else 
+				disable_time := disable_time - 1;
+			end if;
 		end if;
 	end if;
 end process;
