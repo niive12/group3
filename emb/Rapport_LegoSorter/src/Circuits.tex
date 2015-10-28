@@ -69,8 +69,6 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \label{fig::sch_power}
 \end{figure}
 
-\matthias{Uddyb dette afsnit hvis nødvendigt med mere teori omkring regulatorer}
-
 \subsubsection{Heat}
 One of the problems when designing the circuit, is that the linear regulators.
 The energy used in the regulator is converted into heat.
@@ -117,3 +115,51 @@ In this section these modules will be described.
 In order to get maximum brightness, high power diodes are used.
 A diode in red, green and blue is used in order to detect different color LEGO blocks.
 NTD5867NL mosfet was used to turn the diodes on and off.
+
+The Forward voltage on the red is 1.9 V and 3.2 V for the green and blue LED.
+\footnote{led\_datasheet, p5}
+The current is chosen at $50 mA$, based on the recommended range for 100\% duty cycle.
+\footnote{led\_application\_notes, p2}
+\begin{eqnarray}
+ R_{red} =& \frac{12-1.9}{0.05} =& 202 \Omega\\
+ R_{green} = R_{blue} =& \frac{12-3.2}{0.05} =& 176 \Omega
+\end{eqnarray}
+The green and blue LEDS are only turned on for a short amount of time so $R_{green}$ and $R_{blue}$ is rounded down to $160 \Omega$.
+The $R_{red}$ is rounded down to $200\Omega$.
+The schematic can be seen in figure \ref{fig:sch_led}.
+A pull down resistor at is used so the FPGA has to deliver a current to turn the mosfet on.
+
+\begin{figure}[h]
+\centering
+%  \includegraphics[scale =0.8, trim={0,0,0,0},clip]{img/sch_led}
+  \caption{Schematic for LEDS.}
+  \label{fig:sch_led}
+\end{figure}
+
+\subsubsection{Photo Diode}
+The photo diode works by producing a current proportional to the light intensity it receives.
+To turn this into a voltage readable by the ADC, an opamp is used.
+Measurements done by holding a colored LEGO brick up to the same color light source revealed that the current, produced from the photo diode was $5-20 \mu A$.
+Tests using a flashlight directly pointed at the photo diode showed that the current could get up to $40 \mu A$.
+The desired output should be $0-3.3 V$, same as the logic level used on the FPGA.
+If $20 \mu A$ should correlate to $2 V$, the resistor should be $100K\Omega$. 
+This gives room for more intensity, so saturation of the op amp less likely with a false positive.
+
+The LM358 is chosen for the op amp.
+It can be used with a single supply, but does not have rail to rail output.
+Measurements of the output shows that with a supply of 3.3 V the output can vary from 0.05 V to 2.1 V.
+Thus a supply of 4.5 V is chosen so the op amp can provide an output ranging from 0.05 to 3.3 V, thus creating a pseudo rail to rail.
+To get a 4.5 V supply, a voltage divider is used. This is done with 3 resistors so there is a 3.3 V supply for the ADC and a 4.5 V supply for the op amp.
+The schematic for the photo diode can be seen in figure \ref{fig:sch_photo_diode}.
+
+The MCP3001 is an ADC in a single component.
+It provides a 10 bit variable, sent over SPI.
+The supply is chosen to be 3.3 V, keeping the logic level the same as the FPGA.
+
+\begin{figure}[h]
+\centering
+%  \includegraphics[scale =0.8, trim={0,0,0,0},clip]{img/sch_photo_diode}
+  \caption{Schematic for photo diode.}
+  \label{fig:sch_photo_diode}
+\end{figure}
+
