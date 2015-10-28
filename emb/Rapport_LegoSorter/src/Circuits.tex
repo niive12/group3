@@ -1,6 +1,6 @@
 \section{Electronics}
 \subsection{Power supply}
-One of the tasks of the project was to create a power supply for the FPGA board and the external components. This supply should take in a 15 V signal and divide it into 3 different voltage levels which can be seen in table \ref{tab::power_req}. The power supply's should be soldered on a PCB made using Eagle, a CAD program for circuit design. The schematic of the board can be seen on figure \ref{fig::sch_power}.
+One of the tasks of the project was to create a power supply for the FPGA board and the external components. This supply should take in a 15 V signal and divide it into 3 different voltage levels which can be seen in table \ref{tab::power_req}. The power supplys should be soldered on a PCB made using Eagle, a CAD program for circuit design. The schematic of the board can be seen on figure \ref{fig::sch_power}.
 \subsubsection{Regulators}
 \begin{wraptable}{r}{7cm}
  \vspace{5 pt}
@@ -30,7 +30,7 @@ Given the input voltage of 15 V and the max current drawn, $0.5 A$, the value of
 \footnote{LM2574 datasheet p 14, fig 26}
 The schematic for the 5 V supply can be seen in figure \ref{fig::sch_power_5V}.
 
-There is no requirements to the efficiency of the 6 and 12 V supply's so a linear regulator is used.
+There is no requirements to the efficiency of the 6 and 12 V supplys so a linear regulator is used.
 The maximum current in the 6 V supply is 1.5 A, which means a bigger diode is needed.
 For this a 1N5408 is chosen, which can deliver an average 3.0 A forward current.
 \footnote{1N5408 datasheet, p1}
@@ -69,7 +69,6 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \label{fig::sch_power}
 \end{figure}
 
-\nikolaj{Opdater figur, align tekst, ret D3 til 1N5817}
 \matthias{Uddyb dette afsnit hvis nødvendigt med mere teori omkring regulatorer}
 
 \subsubsection{Heat}
