@@ -98,8 +98,7 @@ The FPGA will serve as the master and the ADC as the slave. In the VHDL module a
 \end{figure}
 
 \subsubsection{Implementation}
-Given the datasheet \footnote{Add reference to datasheet}
-\nikolaj{reference mangler side nummer}
+Given the datasheet \footnote{MCP3008,p1}
 the maximum clock frequency of the SPI clock is $3.6$ MHz which gives a period time of 277 ns, but since this is not possible to obtain due to the system clock period being 20 ns. Taking the nearest number that to 277 that divides evenly with 20, 280, a clock frequency of $3.571$ MHz, which should be more than sufficient. Therefore a clock is generated with this period time in this VHDL module and put out on an output pin.
 
 In order to keep the abstraction level, that this module is only for communication, it is the \textbf{LED\_driver} module that tells the \textbf{spi\_module} to initiate a sample. When a sample is received the data is just passed on to the LED\_driver, and a flag is set in order to tell the driver that new data has arrived.
@@ -113,7 +112,4 @@ The servo motor is controlled by a pulse width modulated (PWM) signal. The stand
 When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometimes very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a nice feature. This is where $\mu$TosNet come in to the picture. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
 
 \subsubsection{Usage}
-Since the light intensity in a room i almost never constant, it could be nice to be able to change the thresholds of the different colors from the computer, to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
-\nikolaj{Er det ikke fordi det tager for lang tid at synthesize og flashe fpga'en hver gang man vil ændre en værdi?
-Ellers skal der testes om lys i rummet påvirker systemet.
-}
+Due to the VHDL compiler being slow and tedious it could be nice to be able to change the thresholds of the different colors from the computer instead of compiling and flashing every time you want to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
