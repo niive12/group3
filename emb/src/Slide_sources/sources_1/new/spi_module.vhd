@@ -51,11 +51,11 @@ entity spi_module is
 end spi_module;
 
 architecture Behavioral of spi_module is
-signal slow_clk          : std_logic := '1';
-signal clock_enable		 : std_logic := '0';
-signal pack 			 : std_logic_vector(4 downto 0) := "00000";
-signal data_from_adc	 : std_logic_vector(9 downto 0) := "0000000000";
-signal set_data_out_ready : std_logic := '0';
+signal slow_clk           	: std_logic := '1';
+signal clock_enable       	: std_logic := '0';
+signal pack               	: std_logic_vector(4 downto 0) := "00000";
+signal data_from_adc      	: std_logic_vector(9 downto 0) := "0000000000";
+signal set_data_out_ready 	: std_logic_vector(1 downto 0) := "00";
 begin
 
 spi_clk: --Generate the spi clock signal
@@ -75,36 +75,48 @@ end process;
 
 --Process to read the package from controller once per state shift in controller
 dataprocess:
-process(clk,data_in_ready,slow_clk,data_in)
+process(data_in_ready,slow_clk,data_in)
 variable counter : integer range 0 to 17 := 0;
+variable tmp_jbnr : std_logic_vector(1 downto 0) := "00";
 begin
-  if clk = '1' then
-  set_data_out_ready <= '0';
-  elsif data_in_ready = '1' then
-	set_data_out_ready <= '0';
-	pack <= data_in;
-	clock_enable <= '1';
-	CS <= '0';
-  elsif rising_edge(slow_clk) then
-	set_data_out_ready <= '0';
-	MOSI <= pack(4);
-	pack <= pack(3 downto 0) & '0';
-	if counter > 6 then
-	data_from_adc <= data_from_adc(8 downto 0) & MISO;
+	if rising_edge(slow_clk) then
+		MOSI <= pack(4);
+		pack <= pack(3 downto 0) & '0';
+		if counter > 6 then
+			data_from_adc <= data_from_adc(8 downto 0) & MISO;
+		end if;
+		if counter = 17 then 
+			clock_enable <= '0';
+			data_out <= data_from_adc;
+			tmp_jbnr := std_logic_vector(unsigned(temp_jbnr)+1);
+			set_data_out_ready <= tmp_jbnr;
+			counter := 0;
+			CS <= '1';
+		else
+			counter := counter + 1;
+		end if;
 	end if;
-	if counter = 17 then 
-	  clock_enable <= '0';
-	  data_out <= data_from_adc;
-	  set_data_out_ready <='1';
-	  counter := 0;
-	  CS <= '1';
-	else
-	  counter := counter + 1;
+	if data_in_ready = '1' then
+		pack <= data_in;
+		clock_enable <= '1';
+		CS <= '0';
 	end if;
-  end if;
 end process;
 
-data_out_ready <= set_data_out_ready;
+
+data_out_pule: process(clk)
+variable next_jbnr : std_logic_vector (1 downto 0) := "01";
+begin
+	if rising_edge(clk) then
+		if data_set_out_ready = next_jbnr then
+			next_jbnr := std_logic_vector(unsigned(next_jbnr)+1);
+			data_out_ready <= '1';
+		else 
+			data_out_ready <= '0';
+		end if;
+	end if;
+end process;
+
 SCLK <= slow_clk;
 
 end Behavioral;
