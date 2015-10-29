@@ -86,7 +86,7 @@ Port (
 	   XB_SERIAL_O   	: out	STD_LOGIC;                       -- Serial stream to PC
 	   XB_SERIAL_I	   	: in	STD_LOGIC;                       -- Serial stream from PC
 	   data_adc 		: in STD_LOGIC_VECTOR(9 downto 0);
-	   threshold 		: out STD_LOGIC_VECTOR(29 downto 0)
+	   threshold 		: out STD_LOGIC_VECTOR(31 downto 0)
 	  );
 end COMPONENT;
 
@@ -98,7 +98,7 @@ COMPONENT LED_driver
            
            detected 			: out STD_LOGIC_VECTOR(2 downto 0);
            
-           threshold_container 	: in STD_LOGIC_VECTOR(29 downto 0);
+           threshold_container 	: in STD_LOGIC_VECTOR(31 downto 0);
            
            sample_data 			: in STD_LOGIC_VECTOR (9 downto 0);
            sample_done 			: in STD_LOGIC;
@@ -114,7 +114,7 @@ signal header : STD_LOGIC_VECTOR(4 downto 0);
 signal start_sample : STD_LOGIC;
 signal sample_done : STD_LOGIC;
 
-signal threshold : STD_LOGIC_VECTOR(29 downto 0);
+signal threshold : STD_LOGIC_VECTOR(31 downto 0);
 
 begin
 

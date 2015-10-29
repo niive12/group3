@@ -152,7 +152,7 @@ if rising_edge(clk) then
   start_sample <= '0';
   if sample_counter = n - 1 then
 	sample_counter := 0;
-	red_data <= zero_vector & red_data(data_size downto n);
+	red_data <= zero_vector & red_data(data_size downto n); --divide by 2^4 (16) -- should be 2^2 (4)
 	green_data <= zero_vector & green_data(data_size downto n);
 	blue_data <= zero_vector & blue_data(data_size downto n);
 	if red_data > threshold_red then
@@ -172,7 +172,7 @@ if rising_edge(clk) then
 	end if;
 	led_state <= idle;
   else
-	sample_counter := sample_counter + 1;
+	sample_counter := sample_counter + 1; --take one more sample
 	led_state <= red;
   end if;
   

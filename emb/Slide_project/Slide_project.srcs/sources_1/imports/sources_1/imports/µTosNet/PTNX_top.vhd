@@ -26,7 +26,7 @@ Port (
 	   XB_SERIAL_I	   	: in	STD_LOGIC;                       -- Serial stream from PC
 	   --brick_counter	: in STD_LOGIC_VECTOR(11 downto 0);
 	   data_adc 		: in STD_LOGIC_VECTOR(9 downto 0);
-	   threshold 		: out STD_LOGIC_VECTOR(29 downto 0)
+	   threshold 		: out STD_LOGIC_VECTOR(31 downto 0)
 	  );
 end PTNX_top;
 
@@ -49,6 +49,7 @@ architecture Behavioral of PTNX_top is
 
 -- Here we define the signals used by the top level design
   signal clk_50M           : std_logic := '0';
+  signal col_id            : std_logic_vector(1 downto 0) := "00";
   signal threshold_red  : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
   signal threshold_green : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
   signal threshold_blue : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
@@ -66,7 +67,7 @@ begin
 
 -- Here we instantiate the Pseudo TosNet Controller component, and connect it's ports to signals	
 	PseudoTosNet_ctrlInst : PseudoTosNet_ctrl
-	Port map (
+	port map (
 	   T_clk_50M          => clk_50M,
 		T_serial_out       => XB_SERIAL_O,
 		T_serial_in        => XB_SERIAL_I,
@@ -80,20 +81,20 @@ begin
 -- It's not necessary to transfer these ports to signals, we just think it makes the syntax nicer
 -- to avoid referring to ports in the body of the code. The compiler will optimize identical signals away
 clk_50M <= clk;
-threshold <= threshold_red & threshold_green & threshold_blue;
 adc_data <= data_adc;
 --bricks <= brick_counter;
 ---------------------------------------------------------
 -- Clocked process, to take data off the controller bus	
 ----------------------------------------------------------
+-- threshold <= col_id & threshold_red & threshold_green & threshold_blue; -- packet format
   DatFromTosNet: 	
   process(clk_50M)
   begin -- process
     if (clk_50M'event and clk_50M='1' and T_data_from_mem_latch='1') then
 	   case (T_reg_ptr & T_word_ptr) is                        -- The addresses are concatenated for compact code
-		  when "00000" => 	threshold_red  	<= T_data_from_mem(9 downto 0);
-		  when "00001" => 	threshold_green <= T_data_from_mem(9 downto 0);
-		  when "00010" => 	threshold_blue 	<= T_data_from_mem(9 downto 0);
+		  when "00000" => 	threshold  	<= T_data_from_mem(31 downto 0);
+		  when "00001" => 	threshold  	<= T_data_from_mem(31 downto 0);
+		  when "00010" => 	threshold  	<= T_data_from_mem(31 downto 0);
 		  when others =>
 		end case;
 	 end if;
