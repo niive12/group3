@@ -26,6 +26,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 
+use my_functions.ALL; --my functions
+
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
 --library UNISIM;
@@ -39,7 +41,8 @@ entity LED_driver is
            
            detected 			: out STD_LOGIC_VECTOR(2 downto 0);
            
-           threshold_container 	: in STD_LOGIC_VECTOR(29 downto 0);
+           threshold_container 	: in STD_LOGIC_VECTOR(31 downto 0);
+           color_val            : out STD_LOGIC_VECTOR(31 downto 0);
            
            sample_data 			: in STD_LOGIC_VECTOR (9 downto 0);
            sample_done 			: in STD_LOGIC;
@@ -59,30 +62,81 @@ signal blue_detected : STD_LOGIC;
 signal green_detected : STD_LOGIC;
 
 constant n : INTEGER := 4; --Number of samples. Has to be a power of 2 in order to divide
-constant data_size: INTEGER := 10 + n - 1;
+constant data_size: INTEGER := 9;
 
 signal red_data 		: STD_LOGIC_VECTOR(data_size downto 0);
 signal blue_data		: STD_LOGIC_VECTOR(data_size downto 0);
 signal green_data 		: STD_LOGIC_VECTOR(data_size downto 0);
 
-constant zero_vector 	: STD_LOGIC_VECTOR(n - 1 downto 0) := (others => '0');
-signal threshold_red 		: STD_LOGIC_VECTOR(data_size downto 0) := zero_vector & "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
-signal threshold_green	: STD_LOGIC_VECTOR(data_size downto 0) := zero_vector & "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
-signal threshold_blue	 	: STD_LOGIC_VECTOR(data_size downto 0) := zero_vector & "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
+-- constant zero_vector 	: STD_LOGIC_VECTOR(n - 1 downto 0) := (others => '0');
+-- signal threshold_red 		: STD_LOGIC_VECTOR(data_size downto 0) := "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
+-- signal threshold_green	: STD_LOGIC_VECTOR(data_size downto 0)     := "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
+-- signal threshold_blue	 	: STD_LOGIC_VECTOR(data_size downto 0) := "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
+
+signal red_block_r   : STD_LOGIC_VECTOR(data_size downto 0) := "01" & "0000" & "0000";
+signal red_block_g   : STD_LOGIC_VECTOR(data_size downto 0) := "00" & "0000" & "0000";
+signal red_block_b   : STD_LOGIC_VECTOR(data_size downto 0) := "00" & "0000" & "0000";
+
+signal green_block_r : STD_LOGIC_VECTOR(data_size downto 0) := "00" & "0000" & "0000";
+signal green_block_g : STD_LOGIC_VECTOR(data_size downto 0) := "01" & "0000" & "0000";
+signal green_block_b : STD_LOGIC_VECTOR(data_size downto 0) := "00" & "0000" & "0000";
+
+signal blue_block_r  : STD_LOGIC_VECTOR(data_size downto 0) := "00" & "0000" & "0000";
+signal blue_block_g  : STD_LOGIC_VECTOR(data_size downto 0) := "00" & "0000" & "0000";
+signal blue_block_b  : STD_LOGIC_VECTOR(data_size downto 0) := "01" & "0000" & "0000";
+
+signal no_block_r  : STD_LOGIC_VECTOR(data_size downto 0) := "01" & "0000" & "0000";
+signal no_block_g  : STD_LOGIC_VECTOR(data_size downto 0) := "01" & "0000" & "0000";
+signal no_block_b  : STD_LOGIC_VECTOR(data_size downto 0) := "01" & "0000" & "0000";
+
+signal red_votes     : integer range 0 to 100 := 0;
+signal green_votes   : integer range 0 to 100 := 0;
+signal blue_votes    : integer range 0 to 100 := 0;
+signal invalid_votes : integer range 0 to 100 := 0;
 
 constant threshold_brick	: STD_LOGIC_VECTOR(9 downto 0) := "00" & "0010" & "0000"; -- Threshold for detecting bricks. At the moment these are just arbitrary values
 
-constant head : STD_LOGIC_VECTOR(4 downto 0) := "11000";
+constant head : STD_LOGIC_VECTOR(4 downto 0) := "11000";     --ADC configuration
 begin
 header <= head;
-threshold_red 		<= zero_vector & threshold_container(29 downto 20);
-threshold_green 	<= zero_vector & threshold_container(19 downto 10);
-threshold_blue 		<= zero_vector & threshold_container(9 downto 0);
+
+u_tos_net_handling: process(clk)
+begin
+if rising_edge(clk) then 
+	case threshold_container(31 downto 30) is
+	when "00" =>
+	  red_block_r <= threshold_container(29 downto 20);
+	  red_block_g <= threshold_container(19 downto 10);
+	  red_block_b <= threshold_container(9 downto 0);
+	when "01" =>
+	  green_block_r <= threshold_container(29 downto 20);
+	  green_block_g <= threshold_container(19 downto 10);
+	  green_block_b <= threshold_container(9 downto 0);
+	when "10" =>
+	  blue_block_r <= threshold_container(29 downto 20);
+	  blue_block_g <= threshold_container(19 downto 10);
+	  blue_block_b <= threshold_container(9 downto 0);
+	when others =>
+	  no_block_r <= threshold_container(29 downto 20);
+	  no_block_g <= threshold_container(19 downto 10);
+	  no_block_b <= threshold_container(9 downto 0);
+	end case;
+	end if;
+end process;
 
 main_process:
 process(clk)
 variable sample_counter : INTEGER range 0 to n;
 variable temp_red       : STD_LOGIC_VECTOR(9 downto 0) := "00" & "0000" & "0000";
+
+variable err_red        : integer range 0 to 512 := 0;
+variable err_green      : integer range 0 to 512 := 0;
+variable err_blue       : integer range 0 to 512 := 0;
+variable dist_red       : integer range 0 to 1536 := 0;
+variable dist_green     : integer range 0 to 1536 := 0;
+variable dist_blue      : integer range 0 to 1536 := 0;
+variable dist_no        : integer range 0 to 1536 := 0;
+variable vote           : std_logic_vector(1 downto 0) := "00";
 begin
 if rising_edge(clk) then
   case led_state is
@@ -116,7 +170,7 @@ if rising_edge(clk) then
   if sample_done = '1' then
 	red_led <= '0';
 	sampling <= '0';
-	red_data <= STD_LOGIC_VECTOR(UNSIGNED(red_data) + UNSIGNED(sample_data));
+	red_data <= sample_data;
 	led_state <= green;
   end if;
   
@@ -130,7 +184,7 @@ if rising_edge(clk) then
   if sample_done = '1' then
 	green_led <= '0';
 	sampling <= '0';
-	green_data <= STD_LOGIC_VECTOR(UNSIGNED(green_data) + UNSIGNED(sample_data));
+	green_data <= sample_data;
 	led_state <= blue;
   end if;
   
@@ -144,7 +198,7 @@ if rising_edge(clk) then
   if sample_done = '1' then
 	blue_led <= '0';
 	sampling <= '0';
-	blue_data <= STD_LOGIC_VECTOR(UNSIGNED(blue_data) + UNSIGNED(sample_data));
+	blue_data <= sample_data;
 	led_state <= decider;
   end if;
   
@@ -152,25 +206,38 @@ if rising_edge(clk) then
   start_sample <= '0';
   if sample_counter = n - 1 then
 	sample_counter := 0;
-	red_data <= zero_vector & red_data(data_size downto n); --divide by 2^4 (16) -- should be 2^2 (4)
-	green_data <= zero_vector & green_data(data_size downto n);
-	blue_data <= zero_vector & blue_data(data_size downto n);
-	if red_data > threshold_red then
-	  red_detected <= '1';
-	else
-	  red_detected <= '0';
-	end if;
-	if green_data > threshold_green then
-		green_detected <= '1';
-	else 
-	  green_detected <='0';
-	end if;
-	if blue_data > threshold_blue then
-	  blue_detected <= '1';
-	 else
-		blue_detected <= '0';
-	end if;
-	led_state <= idle;
+	err_red   := abs_subtract(red_data  , red_block_r);
+	err_green := abs_subtract(green_data, red_block_g);
+	err_blue  := abs_subtract(blue_data , red_block_b);
+	dist_red  := err_red + err_green;
+	dist_red  := dist_red + err_blue;
+	err_red   := abs_subtract(red_data  , green_block_r);
+	err_green := abs_subtract(green_data, green_block_g);
+	err_blue  := abs_subtract(blue_data , green_block_b);
+	dist_green:= err_red + err_green;
+	dist_green:= dist_green + err_blue;
+	err_red   := abs_subtract(red_data  , blue_block_r);
+	err_green := abs_subtract(green_data, blue_block_g);
+	err_blue  := abs_subtract(blue_data , blue_block_b);
+	dist_blue := err_red + err_green;
+	dist_blue := dist_blue + err_blue;
+	err_red   := abs_subtract(red_data  , no_block_r);
+	err_green := abs_subtract(green_data, no_block_g);
+	err_blue  := abs_subtract(blue_data , no_block_b);
+	dist_no   := err_red + err_green;
+	dist_no   := dist_no + err_blue;
+	
+	vote := minimum(dist_red, dist_green, dist_blue, dist_no);
+	
+	case vote is 
+		when "00"   => red_votes     <= red_votes     + 1;
+		when "01"   => green_votes   <= green_votes   + 1;
+		when "10"   => blue_votes    <= blue_votes    + 1;
+		when others => invalid_votes <= invalid_votes + 1;
+	end case;
+	
+	detected <= maximum(red_votes, green_votes, blue_votes, invalid_votes);
+	
   else
 	sample_counter := sample_counter + 1; --take one more sample
 	led_state <= red;
@@ -183,5 +250,6 @@ if rising_edge(clk) then
   
   end if;
 end process;
-detected <= red_detected & green_detected & blue_detected;
+color_val <= "00" & red_data & red_data & red_data;
+--detected <= red_detected & green_detected & blue_detected;
 end Behavioral;

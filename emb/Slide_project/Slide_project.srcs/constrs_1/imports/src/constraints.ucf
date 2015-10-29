@@ -1,6 +1,6 @@
 NET "clk"    	LOC = "P60";
 
-NET "SCLK" 	LOC = "P72"; //18
+NET "SCLK" 	LOC = "P44"; //5
 NET "MISO" 	LOC = "P45"; //6
 NET "MOSI" 	LOC = "P49"; //7
 NET "CS" 	LOC = "P50"; //8

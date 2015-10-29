@@ -25,7 +25,7 @@ Port (
 	   XB_SERIAL_O   		: out	STD_LOGIC;                       -- Serial stream to PC
 	   XB_SERIAL_I	   	: in	STD_LOGIC;                       -- Serial stream from PC
 	   --brick_counter	: in STD_LOGIC_VECTOR(11 downto 0);
-	   data_adc 		: in STD_LOGIC_VECTOR(9 downto 0);
+	   color_val 		: in STD_LOGIC_VECTOR(31 downto 0);
 	   threshold 		: out STD_LOGIC_VECTOR(31 downto 0)
 	  );
 end PTNX_top;
@@ -54,7 +54,6 @@ architecture Behavioral of PTNX_top is
   signal threshold_green : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
   signal threshold_blue : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
   --signal bricks : STD_LOGIC_VECTOR(11 downto 0) := (others => '0');
-  signal adc_data	: STD_LOGIC_VECTOR(9 downto 0);
     
 -- Signals below is used to connect to the Pseudo TosNet Controller component  
   signal T_reg_ptr                 : std_logic_vector(2 downto 0);
@@ -81,7 +80,6 @@ begin
 -- It's not necessary to transfer these ports to signals, we just think it makes the syntax nicer
 -- to avoid referring to ports in the body of the code. The compiler will optimize identical signals away
 clk_50M <= clk;
-adc_data <= data_adc;
 --bricks <= brick_counter;
 ---------------------------------------------------------
 -- Clocked process, to take data off the controller bus	
@@ -113,7 +111,7 @@ adc_data <= data_adc;
 			--when "00001" =>	T_data_to_mem <= "0000" & "0000" & "0000" & "0000" & "0000" & "0000" & "0000" & bricks(7 downto 4);	
 			--when "00010" => T_data_to_mem <= "0000" & "0000" & "0000" & "0000" & "0000" & "0000" & "0000" & bricks(11 downto 8);
          -- Register 1
-			when "00100" =>	T_data_to_mem <=  "00" & "0000" & "0000" & "0000" & "0000" & "0000" & adc_data;
+			when "00100" =>	T_data_to_mem <=  color_val;
 			when others =>
 		end case;		
 	end process;

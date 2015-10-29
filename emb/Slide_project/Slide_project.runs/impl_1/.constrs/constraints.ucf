@@ -1,7 +1,7 @@
 NET "clk" LOC = P60;
 
-//18
-NET "SCLK" LOC = P72;
+//5
+NET "SCLK" LOC = P44;
 //6
 NET "MISO" LOC = P45;
 //7
