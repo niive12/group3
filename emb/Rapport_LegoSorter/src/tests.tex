@@ -63,7 +63,7 @@ This was tested to be accurate with the setup in figure \ref{fig:photo_diode_vol
 Given the results of the test, and the fact that the current used here is lower than the one used in the project\footnote{Ref to section with LED circuit} it was decided that a value of $100 000 k\Omega$ would be a reasonable. This gives $0.1 \frac{V}{\mu A}$.
 
 
-\section{ADC}
+\subsection{ADC}
 To test if the ADC works with the FPGA, the ADC was tested on a breadboard.
 A controlled input was given to the ADC and the MISO signal was analyzed to find the ADC value.
 The ADC value is a the last 10 bits of the 17 bit package on the MISO, sent after a falling edge on the CS.
