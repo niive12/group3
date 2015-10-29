@@ -61,3 +61,38 @@ This was tested to be accurate with the setup in figure \ref{fig:photo_diode_vol
 
 \subsubsection{Conclusion}
 Given the results of the test, and the fact that the current used here is lower than the one used in the project\footnote{Ref to section with LED circuit} it was decided that a value of $100 000 k\Omega$ would be a reasonable. This gives $0.1 \frac{V}{\mu A}$.
+
+
+\section{ADC}
+To test if the ADC works with the FPGA, the ADC was tested on a breadboard.
+A controlled input was given to the ADC and the MISO signal was analyzed to find the ADC value.
+The ADC value is a the last 10 bits of the 17 bit package on the MISO, sent after a falling edge on the CS.
+In figure \ref{fig:scope_adc} is the oscilloscope readings for a test with 2.1 V input shown.
+
+To see how the ADC handles the input voltage a series of measurements has been made with a 0.1 V step between measurements.
+In figure \ref{fig:adc_values} can the ADC values in decimal be seen in relation to the input voltage.
+From this it can be seen that the ADC values are proportional to the input voltage and thus the ADC communication works.
+The data code for the data processing can be found in appendix \ref{app:adc_R_code}.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=0.7\textwidth]{img/ADC_values}
+ \caption{ADC values in relation to input voltage.}
+ \label{fig:adc_values}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}
+        \node {
+        \includegraphics[width=0.7\textwidth]{img/scope_adc} 
+        };
+        \node at (-6.5,4)  {CLK};
+        \node at (-6.5,0)  {CS};
+        \node at (-6.5,-4) {MISO};
+    \end{tikzpicture}
+    \caption[Oscilloscope measurements for ADC]
+            {Oscilloscope output of the ADC connections for the 2.107 V RMS input. The red dots signify when the signal is read.}
+            \label{fig:scope_adc}
+\end{figure}
+
