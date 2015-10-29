@@ -21,11 +21,10 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -79,16 +78,16 @@ end process;
 --Process to read the package from controller once per state shift in controller
 dataprocess:
 process(data_in_ready,slow_clk,data_in)
-variable counter : integer range 0 to 32 := 0;
+variable counter : integer range 0 to 17 := 0;
 variable tmp_jbnr : std_logic_vector(1 downto 0) := "00";
 begin
-	if rising_edge(slow_clk) then
+	if falling_edge(slow_clk) then
 		MOSI <= pack(4);
 		pack <= pack(3 downto 0) & '0';
 		if counter > 6 then
 			data_from_adc <= data_from_adc(8 downto 0) & MISO;
 		end if;
-		if counter = 32 then 
+		if counter = 17 then 
 -- 			clock_enable <= '0';
 			data_out <= data_from_adc;
 			tmp_jbnr := std_logic_vector(unsigned(tmp_jbnr)+1);
