@@ -16,8 +16,8 @@ clk = read.csv(filename,skip=6)
 clk_events = find_event(clk,direction="rising")
 time_between_edges(clk_events)
 cat(c("The signal was meassured in : ",length(clk_events), " clock cycles\n"))
-plot(clk[,4],clk[,5],type="l")
-lines(clk_events,array(2.5,length(clk_events),1),type="p",col="red")
+# plot(clk[,4],clk[,5],type="l")
+# lines(clk_events,array(2.5,length(clk_events),1),type="p",col="red")
 
 scope = scope_cs
 filename = paste(c("data/C",scope,"adc_testttt",str_pad(i, 5, pad="0"),".csv"),collapse="")
@@ -31,10 +31,14 @@ lines(cs_events,array(2.5,length(cs_events),1),type="p",col="red")
 scope = scope_miso
 filename = paste(c("data/C",scope,"adc_testttt",str_pad(i, 5, pad="0"),".csv"),collapse="")
 miso = read.csv(filename,skip=6)
-bit = bit_value(data_signal = miso, clock_signal= clk, start_edge = cs_events[1], clock_skips=7, clocks=17)
+
+setEPS()
+postscript("../Rapport_LegoSorter/img/scope_adc.eps",height = 8, width = 8)
+bit = bit_value(data_signal = miso, clock_signal= clk, start_edge = cs_events[1], clock_skips=7, clocks=17, CS=cs,plot=TRUE)
 print(bit)
 print(binary_to_int(bit))
-plot(miso[,4],miso[,5],type="l")
+q=dev.off()
+# plot(miso[,4],miso[,5],type="l")
 
 number_of_meassurements = 34
 bit_value_vs_vin = matrix(0,number_of_meassurements,2)
@@ -57,5 +61,7 @@ for(i in 1:number_of_meassurements){
 
 adc_value  = bit_value_vs_vin[,1]
 v_in       = bit_value_vs_vin[,2]
-
+setEPS()
+postscript("../Rapport_LegoSorter/img/ADC_values.eps",height = 4, width = 8)
 plot(v_in,adc_value,type="l")
+q=dev.off()

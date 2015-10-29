@@ -65,17 +65,25 @@ rms <- function(data){
     return(v)
 }
 
-bit_value <- function(data_signal, clock_signal, start_edge, clock_skips=0, clocks){
+bit_value <- function(data_signal, clock_signal, start_edge, clock_skips=0, clocks, CS=matrix(0,2,5),plot=FALSE){
     clk_rising_edge = find_event(clock_signal,direction="rising",index=TRUE)
     if(length(clk_rising_edge) < (clocks+clock_skips)){ stop("Error: The signal has not been meassured for that long") }
     logic_low  = 0.7 
     logic_high = 2.5
-    start = which(data_signal[,4]>start_edge)[1]
-    pulse_width = clk_rising_edge[2] - clk_rising_edge[1]
+    clk_falling_edge = find_event(clock_signal,direction="falling")
+    start = which(clk_falling_edge>start_edge)[1] #first clk falling edge after CS
+    start = which(data_signal[,4]>clk_falling_edge[start])[1]
+    
+    pulse_width = clk_rising_edge[2] - clk_rising_edge[1] #280 ns
     read_time = trunc(pulse_width)/4
+    start = start + read_time
     bit_val = c("0b")
-    for(i in clock_skips:(clocks-1)){
+            read_points = 0
+            data_amplitude = 0
+    for(i in clock_skips:(clocks-1)){ #7:16
         index = start+i*pulse_width
+                read_points = c(read_points, data_signal[index,4])
+                data_amplitude = c(data_amplitude, data_signal[index,5])
         if(data_signal[index,5] > logic_high){
             bit_val = c(bit_val,"1")
         } else if(data_signal[index,5] < logic_low){
@@ -84,6 +92,20 @@ bit_value <- function(data_signal, clock_signal, start_edge, clock_skips=0, cloc
             bit_val = c(bit_val,"U")
         }
     }
+    
+    if(plot){
+        read_points = read_points[-1]
+        data_amplitude = data_amplitude[-1]
+        par(mfrow=c(3,1),
+            oma=c(0,0,0,0)+0.1, 
+            mar=c(0,0,0.1,0.1)+0.1)
+        plot(clock_signal[,4],clock_signal[,5],type="l",col="blue",axes=FALSE)
+        points(clock_signal[start,4],2,type="p",col="red")
+        plot(CS[,4],CS[,5],type="l",col="orange",axes=FALSE)
+        plot(data_signal[,4],data_signal[,5],type="l")
+        lines(read_points,data_amplitude,type="p",col="red")
+        par(mfrow=c(1,1),oma=c(2,0,0,0)+0.1, mar=c(4,4,4,1)+0.1)
+    }
     return(paste(bit_val,collapse=""))
 }
 
@@ -91,7 +113,8 @@ binary_to_int <- function(bit_string){
     int = 0;
     split = strsplit(bit_string, "")[[1]]
     garbage = FALSE
-    for (bit in length(split):3) { #ignoring the 0b
+    
+    for(bit in 3:length(split)) { #ignoring the 0b
         int = int * 2 #leftshift
         if(split[bit] == "1"){
             int = int + 1 #add one
