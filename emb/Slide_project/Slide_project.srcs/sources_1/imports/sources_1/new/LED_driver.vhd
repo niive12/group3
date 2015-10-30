@@ -47,7 +47,7 @@ entity LED_driver is
            sample_data 			: in STD_LOGIC_VECTOR (9 downto 0);
            sample_done 			: in STD_LOGIC;
 		   start_sample 		: out STD_LOGIC;
-		   header 				: out STD_LOGIC_VECTOR(4 downto 0);
+		   header 				: out STD_LOGIC_VECTOR(5 downto 0);
             
            clk				 	: in STD_LOGIC);
 end LED_driver;
@@ -57,9 +57,6 @@ type led_state_t is (idle, decider, red, green, blue);
 signal led_state : led_state_t := idle;
 
 signal sampling 	: STD_LOGIC := '0';
-signal red_detected : STD_LOGIC;
-signal blue_detected : STD_LOGIC;
-signal green_detected : STD_LOGIC;
 
 constant n : INTEGER := 4; --Number of samples. Has to be a power of 2 in order to divide
 constant data_size: INTEGER := 9;
@@ -67,11 +64,6 @@ constant data_size: INTEGER := 9;
 signal red_data 		: STD_LOGIC_VECTOR(data_size downto 0);
 signal blue_data		: STD_LOGIC_VECTOR(data_size downto 0);
 signal green_data 		: STD_LOGIC_VECTOR(data_size downto 0);
-
--- constant zero_vector 	: STD_LOGIC_VECTOR(n - 1 downto 0) := (others => '0');
--- signal threshold_red 		: STD_LOGIC_VECTOR(data_size downto 0) := "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
--- signal threshold_green	: STD_LOGIC_VECTOR(data_size downto 0)     := "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
--- signal threshold_blue	 	: STD_LOGIC_VECTOR(data_size downto 0) := "00" & "1000" & "0000"; -- At the moment these are just arbitrary values
 
 signal red_block_r   : STD_LOGIC_VECTOR(data_size downto 0) := "01" & "0000" & "0000";
 signal red_block_g   : STD_LOGIC_VECTOR(data_size downto 0) := "00" & "0000" & "0000";
@@ -96,7 +88,7 @@ signal invalid_votes : integer range 0 to 100 := 0;
 
 constant threshold_brick	: STD_LOGIC_VECTOR(9 downto 0) := "00" & "0010" & "0000"; -- Threshold for detecting bricks. At the moment these are just arbitrary values
 
-constant head : STD_LOGIC_VECTOR(4 downto 0) := "11000";     --ADC configuration
+constant head : STD_LOGIC_VECTOR(5 downto 0) := "011000";     --ADC configuration
 begin
 header <= head;
 
@@ -137,6 +129,7 @@ variable dist_green     : integer range 0 to 1536 := 0;
 variable dist_blue      : integer range 0 to 1536 := 0;
 variable dist_no        : integer range 0 to 1536 := 0;
 variable vote           : std_logic_vector(1 downto 0) := "00";
+variable dummy_count    : integer range 0 to 2 := 0;
 begin
 if rising_edge(clk) then
   case led_state is
@@ -171,7 +164,12 @@ if rising_edge(clk) then
 	red_led <= '0';
 	sampling <= '0';
 	red_data <= sample_data;
-	led_state <= green;
+	if dummy_count = 2 then
+	   led_state <= green;
+	   dummy_count := 0;
+	else
+	  dummy_count := dummy_count + 1;
+	end if;
   end if;
   
   when green =>
@@ -185,7 +183,12 @@ if rising_edge(clk) then
 	green_led <= '0';
 	sampling <= '0';
 	green_data <= sample_data;
-	led_state <= blue;
+	if dummy_count = 2 then
+      led_state <= blue;
+      dummy_count := 0;
+    else
+      dummy_count := dummy_count + 1;
+    end if;
   end if;
   
   when blue =>
@@ -199,8 +202,12 @@ if rising_edge(clk) then
 	blue_led <= '0';
 	sampling <= '0';
 	blue_data <= sample_data;
-	led_state <= decider;
-  end if;
+	if dummy_count = 2 then
+      led_state <= decider;
+      dummy_count := 0;
+    else
+      dummy_count := dummy_count + 1;
+    end if;  end if;
   
   when decider => 
   start_sample <= '0';
@@ -251,5 +258,5 @@ if rising_edge(clk) then
   end if;
 end process;
 color_val <= "00" & red_data & red_data & red_data;
---detected <= red_detected & green_detected & blue_detected;
+
 end Behavioral;

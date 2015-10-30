@@ -49,10 +49,7 @@ architecture Behavioral of PTNX_top is
 
 -- Here we define the signals used by the top level design
   signal clk_50M           : std_logic := '0';
-  signal col_id            : std_logic_vector(1 downto 0) := "00";
-  signal threshold_red  : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
-  signal threshold_green : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
-  signal threshold_blue : STD_LOGIC_VECTOR(9 downto 0) := "00" & "1000" & "0000";
+  --signal col_id            : std_logic_vector(1 downto 0) := "00";
   --signal bricks : STD_LOGIC_VECTOR(11 downto 0) := (others => '0');
     
 -- Signals below is used to connect to the Pseudo TosNet Controller component  

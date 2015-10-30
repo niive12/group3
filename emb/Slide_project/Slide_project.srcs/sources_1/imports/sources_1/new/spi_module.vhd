@@ -40,7 +40,7 @@ entity spi_module is
            SCLK             : out STD_LOGIC;
                       
            -- For communication with controller
-           data_in          : in STD_LOGIC_VECTOR(4 downto 0); -- Data from controller to be sent to ADC
+           data_in          : in STD_LOGIC_VECTOR(5 downto 0); -- Data from controller to be sent to ADC
            data_in_ready    : in  STD_LOGIC; -- Signal to pull chip select low
            
            data_out         : out STD_LOGIC_VECTOR(9 downto 0); -- Data recieved from the ADC to be sent to controller
@@ -53,7 +53,7 @@ end spi_module;
 architecture Behavioral of spi_module is
 signal slow_clk           	: std_logic := '1';
 -- signal clock_enable       	: std_logic := '0';
-signal pack               	: std_logic_vector(4 downto 0) := "00000";
+signal pack               	: std_logic_vector(5 downto 0) := "000000";
 signal data_from_adc      	: std_logic_vector(9 downto 0) := "0000000000";
 signal set_data_out_ready 	: std_logic_vector(1 downto 0) := "00";
 signal set_cs             	: std_logic_vector(1 downto 0) := "00";
@@ -78,16 +78,16 @@ end process;
 --Process to read the package from controller once per state shift in controller
 dataprocess:
 process(data_in_ready,slow_clk,data_in)
-variable counter : integer range 0 to 17 := 0;
+variable counter : integer range 0 to 18 := 0;
 variable tmp_jbnr : std_logic_vector(1 downto 0) := "00";
 begin
 	if falling_edge(slow_clk) then
-		MOSI <= pack(4);
-		pack <= pack(3 downto 0) & '0';
-		if counter > 6 then
+		MOSI <= pack(5);
+		pack <= pack(4 downto 0) & '0';
+		if counter > 7 then
 			data_from_adc <= data_from_adc(8 downto 0) & MISO;
 		end if;
-		if counter = 17 then 
+		if counter = 18 then 
 -- 			clock_enable <= '0';
 			data_out <= data_from_adc;
 			tmp_jbnr := std_logic_vector(unsigned(tmp_jbnr)+1);
