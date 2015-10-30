@@ -208,12 +208,12 @@ if rising_edge(clk) then
 	err_red   := abs_subtract(red_data  , red_block_r);
 	err_green := abs_subtract(green_data, red_block_g);
 	err_blue  := abs_subtract(blue_data , red_block_b);
-	dist_red  := err_red + err_green
+	dist_red  := err_red + err_green;
 	dist_red  := dist_red + err_blue;
 	err_red   := abs_subtract(red_data  , green_block_r);
 	err_green := abs_subtract(green_data, green_block_g);
 	err_blue  := abs_subtract(blue_data , green_block_b);
-	dist_green:= err_red + err_green
+	dist_green:= err_red + err_green;
 	dist_green:= dist_green + err_blue;
 	err_red   := abs_subtract(red_data  , blue_block_r);
 	err_green := abs_subtract(green_data, blue_block_g);
