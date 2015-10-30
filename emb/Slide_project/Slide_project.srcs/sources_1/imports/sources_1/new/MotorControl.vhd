@@ -47,10 +47,10 @@ begin
 
 scaled_down_clk: -- generate clock with period of 0.5 ms
 process(clk)
-  variable counter : integer range 0 to 12500 := 0; -- 25000*20 ns = 500 µs = 0.5 ms = slow_clk.period 
+  variable counter : integer range 0 to 1250 := 0; -- 25000*20 ns = 500 µs = 0.5 ms = slow_clk.period 
 begin
 if rising_edge(clk)  then
-  if counter = 12500 then
+  if counter = 1250 then
 	counter := 0;
 	slow_clk <= not slow_clk;
   else
@@ -63,10 +63,10 @@ end process;
 
 pwm_generator:
 process(slow_clk)
-  variable pwm_counter : integer range 0 to 40; -- the period of the PWM signal should be 20 ms so pwm.period = 20*slow_clk.period = 20 ms 
+  variable pwm_counter : integer range 0 to 399; -- the period of the PWM signal should be 20 ms so pwm.period = 20*slow_clk.period = 20 ms 
 begin
 if rising_edge(slow_clk) then
-  if pwm_counter = 40 then
+  if pwm_counter = 399 then
 	pwm_counter := 0;
   else
 	pwm_counter := pwm_counter + 1;
@@ -84,11 +84,11 @@ process(clk)
 begin
 if(rising_edge(clk)) then
   if colours_detected = "100" then
-	pwm_value <= 2; -- Left (1.35 ms)
+	pwm_value <= 27; -- Left (1.35 ms)
   elsif colours_detected = "001" then
-	pwm_value <= 4; -- Right (1.65 ms)
+	pwm_value <= 33; -- Right (1.65 ms)
   else
-	pwm_value <= 3; -- Center (1.5 ms) 
+	pwm_value <= 30; -- Center (1.5 ms) 
   end if;
 end if;
 end process;
