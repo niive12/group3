@@ -42,7 +42,7 @@ This was tested to be accurate with the setup in figure \ref{fig:photo_diode_vol
 
 
 \subsubsection{Conclusion}
-Given the results of the test, and the fact that the current used here is lower than the one used in the project\footnote{Ref to section with LED circuit} it was decided that a value of $100 000 k\Omega$ would be a reasonable. This gives $0.1 \frac{V}{\mu A}$.
+Given the results of the test, and the fact that the current used here is lower than the one used in the project\footnote{Ref to section with LED circuit} it was decided that a value of $100 k\Omega$ would be a reasonable. This gives $0.1 \frac{V}{\mu A}$.
 
 \subsection{Rise time test of amplifier} \label{sec:rise_time_test}
 
@@ -142,6 +142,38 @@ To give the amplifier time to settle the ADC will be read three times, throwing 
 This effectively gets the frequency down to $63 kHz$ and reading becomes possible.
 For simplicity the LED signal will be treated as a $63 kHz$ pulse in this section.
 An naive approach to make the signal is to turn the led on and wait for the signal that the transmission is complete.
+
+\begin{figure}[h]
+\centering
+\begin{tikztimingtable}[xscale=0.3]
+ slow\_clk       & L2{26{2{T}}          }L\\
+ led\_signal     & Z 1{50D{R}}1{2Z} 1{50D{G}}1{2Z}      L\\
+ adc\_read       & L2{13{2L}2{2H}11{2L} }L\\
+ adc\_transfer   & L2{15{2L}10{2H}1{2L} }L\\
+ signal\_complete& L2{25{2L}1{2H}       }L\\
+\end{tikztimingtable}
+ \caption{ADC communication, naive approach.}\label{fig:naive_communication}
+\end{figure}
+
+This is very inefficient as the led is still turned on after the ADC supposedly have made the discretization.
+A way to optimize this is to overlap the colors, so a LED is turned on as soon as the ADC starts to transmit data.
+This means the led can be turned on 8 clock cycles sooner and the rise time on the op amp can start.
+Such a communication can be seen in figure \ref{fig:optimized_communication}.
+
+\begin{figure}[h]
+\centering
+\begin{tikztimingtable}[xscale=0.3]
+ slow\_clk       & L12{2{T}}3{19{2{T}}          }\\
+ led\_signal     & Z 1{38D{R}} 1{38D{G}}1{38D{B}} 1{24D{R}} \\
+ adc\_read       & L12{2L} 3{5{2L}2{2H}11{2L}1{2L} }\\
+ adc\_transfer   & L12{2L} 3{7{2L}1{20D{adc}}1{2L}1{2L} }\\ 
+ sample\_done    & L29{2L} 2{1{2H}16{2L}     2{2L} }1{2H}LL\\ 
+ \extracode
+    \vertlines[dashed]{61,77,99,115} %8 clock cycles
+\end{tikztimingtable}
+\caption{ADC communication optimized.}\label{fig:optimized_communication}
+\end{figure}
+>>>>>>> f4db1fc6a806ad34bb4b6af113b3c537e030e5f6
 
 \subsection{ADC}
 To test if the ADC works with the FPGA, the ADC was tested on a breadboard.
