@@ -38,8 +38,8 @@ This module is only there in order to take the different components and put them
  \draw[->] (top.east) to node[anchor = south] {\scriptsize Serial in} (tosnet.west);
  \draw[->] (motor) |- node[anchor = south,xshift=-2 cm]{pwm\_out} (top.300);
  
- \draw[vecArrow] (spi) to node[anchor=east]{\scriptsize Data\_out[9:0]} (tosnet);
- \draw[vecArrow] (tosnet.east) to ++(1,0) to ++(0,1.5) -| node[anchor=south,xshift=-1.2cm]{\scriptsize Threshold[29:0]} (led_control.240);
+ \draw[vecArrow] (tosnet.east) to ++(0.7,0) to ++(0,1.5) -| node[anchor=north,xshift=-0.7cm]{\scriptsize Threshold[31:0]} (led_control.240);
+ \draw[vecArrow] (led_control.230) to ++(0,-0.7) -| node[anchor=south,xshift=1cm]{\scriptsize color\_val[31:0]} (tosnet.60);
  
  \end{tikzpicture}
  \caption{Block diagram of the system}
@@ -66,9 +66,9 @@ In order to make this work a state machine is implemented. A state diagram can b
  \node[state,name=decide, minimum width = 1.3 cm]            at (c.162)   {Decider};
  
  \draw[->] (state0)   edge[bend left=27] node[midway,above,fill=white,xshift=0.9cm,yshift=-0.5cm] {ADC data $>$ threshold}  (stateR);
- \draw[->] (stateR)   edge[bend left=27] node[midway,fill=white]                                  {sample\_done}            (stateG);
- \draw[->] (stateG)   edge[bend left=27] node[midway,below]                                       {sample\_done}            (stateB);
- \draw[->] (stateB)   edge[bend left=27] node[midway,fill=white]                                  {sample\_done}            (decide);
+ \draw[->] (stateR)   edge[bend left=27] node[midway,fill=white]                                  {dummy\_count $=$ 2}            (stateG);
+ \draw[->] (stateG)   edge[bend left=27] node[midway,below]                                       {dummy\_count $=$ 2}            (stateB);
+ \draw[->] (stateB)   edge[bend left=27] node[midway,fill=white]                                  {dummy\_count $=$ 2}            (decide);
  \draw[->] (decide)   edge[bend left=27] node[midway,below,fill=white]                            {sample\_count $=$ 4}     (state0);
  \draw[->] (decide)   to                 node[midway,above]                                       {sample\_count $!=$ 4}    (stateR);
  \draw[->] (start)    to                                                                                                    (state0);
