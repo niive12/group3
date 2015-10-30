@@ -61,7 +61,7 @@ COMPONENT spi_module
            SCLK             : out STD_LOGIC;
                       
            -- For communication with controller
-           data_in          : in STD_LOGIC_VECTOR(4 downto 0); -- Data from controller to be sent to ADC
+           data_in          : in STD_LOGIC_VECTOR(5 downto 0); -- Data from controller to be sent to ADC
            data_in_ready    : in  STD_LOGIC; -- Signal to pull chip select low
            
            data_out         : out STD_LOGIC_VECTOR(9 downto 0); -- Data recieved from the ADC to be sent to controller
@@ -104,14 +104,14 @@ COMPONENT LED_driver
            sample_data 			: in STD_LOGIC_VECTOR (9 downto 0);
            sample_done 			: in STD_LOGIC;
 		   start_sample 		: out STD_LOGIC;
-		   header 				: out STD_LOGIC_VECTOR(4 downto 0);
+		   header 				: out STD_LOGIC_VECTOR(5 downto 0);
             
            clk				 	: in STD_LOGIC);
 end COMPONENT;
 
 signal detected : STD_LOGIC_VECTOR(2 downto 0);
 signal sample_data : STD_LOGIC_VECTOR(9 downto 0):= (others => '0');
-signal header : STD_LOGIC_VECTOR(4 downto 0);
+signal header : STD_LOGIC_VECTOR(5 downto 0);
 signal start_sample : STD_LOGIC;
 signal sample_done : STD_LOGIC;
 signal color_val : STD_LOGIC_VECTOR(31 downto 0);
