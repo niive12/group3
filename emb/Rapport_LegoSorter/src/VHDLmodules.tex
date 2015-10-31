@@ -51,7 +51,7 @@ This module is only there in order to take the different components and put them
 This module is the brain of the project. This is where it is decided which LED should be on at the given moment, it takes the samples from the ADC, it analyzes the results of the ADC and decides which color the brick is.
 
 \subsubsection{Implementation}
-In order to make this work a state machine is implemented. A state diagram can be seen figure \ref{fig::state_led}. It starts in in idle state. In this state the red LED is turned on, and a sample from the ADC is done. If this value is bigger than a specific threshold, which mean that a brick is present at the photo diode. The state is then changed and the different LED's are flashed one at a time, and the value of the photo diode is read from the ADC. Instead of just taking one sample of each color, it was chosen to take a number of samples and take the mean in order to ensure that the choice is more reliable. In order to make the mean calculation easier, the number of samples should be a power of 2, since division with a power of 2 is just right shifting the number of times of the power, so 4 samples = 2 $\times$ rightshift. This is what is happening in the Decider state in figure \ref{fig::state_led}, note sample\_count is a counter that counts run-throughs, and not individual colors. When the decider detects a color, i.e the ADC value is bigger than a specified threshold, a bit is set in a signal corresponding to the given color. The thresholds of the colors can be updated from the computer through $\mu$TosNet. 
+In order to make this work, a state machine is implemented. A state diagram can be seen figure \ref{fig::state_led}. It starts in in idle state. In this state the red LED is turned on, and a sample from the ADC is done. If this value is bigger than a specific threshold, which mean that a brick is present at the photo diode. The state is then changed and the different LED's are flashed one at a time, and the value of the photo diode is read from the ADC. Instead of just taking one sample of each color, it was chosen to take a number of samples and take the mean in order to ensure that the choice is more reliable. In order to make the mean calculation easier, the number of samples should be a power of 2, since division with a power of 2 is just right shifting the number of times of the power, so 4 samples = 2 $\times$ rightshift. This is what is happening in the Decider state in figure \ref{fig::state_led}, note sample\_count is a counter that counts run-throughs, and not individual colors. When the decider detects a color, i.e the ADC value is bigger than a specified threshold, a bit is set in a signal corresponding to the given color. The thresholds of the colors can be updated from the computer through $\mu$TosNet. 
 
 \begin{figure}[h]
 \centering
@@ -106,10 +106,60 @@ In order to keep the abstraction level, that this module is only for communicati
 \subsection{MotorControl}
 In order to make the sorting happen, a servo motor with a mounted plastic rod is used. The colors that the \textbf{LED\_driver} has detected is fed in to the module, one wire for each color. The motor controller then decides which way the rod should point. If there are more than one color wire that is high, the rod is placed in the middle. 
 
-The servo motor is controlled by a pulse width modulated (PWM) signal. The standard for RC-servo motors\footnote{Add reference to Electronics book}, one of which was provided for this project, a pulse width of 1 ms to be on the left extreme and 2 ms for the right extreme, with a PWM period of 20 ms. Since it is not needed to go to the extremes, some new width values has to be put in. It was found out that these values should be 1.35 ms to make the bricks slide right and 1.65 ms to make them slide left.
+The servo motor is controlled by a pulse width modulated (PWM) signal. The standard for RC-servo motors\footnote{Add reference to Electronics book}, one of which was provided for this project, a pulse width of 1 ms to be on the left extreme and 2 ms for the right extreme, with a PWM period of 20 ms. 
+The pulse width for a desired angle can be calculated using equation \ref{eq:pulse_width}.
+Here the max value of the motor has to be found.
+The given motor has a max angle of 120 degrees but others might have 220 degrees.
+Since it is not needed to go to the extremes, new width values has to be put in. 
+
+\begin{equation}
+ \text{pulse}_\text{width} = \frac{\text{desired}_{\text{angle}}}{\text{max}_{\text{angle}}}+\text{pulse}_{\text{normal}} \label{eq:pulse_width}
+\end{equation}
+
+The plastic rod has been measured to be $10 cm$ long and the rod should move $2.5 cm$ in either direction from the middle position.
+Thus an angle of $14$ degrees is desired in both directions.
+It was found out that these values should be $1.38 ms$ to make the bricks slide right and $1.62 ms$ to make them slide left.
+With a $400$ division this means the pulse width should be $27.6$ clock cycles to make the rod go right and $32.3$ clocks to make it go to the left.
+This was decided to be rounded towards maximum spread, thus choosing $27$ and $33$ clock cycles.
+In figure \ref{fig:pwm_simulation} can the simulation of the pwm signal be seen.
+The motor reacts on the color of the Lego and the different widths can be seen.
+
+\begin{figure}[h]
+\centering
+    \includegraphics[width=0.9\linewidth]{img/pwm_simulation}
+    \caption{Simulation of the pwm signal that controls the servo motor.}
+    \label{fig:pwm_simulation}
+\end{figure}
 
 \subsection{$\mu$TosNet}
-When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometimes very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a nice feature. This is where $\mu$TosNet come in to the picture. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
+When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometimes very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a desired feature. A communication module called $\mu$TosNet is available and used. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
 
-\subsubsection{Usage}
-Due to the VHDL compiler being slow and tedious it could be nice to be able to change the thresholds of the different colors from the computer instead of compiling and flashing every time you want to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
+Due to the process of compiling the bit file from VHDL is slow and tedious, it could be nice to be able to change the thresholds of the different colors from the computer instead of compiling and flashing every time you want to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
+
+To make the communication on the computer a small C++ program was made, using the Boost library to instantiate the serial communication.
+The application has two functions.
+Either the user enters a value to change the threshold or the computer will go into read mode, which will continuously read the color values.
+The protocol is shown in figure \ref{fig:read_protocol}. 10 bits are used for each color and a control signal is sent in the remainding bits. The ctrl bits shows which color is being guessed as the likely color.
+The sending protocol is identical. Only this is used to overwrite the thresholds and the ctrl bits are used to specify which brick values are being overwritten.
+
+\nikolaj{Is this actually done or should we do this tomorrow?}
+
+\begin{figure}[h]
+\centering
+    \begin{tikzpicture}[scale=0.75, every node/.style={scale=0.75}]
+        \node[draw, color=black,text centered, minimum height=12pt, name=ctrl,   minimum width=1cm] at (0,0)                     {ctrl};
+        \node[draw, color=black,text centered, minimum height=12pt, name=red,    minimum width=5cm,  right of=ctrl,   xshift=2.1cm] {red};
+        \node[draw, color=black,text centered, minimum height=12pt, name=green,  minimum width=5cm,  right of=red,   xshift=4.1cm] {green};
+        \node[draw, color=black,text centered, minimum height=12pt, name=blue,   minimum width=5cm,  right of=green,   xshift=4.1cm] {blue};
+        
+        \draw[decorate,decoration={brace,amplitude=5pt,raise=3pt}] (ctrl.north west) -- (blue.north east) node[midway,yshift=1cm] {32 bits} ;
+        
+        \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=3pt}] (ctrl.south west) -- (ctrl.south east) node[midway,yshift=-1cm] {2 bits} ;
+        
+        \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=3pt}] (red.south west) -- (red.south east) node[midway,yshift=-1cm] {10 bits} ;
+        \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=3pt}] (green.south west) -- (green.south east) node[midway,yshift=-1cm] {10 bits} ;
+        \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=3pt}] (blue.south west) -- (blue.south east) node[midway,yshift=-1cm] {10 bits} ;
+    \end{tikzpicture}
+    \caption[$\mu$tosnet data protocol.]{The data format used when sending data to and from the FPGA.}
+    \label{fig:read_protocol}
+\end{figure}

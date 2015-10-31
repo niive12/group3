@@ -121,13 +121,13 @@ The Forward voltage on the red is 1.9 V and 3.2 V for the green and blue LED.
 The current is chosen at $50 mA$, based on the recommended range for 100\% duty cycle.
 \footnote{led\_application\_notes, p2}
 \begin{eqnarray}
- R_{red} =& \frac{12-1.9}{0.05} =& 202 \Omega\\
- R_{green} = R_{blue} =& \frac{12-3.2}{0.05} =& 176 \Omega
+ R_{red} =& \frac{12-1.9}{0.05} =& 202 \Omega \nonumber \\
+ R_{green} = R_{blue} =& \frac{12-3.2}{0.05} =& 176 \Omega \nonumber 
 \end{eqnarray}
-The green and blue LEDS are only turned on for a short amount of time so $R_{green}$ and $R_{blue}$ is rounded down to $160 \Omega$.
+In the sorting application, the LEDs have a duty cycle of 33\% so $R_{green}$ and $R_{blue}$ is rounded down to $160 \Omega$.
 The $R_{red}$ is rounded down to $200\Omega$.
 The schematic can be seen in figure \ref{fig:sch_led}.
-A pull down resistor at is used so the FPGA has to deliver a current to turn the mosfet on.
+A pull down resistor at is used so the diode is not turned on without the FPGA driving it.
 
 \begin{figure}
 \centering
@@ -165,13 +165,13 @@ The supply is chosen to be 3.3 V, keeping the logic level the same as the FPGA.
 
 \subsubsection{PCB design}
 The PCB design was made early in the process.
-This means errors the errors in the board are still present.
+This means the errors in the board are still present.
 Two fixes has been made to the PCB design.
 The $V_+$ on the op amp has been swapped with the $V_-$.
 This has been fixed by adding wires between the op-amp and the socket.
 Another fix has been adding a capacitor on feedback signal to the op-amp.
 This is discussed in section \ref{sec:rise_time_test}. 
-The pcb can be seen in figure \ref{fig:adc_board}
+The PCB can be seen in figure \ref{fig:adc_board}.
 
 \begin{figure}[h]                     %left, bot, right, top
 \centering
