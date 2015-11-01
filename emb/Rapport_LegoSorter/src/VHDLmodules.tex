@@ -94,7 +94,7 @@ The block values can be updated from the computer through $\mu$TosNet.
  \label{fig::state_led}
 \end{figure}
 
-\subsubsection{Test of Decision state.}
+\subsubsection{Test of Decision state.}\label{sec:system_test}
 To find the ideal initial values for the blocks, a test with a each color block and a test without any blocks were made.
 This showed that the light intensities are not ideal and green and blue light gets reflected more than expected.
 This should be compensated by the Nearest Neighbor approach.
@@ -138,14 +138,15 @@ The current clock skew with the nearest neighbor approach is $13.040 ns$, which 
 \setlength{\belowcaptionskip}{5pt}
 
 \begin{subfigure}[b]{0.70\textwidth}
+\centering
 \includegraphics[width=\linewidth]{img/nearest_neighbor_optimized.png}
-\caption{Logic consumption of the project with Nearest Neighbor algorithm as decider}
+\caption{Logic consumption of the project with Nearest Neighbor algorithm as decider.}
 \end{subfigure}
 
 \begin{subfigure}[b]{0.70\textwidth}
 \centering
 \includegraphics[width=\linewidth]{img/thresholding.png}
-\caption{Logic consumption of project with a simple thresholding algorithm as decider}
+\caption{Logic consumption of project with a simple thresholding algorithm as decider.}
 \end{subfigure}
 
 \end{figure}
