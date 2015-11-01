@@ -6597,7 +6597,7 @@ naming: grid - package width</description>
 <part name="P+31" library="supply1" deviceset="VCC" device="" value="0V"/>
 <part name="P+32" library="supply1" deviceset="VCC" device="" value="0V"/>
 <part name="P+33" library="supply1" deviceset="VCC" device="" value="0V"/>
-<part name="IC1" library="linear" deviceset="LM358" device="N"/>
+<part name="IC1" library="linear" deviceset="LM358" device="N" value="LM2904"/>
 <part name="4.5V2" library="supply1" deviceset="VCC" device="" value="4.5V"/>
 <part name="3.3V1" library="supply1" deviceset="VCC" device="" value="3.3V"/>
 <part name="P+1" library="supply1" deviceset="VCC" device="" value="0V"/>

@@ -1645,7 +1645,7 @@ design rules under a new name.</description>
 <element name="R7" library="rcl" package="0207/10" value="160" x="59.24" y="39.45" rot="R270"/>
 <element name="J1" library="con-amp" package="10X08MTA" value="" x="55.84" y="68.327"/>
 <element name="J2" library="my_lbr" package="10X03MTA" value="" x="70.971" y="37.0305" rot="R270"/>
-<element name="IC1" library="linear" package="DIL08" value="LM358N" x="28.11" y="46.61" rot="R90"/>
+<element name="IC1" library="linear" package="DIL08" value="LM2904" x="28.11" y="46.61" rot="R90"/>
 <element name="R8" library="rcl" package="0207/10" value="12K" x="75" y="58"/>
 <element name="R9" library="rcl" package="0207/10" value="12K" x="71.5" y="60.75"/>
 <element name="R10" library="rcl" package="0207/10" value="12K" x="64.75" y="64" rot="R180"/>
