@@ -4,37 +4,39 @@
 #include"SimpleSerial.cpp"
 void get_tosnet_value(std::string);
 
-#define red   0b00111111111100000000000000000000
-#define green 0b00000000000011111111110000000000
-#define blue  0b00000000000000000000001111111111
-
 int main(){
+SimpleSerial tosnet("/dev/ttyUSB0",115200);
 
-  std::string ui;
+   char ui;
+   bool running=true;
+   std::string val="";
+   int nr=0;
   while(1){
-	/*std::cin >> ui;	
-	if(ui =="s")
-	  break*/;
+	std::cout << "Symbol description: s = stop, color values = c, 	r = set thresholds red, g = set thresholds green, b = set thresholds blue, n = set thresholds no_brick\n";
+	std::cout << "Write a char: ";
+	std::cin >> ui;	
+	switch(ui){
+	  case 'c': std::cout << "Number of samples: "
+				std::cin >> nr;
+	            if(nr > 0){
+				  tosnet.get_colors(100);
+				}else{
+				  std::cout << "Number of samples invalid\n";
+				}
+				break;
+	  
+	  case 's': running = false;
+				break;
+	  
+	  case 'r': std::cout << "Threshold: ";
+				std::cin >> val;
+		        tosnet.set_threshold(val,ui);
+				break;
+	  
+	  default:	break;
+	}
 	sleep(1);
-	get_tosnet_value("r10");
   }
-  
+
 return 0;
 }
-
-void get_tosnet_value(std::string word){;	
-	SimpleSerial tosnet("/dev/ttyUSB0",115200);
-	std::string input = "";
-	tosnet.writeString(word);
-	input = tosnet.readLine();
-	std::int32_t x = 0;
-	std::stringstream ss;
-	ss << std::hex << input;
-	ss >> x;
-	
-	int red_val=0,green_val=0,blue_val = 0;
-	red_val   = (x & red) >> 20;
-	green_val = (x & green) >> 10;
-	blue_val  = (x & blue);
-	std::cout << "Red: " << red_val << "\tGreen: " << green_val << "\tBlue: " << blue_val << " Input: " << input << "\tHex: " << x << std::endl;
-}	

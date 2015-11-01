@@ -53,6 +53,8 @@ This module is the brain of the project. This is where it is decided which LED s
 \subsubsection{Implementation}
 In order to make this work a state machine is implemented. A state diagram can be seen figure \ref{fig::state_led}. It starts in in idle state. In this state the red LED is turned on, and a sample from the ADC is done. If this value is bigger than a specific threshold, which mean that a brick is present at the photo diode. The state is then changed and the different LED's are flashed one at a time, and the value of the photo diode is read from the ADC. Instead of just taking one sample of each color, it was chosen to take a number of samples and take the mean in order to ensure that the choice is more reliable. In order to make the mean calculation easier, the number of samples should be a power of 2, since division with a power of 2 is just right shifting the number of times of the power, so 4 samples = 2 $\times$ rightshift. This is what is happening in the Decider state in figure \ref{fig::state_led}, note sample\_count is a counter that counts run-throughs, and not individual colors. When the decider detects a color, i.e the ADC value is bigger than a specified threshold, a bit is set in a signal corresponding to the given color. The thresholds of the colors can be updated from the computer through $\mu$TosNet. 
 
+\matthias{Skriv om til Nearest Neighbor implementering}
+
 \begin{figure}[h]
 \centering
  \begin{tikzpicture}[node distance=2.5cm]
@@ -78,6 +80,25 @@ In order to make this work a state machine is implemented. A state diagram can b
  \label{fig::state_led}
 \end{figure}
 
+\subsubsection{Extra considerations}
+One of the things that was thought of during implementation the Nearest Neighbor algorithm was whether or not there was logic enough in order to contain all of the data needed without using external memory. In the beginning a simpler algorithm was implemented, that uses thresholds in order to decide which color brick there is.
+
+\begin{figure}[H]
+ \centering
+\setlength{\belowcaptionskip}{5pt}
+
+\begin{subfigure}[b]{0.70\textwidth}
+\includegraphics[width=\linewidth]{img/nearest_neighbor.png}
+\caption{Logic consumption of the project with Nearest Neighbor algorithm as decider}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.70\textwidth}
+\centering
+\includegraphics[width=\linewidth]{img/thresholding.png}
+\caption{Logic consumption of project with a simple thresholding algorithm as decider}
+\end{subfigure}
+
+\end{figure}
 
 \subsection{SPI}
 The analog to digital converter (ADC) supplied by the supervisor uses a SPI protocol as it's form of communication, so a module in the FPGA needs to be set up.
@@ -111,5 +132,6 @@ The servo motor is controlled by a pulse width modulated (PWM) signal. The stand
 \subsection{$\mu$TosNet}
 When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometimes very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a nice feature. This is where $\mu$TosNet come in to the picture. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
 
+In order to communicate with the FPGA a simple program has been written in C++, building on a skeleton found on the internet\footnote{\url{http://www.webalice.it/fede.tft/serial_port/serial_port.html}}. The program interfaces a simple UI where the user can input threshold values and then the program figures out what command should be sent. 
 \subsubsection{Usage}
 Due to the VHDL compiler being slow and tedious it could be nice to be able to change the thresholds of the different colors from the computer instead of compiling and flashing every time you want to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 

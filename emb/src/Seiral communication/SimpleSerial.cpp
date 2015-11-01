@@ -1,5 +1,10 @@
 #include <boost/asio.hpp>
 
+#define red   0b00111111111100000000000000000000
+#define green 0b00000000000011111111110000000000
+#define blue  0b00000000000000000000001111111111
+
+
 class SimpleSerial
 {
 public:
@@ -41,6 +46,42 @@ public:
     return response;
     }
 
+std::string tosnet_command(std::string word){
+	std::string input = "";
+	writeString(word);
+	input = readLine();
+	return input;	
+	}	
+
+void set_threshold(std::string value, char color){
+  std::string command = "r0";
+  switch(color){
+	case 'r': command.append("0 ");
+	case 'g': command.append("1 ");
+	case 'b': command.append("2 ");
+	case 'n': command.append("3 ");
+  }
+  command.append(value);
+  tosnet_command(command);
+}
+	
+void get_colors(int number = 1){
+    std::string input;
+	for(int i = 0;i<number;i++){
+	  
+	input = tosnet_command("r10");
+	std::int32_t x = 0;
+	std::stringstream ss;
+	ss << std::hex << input;
+	ss >> x;
+	
+	int red_val=0,green_val=0,blue_val = 0;
+	red_val   = (x & red) >> 20;
+	green_val = (x & green) >> 10;
+	blue_val  = (x & blue);
+	std::cout << "Red: " << red_val << "\tGreen: " << green_val << "\tBlue: " << blue_val << std::endl; 
+	}
+};
 private:
     boost::asio::io_service io;
     boost::asio::serial_port serial;
