@@ -8,6 +8,7 @@
 \usepackage{wrapfig,booktabs}
 \usepackage{tikz}
 \usepackage{circuitikz}
+\usepackage{cite}
 \usepackage{tikz-timing}
 \usepackage{url}
 \usepackage{hyperref}
@@ -95,7 +96,12 @@
 
 \input{./src/VHDLmodules.tex}
 
-\newpage\input{src/tests.tex}
+\newpage
 
-% \inpu
+\input{src/tests.tex}
+
+\bibliographystyle{ieeetr}
+\bibliography{src/bibtex}
+
+\matthias{Bill of materials}
 \end{document}

@@ -169,7 +169,7 @@ The FPGA will serve as the master and the ADC as the slave. In the VHDL module a
 \end{figure}
 
 \subsubsection{Implementation}
-Given the datasheet \footnote{MCP3008,p1}
+Given the datasheet\cite[p. 1]{ds:MCP3008}
 the maximum clock frequency of the SPI clock is $3.6$ MHz which gives a period time of 277 ns, but since this is not possible to obtain due to the system clock period being 20 ns. Taking the nearest number that to 277 that divides evenly with 20, 280, a clock frequency of $3.571$ MHz, which should be more than sufficient. Therefore a clock is generated with this period time in this VHDL module and put out on an output pin.
 
 In order to keep the abstraction level, that this module is only for communication, it is the \textbf{LED\_driver} module that tells the \textbf{spi\_module} to initiate a sample. When a sample is received the data is just passed on to the LED\_driver, and a flag is set in order to tell the driver that new data has arrived.
@@ -177,7 +177,7 @@ In order to keep the abstraction level, that this module is only for communicati
 \subsection{MotorControl}
 In order to make the sorting happen, a servo motor with a mounted plastic rod is used. The colors that the \textbf{LED\_driver} has detected is fed in to the module, one wire for each color. The motor controller then decides which way the rod should point. If there are more than one color wire that is high, the rod is placed in the middle. 
 
-The servo motor is controlled by a pulse width modulated (PWM) signal. The standard for RC-servo motors\footnote{Add reference to Electronics book}, one of which was provided for this project, a pulse width of 1 ms to be on the left extreme and 2 ms for the right extreme, with a PWM period of 20 ms. 
+The servo motor is controlled by a pulse width modulated (PWM) signal. The standard for RC-servo motors\cite[p. 917]{book:prac_ele}, one of which was provided for this project, a pulse width of 1 ms to be on the left extreme and 2 ms for the right extreme, with a PWM period of 20 ms. 
 The pulse width for a desired angle can be calculated using equation \ref{eq:pulse_width}.
 Here the max value of the motor has to be found.
 The given motor has a max angle of 120 degrees but others might have 220 degrees.
@@ -208,7 +208,7 @@ When working with an FPGA, especially with one with limited I/O pins, setting up
 \subsubsection{Usage}
 Due to the process of compiling the bit file from VHDL is slow and tedious, it could be nice to be able to change the thresholds of the different colors from the computer instead of compiling and flashing every time you want to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
 
-To make the communication on the computer a small C++ program was made, using the Boost library to instantiate the serial communication, building on a skeleton found on the internet \footnote{\url{http://www.webalice.it/fede.tft/serial_port/serial_port.html}}.
+To make the communication on the computer a small C++ program was made, using the Boost library to instantiate the serial communication, building on a skeleton found on the internet\cite{url:serial}.
 The application has two functions.
 Either the user enters a value to change the threshold or the computer will go into read mode, which will repeatedly read the color values.
 The protocol is shown in figure \ref{fig:read_protocol}. 10 bits are used for each color and a control signal is sent in the remainding bits. %The ctrl bits shows which color is being guessed as the likely color.
