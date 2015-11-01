@@ -1,5 +1,8 @@
 \section{Electronics}
-\nikolaj{introduction of this section}
+
+In this section the design choices of the power supply and the photo diode circuit is described.
+These are implemented as two separate boards as their functionality does not cross.
+
 \subsection{Power supply}
 One of the tasks of the project was to create a power supply for the FPGA board and the external components. 
 This supply should take a 15 V signal and divide it into 3 different voltage levels which can be seen in table \ref{tab::power_req}. 
@@ -50,7 +53,7 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \caption{6 V supply.}
 \label{fig::sch_power_6V}
 \end{subfigure}
-\begin{subfigure}{0.4\linewidth}
+\begin{subfigure}{0.5\linewidth}
 \centering
 \includegraphics[scale=0.8,trim={5.3cm 24cm 7.8cm 0.6cm},clip]{img/powersupply.pdf}
 \caption{5 V supply.}
@@ -63,7 +66,7 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \caption{12 V supply.}
 \label{fig::sch_power_12V}
 \end{subfigure}
-\begin{subfigure}{0.4\linewidth}
+\begin{subfigure}{0.5\linewidth}
 \centering
 \includegraphics[scale=0.8,trim={5.3cm 18.5cm 10.4cm 6.0cm},clip]{img/powersupply.pdf}
 \caption{Breakout pins.}
@@ -72,8 +75,6 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \caption{Schematic diagram of power supply}
 \label{fig::sch_power}
 \end{figure}
-
-\nikolaj{fix figur, align stuff}
 
 \subsubsection{Heat}
 One of the problems when designing the circuit, is that the linear regulators.
