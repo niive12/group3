@@ -22,7 +22,7 @@ The schematic of the board can be seen on figure \ref{fig::sch_power}.
 The 5 V supply, driving the FPGA, has a requirement to the efficiency which means a switching regulator must be used for this task. 
 For the switching regulator a LM2574N-5.0 was chosen as it provides a 0.5A, 5.0V supply.
 According to the datasheet, the typical efficiency is 77\% \cite{ds:LM2574N}. 
-The regulator has been assigned to this project so this is overlooked.
+The switching regulator is the best available to this project so this is overlooked.
 
 The specified tolerance is 4\% which means the tolerance is worse than required. Further testing is required to see if the configuration is good enough for the application\cite[p. 1]{ds:LM2574N}.
 The power supply is tested under load in section \ref{sec:test_pwr_supply}.
@@ -47,20 +47,20 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \begin{subfigure}{0.3\linewidth}
 \centering
 \includegraphics[scale=0.8,trim={0 24cm 15.7cm 0.6cm},clip]{img/powersupply.pdf}
-\caption{6V supply.}
+\caption{6 V supply.}
 \label{fig::sch_power_6V}
 \end{subfigure}
 \begin{subfigure}{0.4\linewidth}
 \centering
 \includegraphics[scale=0.8,trim={5.3cm 24cm 7.8cm 0.6cm},clip]{img/powersupply.pdf}
-\caption{5V supply.}
+\caption{5 V supply.}
 \label{fig::sch_power_5V}
 \end{subfigure}
 
 \begin{subfigure}{0.3\linewidth}
 \centering
 \includegraphics[scale=0.8,trim={0 18.5cm 15.7cm 6.0cm},clip]{img/powersupply.pdf}
-\caption{12V supply.}
+\caption{12 V supply.}
 \label{fig::sch_power_12V}
 \end{subfigure}
 \begin{subfigure}{0.4\linewidth}
@@ -72,6 +72,8 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 \caption{Schematic diagram of power supply}
 \label{fig::sch_power}
 \end{figure}
+
+\nikolaj{fix figur, align stuff}
 
 \subsubsection{Heat}
 One of the problems when designing the circuit, is that the linear regulators.

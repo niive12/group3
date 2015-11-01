@@ -93,31 +93,15 @@ The block values can be updated from the computer through $\mu$TosNet.
 \end{figure}
 
 \subsubsection{Test of Decision State.}\label{sec:system_test}
-To find the ideal initial values for the blocks, a test with a each color block and a test without any blocks were made.
+To find the classifier values for the blocks, a test with a each color block and a test without any blocks were made.
 This showed that the light intensities are not ideal and green and blue light gets reflected more than expected.
 This should be compensated by the Nearest Neighbor approach.
-In figure \ref{fig:analog_values} is the test result for a green block shown.
-The colored signals signify which color LED is turned on at the time and the yellow signal is the analog output.
-It can be seen that the there is more blue light reflected from a green Lego which would break the system if the highest value is selected.
 
 The signal has been analyzed and the binary value corresponding to the tested ADC reading has been found for each block.
 These numbers are then used in the code as the default values for each brick.
+The numbers can be updated over the $\mu$TosNet protocol.
 
-But defining bricks this way leads to inaccuracies, which would take more investigation to sort out and thus is not accounted for in the code.
-Testing shows that the Nearest Neighbor algorithm mostly results in invalid detections.
-Since the different tests just each cast a vote, a majority of invalid detections remove valid detections.
-This is compensated for by reducing the impact of an invalid vote, by making each vote count a 1/5th of a colored vote.
-This has not proved to be successful.
-This means the signal does not change and the motor does not change pwm.
-As this part failed, the entire system is unable to detect the color of the Lego, and the arm on the motor will not move. 
-\nikolaj{Fix this in VHDL so I can get a more optimistic conclusion on this}
-
-\begin{figure}[h]
-\centering
- \includegraphics[width=0.9\linewidth]{img/analog_values}
- \caption[Analog output with all diodes.]{Analog output with on yellow, red,green,blue signifies when the LED is turned on. The tested color is green.}
- \label{fig:analog_values}
-\end{figure}
+A c++ program has been made, which samples the ADC values and sets the classifier as the mean of the samples.
 
 \subsubsection{Extra considerations}
 One of the things that was thought of during implementation the Nearest Neighbor algorithm was whether or not there was logic enough in order to contain all of the data needed without using external memory. In the beginning a simpler algorithm was implemented, that uses thresholds in order to decide which color brick there is.
@@ -129,7 +113,7 @@ Another drawback of running everything in a single process is clock skew.
 If not specified, Xilinx does not know the clock speed of the device.
 Thus it will warn the user about potential clock skew.
 If the skew gets above the period, the FPGA cannot be ready to run the process again and the behavior gets unpredictable.
-The current clock skew with the nearest neighbor approach is $13.040 ns$, which is in a dangerous zone, but below the threshold. 
+The current clock skew with the nearest neighbor approach is $14.316 ns$, which is in a dangerous zone, but below the threshold. 
 
 \begin{figure}[H]
  \centering

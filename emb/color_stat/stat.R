@@ -70,7 +70,6 @@ block_value[1] = adc_value[which(v_in>red_value)[1]]
 block_value[2] = adc_value[which(v_in>green_value)[1]]
 block_value[3] = adc_value[which(v_in>blue_value)[1]]
 
-# print(block_value)
-block_value = c(red_value,green_value,blue_value)
+print(block_value)
 cat(c(as_bin(block_value,length=10),"\n"))
 }
