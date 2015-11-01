@@ -17,8 +17,7 @@ One of the tasks of the project was to create a power supply for the FPGA board 
 \end{wraptable}
 The 5V supply, driving the FPGA, has a requirement to the efficiency which means a switching regulator must be used for this task. 
 For the switching regulator a LM2574N-5.0 was chosen as it provides a 0.5A, 5.0V supply.
-According to the datasheet, the typical efficiency is 77\%.
-\footnote{LM2574N datasheet, p4}
+According to the datasheet, the typical efficiency is 77\%\cite{ds:LM2574N}.
 The specified tolerance is 4\% which means the tolerance is worse than required. Further testing is required to see if the configuration is good enough for the application.
 \footnote{LM2574N datasheet, p1}
 The schematic was designed following the typical application guidelines in the datasheet.
@@ -93,18 +92,18 @@ It is decided to use a heatsink on both.
 \subsubsection{PCB design}
 The components described above, put together as seen in the block diagram in figure \ref{fig::sch_power}. 
 % One of the things that were taken into account when designing the PCB was, in order to save space, instead of having one capacitor on the each of the regulator input, the 15V input was put roughly in the middle of the regulators with only one input capacitor
+\matthias{Der er en udkommentering af begrundelsen af at vi har valgt at bruge 1 input capacitor, hvorfor}
 The 15 V input was put between the regulators with only one input capacitor to save space.
 A ground plane was added to reduce the resistance to ground.
 This has the added benefit that it will be easier to route and faster to produce as less copper is removed.
-The pcb can be seen in figure \ref{fig::pcb_power}
+The PCB can be seen in figure \ref{fig::pcb_power}
 
-\begin{figure}
+\begin{figure}[ht]
 \centering
-\begin{tikzpicture} \node[rotate=-90] {\includegraphics[scale=0.5]{img/pcb_power.png} }; \end{tikzpicture}
+\includegraphics[angle=90,scale=0.5]{img/pcb_power.png}
 \caption{PCB design of the power supply made in Eagle} 
 \label{fig::pcb_power}
 \end{figure}
-\nikolaj{Update figure}
 
 \subsection{Color detection}
 In order to detect colors a block gets shined upon with different colored LEDS.
@@ -129,7 +128,7 @@ The $R_{red}$ is rounded down to $200\Omega$.
 The schematic can be seen in figure \ref{fig:sch_led}.
 A pull down resistor at is used so the diode is not turned on without the FPGA driving it.
 
-\begin{figure}
+\begin{figure}[ht]
 \centering
  \includegraphics[scale=0.9,trim={2.4cm 14cm 5.1cm 9cm},clip]{img/adc_schematic.pdf}
   \caption{Schematic for LEDS.}
@@ -156,7 +155,7 @@ The MCP3001 is an ADC in a single component.
 It provides a 10 bit variable, sent over SPI.
 The supply is chosen to be 3.3 V, keeping the logic level the same as the FPGA.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering%left, bot, right, top
  \includegraphics[scale=0.9,trim={2.4cm 20.8cm 5.1cm 2.2cm},clip]{img/adc_schematic.pdf}
   \caption{Schematic for photo diode.}
@@ -173,7 +172,7 @@ Another fix has been adding a capacitor on feedback signal to the op-amp.
 This is discussed in section \ref{sec:rise_time_test}. 
 The PCB can be seen in figure \ref{fig:adc_board}.
 
-\begin{figure}[h]                     %left, bot, right, top
+\begin{figure}[ht]                     %left, bot, right, top
 \centering
  \includegraphics[scale=1,trim={7.6cm 13.5cm 8cm 11.8cm},clip]{img/printed_adc_board}
  \caption{The printed ADC board.}\label{fig:adc_board}

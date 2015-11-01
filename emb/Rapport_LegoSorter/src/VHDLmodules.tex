@@ -67,6 +67,8 @@ So instead of going with the highest value, this method looks at an approximatio
 This is usually done by comparing euclidean distances, but this has been simplified to the sum of the absolute difference.
 The block values can be updated from the computer through $\mu$TosNet. 
 
+\matthias{Skriv om til Nearest Neighbor implementering}
+
 \begin{figure}[h]
 \centering
  \begin{tikzpicture}[node distance=2.5cm]
@@ -100,6 +102,26 @@ To find the ideal initial values for the blocks, a test with a each color block 
  \includegraphics[width=0.9\linewidth]{img/analog_values}
  \caption[Analog output with all diodes.]{Analog output with on yellow, red,green,blue signifies when the LED is turned on. The tested color is green.}
  \label{fig:analog_values}
+\end{figure}
+
+\subsubsection{Extra considerations}
+One of the things that was thought of during implementation the Nearest Neighbor algorithm was whether or not there was logic enough in order to contain all of the data needed without using external memory. In the beginning a simpler algorithm was implemented, that uses thresholds in order to decide which color brick there is.
+
+\begin{figure}[H]
+ \centering
+\setlength{\belowcaptionskip}{5pt}
+
+\begin{subfigure}[b]{0.70\textwidth}
+\includegraphics[width=\linewidth]{img/nearest_neighbor.png}
+\caption{Logic consumption of the project with Nearest Neighbor algorithm as decider}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.70\textwidth}
+\centering
+\includegraphics[width=\linewidth]{img/thresholding.png}
+\caption{Logic consumption of project with a simple thresholding algorithm as decider}
+\end{subfigure}
+
 \end{figure}
 
 \subsection{SPI}
@@ -157,12 +179,14 @@ The motor reacts on the color of the Lego and the different widths can be seen.
 \subsection{$\mu$TosNet}
 When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometimes very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a desired feature. A communication module called $\mu$TosNet is available and used. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
 
+\subsubsection{Usage}
 Due to the process of compiling the bit file from VHDL is slow and tedious, it could be nice to be able to change the thresholds of the different colors from the computer instead of compiling and flashing every time you want to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
 
-To make the communication on the computer a small C++ program was made, using the Boost library to instantiate the serial communication.
+To make the communication on the computer a small C++ program was made, using the Boost library to instantiate the serial communication, building on a skeleton found on the internet \footnote{\url{http://www.webalice.it/fede.tft/serial_port/serial_port.html}}.
 The application has two functions.
-Either the user enters a value to change the threshold or the computer will go into read mode, which will continuously read the color values.
-The protocol is shown in figure \ref{fig:read_protocol}. 10 bits are used for each color and a control signal is sent in the remainding bits. The ctrl bits shows which color is being guessed as the likely color.
+Either the user enters a value to change the threshold or the computer will go into read mode, which will repeatedly read the color values.
+The protocol is shown in figure \ref{fig:read_protocol}. 10 bits are used for each color and a control signal is sent in the remainding bits. %The ctrl bits shows which color is being guessed as the likely color.
+\matthias{Der er ingen kontrol bits lige nu på modtag siden}
 The sending protocol is identical. Only this is used to overwrite the thresholds and the ctrl bits are used to specify which brick values are being overwritten.
 
 \nikolaj{Is this actually done or should we do this tomorrow?}

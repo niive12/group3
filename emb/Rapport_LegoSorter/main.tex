@@ -60,15 +60,26 @@
 \input{todoextend}
 \begin{document}
 
-\maketitle
-\vspace{2 cm}
-\begin{figure*}[h]
-\centering
-\includegraphics{img/sdu.jpg}
-\end{figure*}
-\thispagestyle{empty}
-\addtocounter{page}{-1}
-\newpage 
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE University of Southern Denmark \par}
+	\vspace{1cm}
+	{\scshape\Large Embedded Programming (EMB1) \par}
+	\vspace{1.5cm}
+	{\huge\bfseries Brick Sorter\par}
+	\vspace{2cm}
+	{\Large\itshape Group 3 \\ Nikolaj Iversen \{nive12\} \\ \& \\ Matthias Harald Hessels \{mahes12\} \par}
+	\vspace{1cm}
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/sdu}\par
+	\vfill
+	supervised by\par
+	Jørgen Christian Larsen \& Richard Beck
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
 
 \tableofcontents
 \listoftodos
@@ -86,4 +97,5 @@
 
 \newpage\input{src/tests.tex}
 
+% \inpu
 \end{document}
