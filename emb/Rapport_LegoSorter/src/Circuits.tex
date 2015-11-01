@@ -1,6 +1,10 @@
 \section{Electronics}
+\nikolaj{introduction of this section}
 \subsection{Power supply}
-One of the tasks of the project was to create a power supply for the FPGA board and the external components. This supply should take in a 15 V signal and divide it into 3 different voltage levels which can be seen in table \ref{tab::power_req}. The power supplys should be soldered on a PCB made using Eagle, a CAD program for circuit design. The schematic of the board can be seen on figure \ref{fig::sch_power}.
+One of the tasks of the project was to create a power supply for the FPGA board and the external components. 
+This supply should take a 15 V signal and divide it into 3 different voltage levels which can be seen in table \ref{tab::power_req}. 
+The power supplys is soldered on a PCB made using Eagle, a CAD program for circuit design. 
+The schematic of the board can be seen on figure \ref{fig::sch_power}.
 \subsubsection{Regulators}
 \begin{wraptable}{r}{7cm}
  \vspace{5 pt}
@@ -15,10 +19,14 @@ One of the tasks of the project was to create a power supply for the FPGA board 
 \label{tab::power_req}
  \vspace{5 pt}
 \end{wraptable}
-The 5V supply, driving the FPGA, has a requirement to the efficiency which means a switching regulator must be used for this task. 
+The 5 V supply, driving the FPGA, has a requirement to the efficiency which means a switching regulator must be used for this task. 
 For the switching regulator a LM2574N-5.0 was chosen as it provides a 0.5A, 5.0V supply.
-According to the datasheet, the typical efficiency is 77\% \cite{ds:LM2574N}.
+According to the datasheet, the typical efficiency is 77\% \cite{ds:LM2574N}. 
+The regulator has been assigned to this project so this is overlooked.
+
 The specified tolerance is 4\% which means the tolerance is worse than required. Further testing is required to see if the configuration is good enough for the application\cite[p. 1]{ds:LM2574N}.
+The power supply is tested under load in section \ref{sec:test_pwr_supply}.
+
 The schematic was designed following the typical application guidelines in the datasheet.
 The diode was selected as 1N5817\cite[p. 17]{ds:LM2574N}. 
 The $C_{out}$ capacitor was chosen to be $330\mu f$ to minimize ripple voltage\cite[p. 19]{ds:LM2574N}.
@@ -31,7 +39,7 @@ There is no requirements to the efficiency of the 6 and 12 V supplys so a linear
 The maximum current in the 6 V supply is 1.5 A, which means a bigger diode is needed.
 For this a 1N5408 is chosen, which can deliver an average 3.0 A forward current\cite[p. 1]{ds:1N5408}.
 
-The capacitors are there to eliminate voltage spikes from the load. A capacitance of $0.1 \mu F$ is chosen\cite[p. 702]{book:prac_ele}.
+The capacitors are there to eliminate voltage spikes from the load. A capacitance of $0.1 \mu F$ is chosen based on the recommendations\cite[p. 702]{book:prac_ele}.
 The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_power_6V} and \ref{fig::sch_power_12V}.
 
 \begin{figure}[H] %left, bot, right, top

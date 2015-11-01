@@ -58,6 +58,7 @@ architecture Behavioral of PTNX_top is
   signal T_data_to_mem             : std_logic_vector(31 downto 0);
   signal T_data_from_mem           : std_logic_vector(31 downto 0);
   signal T_data_from_mem_latch     : std_logic;
+  constant null_vector : std_logic_vector(29 downto 0) := (others => '0');
 	
 begin
 
@@ -86,12 +87,14 @@ clk_50M <= clk;
   process(clk_50M)
   begin -- process
     if (clk_50M'event and clk_50M='1' and T_data_from_mem_latch='1') then
-	   case (T_reg_ptr & T_word_ptr) is                        -- The addresses are concatenated for compact code
-		  when "00000" => 	threshold  	<= T_data_from_mem(31 downto 0);
-		  when "00001" => 	threshold  	<= T_data_from_mem(31 downto 0);
-		  when "00010" => 	threshold  	<= T_data_from_mem(31 downto 0);
-		  when others =>
-		end case;
+		if T_data_from_mem(29 downto 0) /= null_vector then -- avoid bad bits
+			case (T_reg_ptr & T_word_ptr) is                        -- The addresses are concatenated for compact code
+				when "00000" => 	threshold  	<= "00" & T_data_from_mem(29 downto 0);
+				when "00001" => 	threshold  	<= "01" & T_data_from_mem(29 downto 0);
+				when "00010" => 	threshold  	<= "10" & T_data_from_mem(29 downto 0);
+				when others =>    threshold   <= "11" & T_data_from_mem(29 downto 0);
+			end case;
+		end if;
 	 end if;
   end process;
 

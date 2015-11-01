@@ -69,21 +69,21 @@ signal red_data 		: STD_LOGIC_VECTOR(data_size downto 0);
 signal blue_data		: STD_LOGIC_VECTOR(data_size downto 0);
 signal green_data 		: STD_LOGIC_VECTOR(data_size downto 0);
 
-signal red_block_r   : STD_LOGIC_VECTOR(data_size downto 0) := "0111100010" ;
-signal red_block_g   : STD_LOGIC_VECTOR(data_size downto 0) := "1000011111" ;
-signal red_block_b   : STD_LOGIC_VECTOR(data_size downto 0) := "0110010110" ;
-
-signal green_block_r : STD_LOGIC_VECTOR(data_size downto 0) := "0011111100";
-signal green_block_g : STD_LOGIC_VECTOR(data_size downto 0) := "1000011111";
-signal green_block_b : STD_LOGIC_VECTOR(data_size downto 0) := "1010001010";
-
-signal blue_block_r  : STD_LOGIC_VECTOR(data_size downto 0) := "0011111100";
-signal blue_block_g  : STD_LOGIC_VECTOR(data_size downto 0) := "1011000011";
-signal blue_block_b  : STD_LOGIC_VECTOR(data_size downto 0) := "1000011111";
-
-signal no_block_r  : STD_LOGIC_VECTOR(data_size downto 0)   := "0011111100";
-signal no_block_g  : STD_LOGIC_VECTOR(data_size downto 0)   := "1000011111";
-signal no_block_b  : STD_LOGIC_VECTOR(data_size downto 0)   := "0101010110";
+signal red_block_r   : STD_LOGIC_VECTOR(data_size downto 0) := "0011110111" ;
+signal red_block_g   : STD_LOGIC_VECTOR(data_size downto 0) :=  "0011001100" ;
+signal red_block_b   : STD_LOGIC_VECTOR(data_size downto 0) :=  "0100011100" ;
+                                                                
+signal green_block_r : STD_LOGIC_VECTOR(data_size downto 0) := "0010001100";
+signal green_block_g : STD_LOGIC_VECTOR(data_size downto 0) :=  "0101000001";
+signal green_block_b : STD_LOGIC_VECTOR(data_size downto 0) :=  "0100011100";
+                                                                
+signal blue_block_r  : STD_LOGIC_VECTOR(data_size downto 0) := "0010001101";
+signal blue_block_g  : STD_LOGIC_VECTOR(data_size downto 0) :=  "0100001100";
+signal blue_block_b  : STD_LOGIC_VECTOR(data_size downto 0) :=  "0110011101";
+                                                                
+signal no_block_r  : STD_LOGIC_VECTOR(data_size downto 0)   := "0010000011";
+signal no_block_g  : STD_LOGIC_VECTOR(data_size downto 0)   :=  "0011000000";
+signal no_block_b  : STD_LOGIC_VECTOR(data_size downto 0)   :=  "0100100000";
 
 signal red_votes     : integer range 0 to counter_threshold_max := 0;
 signal green_votes   : integer range 0 to counter_threshold_max := 0;
@@ -98,29 +98,29 @@ constant head : STD_LOGIC_VECTOR(5 downto 0) := "011000";     --ADC configuratio
 begin
 header <= head;
 
-u_tos_net_handling: process(clk)
-begin
-if rising_edge(clk) then 
-	case threshold_container(31 downto 30) is
-	when "00" =>
-	  red_block_r   <= threshold_container(29 downto 20);
-	  red_block_g   <= threshold_container(19 downto 10);
-	  red_block_b   <= threshold_container(9 downto 0);
-	when "01" =>
-	  green_block_r <= threshold_container(29 downto 20);
-	  green_block_g <= threshold_container(19 downto 10);
-	  green_block_b <= threshold_container(9 downto 0);
-	when "10" =>
-	  blue_block_r  <= threshold_container(29 downto 20);
-	  blue_block_g  <= threshold_container(19 downto 10);
-	  blue_block_b  <= threshold_container(9 downto 0);
-	when others =>  
-	  no_block_r    <= threshold_container(29 downto 20);
-	  no_block_g    <= threshold_container(19 downto 10);
-	  no_block_b    <= threshold_container(9 downto 0);
-	end case;
-	end if;
-end process;
+-- u_tos_net_handling: process(clk)
+-- begin
+-- if rising_edge(clk) then 
+-- 	case threshold_container(31 downto 30) is
+-- 	when "00" =>
+-- 	  red_block_r   <= threshold_container(29 downto 20);
+-- 	  red_block_g   <= threshold_container(19 downto 10);
+-- 	  red_block_b   <= threshold_container(9 downto 0);
+-- 	when "01" =>
+-- 	  green_block_r <= threshold_container(29 downto 20);
+-- 	  green_block_g <= threshold_container(19 downto 10);
+-- 	  green_block_b <= threshold_container(9 downto 0);
+-- 	when "10" =>
+-- 	  blue_block_r  <= threshold_container(29 downto 20);
+-- 	  blue_block_g  <= threshold_container(19 downto 10);
+-- 	  blue_block_b  <= threshold_container(9 downto 0);
+-- 	when others =>  
+-- 	  no_block_r    <= threshold_container(29 downto 20);
+-- 	  no_block_g    <= threshold_container(19 downto 10);
+-- 	  no_block_b    <= threshold_container(9 downto 0);
+-- 	end case;
+-- 	end if;
+-- end process;
 
 main_process:
 process(clk)
@@ -171,8 +171,8 @@ if rising_edge(clk) then
   end if;
   if sample_done = '1' then
 	sampling <= '0';
-	red_data <= sample_data;
 	if dummy_count = 2 then   --throw away first two results so the analog signal can settle
+	red_data <= sample_data;
 		red_led <= '0';
 		led_state <= green;
 		dummy_count := 0;
@@ -190,8 +190,8 @@ if rising_edge(clk) then
   end if;
   if sample_done = '1' then
 	sampling <= '0';
-	green_data <= sample_data;
 	if dummy_count = 2 then   --throw away first two results so the analog signal can settle
+	green_data <= sample_data;
 		green_led <= '0';
 		led_state <= blue;
 		dummy_count := 0;
@@ -209,8 +209,8 @@ if rising_edge(clk) then
   end if;
   if sample_done = '1' then
 	sampling <= '0';
-	blue_data <= sample_data;
 	if dummy_count = 2 then   --throw away first two results so the analog signal can settle
+	blue_data <= sample_data;
 		blue_led <= '0';
 		led_state <= decider;
 		dummy_count := 0;
@@ -278,7 +278,7 @@ if rising_edge(clk) then
 					green_votes    <= 0;
 					blue_votes     <= 0;
 					invalid_votes  <= 0;
-			elsif blue_votes > counter_threshold_min then
+			elsif green_votes > counter_threshold_min then
 				detected <= current_estimate;
 			end if;
 		when "100" =>
@@ -311,6 +311,6 @@ if rising_edge(clk) then
   end if;
 end process;
 
-color_val <= current_estimate(1 downto 0) & red_data & red_data & red_data;
+color_val <= current_estimate(1 downto 0) & red_data & green_data & blue_data;
 
 end Behavioral;

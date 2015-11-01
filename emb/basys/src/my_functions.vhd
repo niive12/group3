@@ -37,10 +37,10 @@ package body my_functions is
                 minima := c;
                 result := "10";
             end if;
---             if d < minima then
---                 minima := d;
---                 result := "11";
---             end if;
+            if d < minima then
+                minima := d;
+                result := "11";
+            end if;
             return result;
         end minimum;
         
