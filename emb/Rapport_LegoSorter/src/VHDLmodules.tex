@@ -193,15 +193,13 @@ The motor reacts on the color of the Lego and the different widths can be seen.
 When working with an FPGA, especially with one with limited I/O pins, setting up some sort of user interaction is very limited and sometimes very primitive. This can be a problem if the system is complex. Therefore setting up communication with a PC could be a desired feature. A communication module called $\mu$TosNet is available and used. $\mu$TosNet uses UART, which is a serial communication using only 2 wires. This makes it good for non I/O heavy FPGA. 
 
 \subsubsection{Usage}
-Due to the process of compiling the bit file from VHDL is slow and tedious, it could be nice to be able to change the thresholds of the different colors from the computer instead of compiling and flashing every time you want to fine tune the system. Another parameter that could be interesting to monitor is the current value of the ADC, in order to estimate what values could be good to use for the threshold. 
+Due to the process of compiling the bit file from VHDL is slow and tedious, it could be nice to be able to calibrate the different color classification from the computer instead of compiling and flashing every time you want to fine tune the system. This can be done for each color individually or a live calibration, with instructions.
 
 To make the communication on the computer a small C++ program was made, using the Boost library to instantiate the serial communication, building on a skeleton found on the internet\cite{url:serial}.
-The application has two functions.
-Either the user enters a value to change the threshold or the computer will go into read mode, which will repeatedly read the color values.
-The protocol is shown in figure \ref{fig:read_protocol}. 10 bits are used for each color and a control signal is sent in the remainding bits. %The ctrl bits shows which color is being guessed as the likely color.
+
+The communication protocol is shown in figure \ref{fig:read_protocol}. 10 bits are used for each color and a control signal is sent in the remainding bits. %The ctrl bits shows which color is being guessed as the likely color.
 The sending protocol is identical. Only this is used to overwrite the thresholds and the ctrl bits are used to specify which brick values are being overwritten.
 
-\nikolaj{Update this section so it is true.}
 
 \begin{figure}[h]
 \centering
