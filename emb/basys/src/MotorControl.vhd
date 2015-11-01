@@ -84,7 +84,7 @@ if(rising_edge(clk)) then
 	pwm_value <= 27; -- Left (1.35 ms)
   elsif colours_detected = "001" then --red
 	pwm_value <= 33; -- Right (1.65 ms)
-  elsif colours_detected = "000" then --invalid
+  elsif colours_detected = "111" then --invalid
 	pwm_value <= 21; -- left max (1.05 ms)
   else
 	pwm_value <= 30; -- Center (1.5 ms) --green 

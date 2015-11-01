@@ -94,7 +94,7 @@ The block values can be updated from the computer through $\mu$TosNet.
  \label{fig::state_led}
 \end{figure}
 
-\subsubsection{Test of Decision state.}\label{sec:system_test}
+\subsubsection{Test of Decision State.}\label{sec:system_test}
 To find the ideal initial values for the blocks, a test with a each color block and a test without any blocks were made.
 This showed that the light intensities are not ideal and green and blue light gets reflected more than expected.
 This should be compensated by the Nearest Neighbor approach.
@@ -131,7 +131,7 @@ Another drawback of running everything in a single process is clock skew.
 If not specified, Xilinx does not know the clock speed of the device.
 Thus it will warn the user about potential clock skew.
 If the skew gets above the period, the FPGA cannot be ready to run the process again and the behavior gets unpredictable.
-The current clock skew with the nearest neighbor approach is $13.040 ns$, which is in a dangerous zone. 
+The current clock skew with the nearest neighbor approach is $13.040 ns$, which is in a dangerous zone, but below the threshold. 
 
 \begin{figure}[H]
  \centering
@@ -173,10 +173,10 @@ The FPGA will serve as the master and the ADC as the slave. In the VHDL module a
 Given the datasheet\cite[p. 1]{ds:MCP3008}
 the maximum clock frequency of the SPI clock is $3.6$ MHz which gives a period time of 277 ns, but since this is not possible to obtain due to the system clock period being 20 ns. Taking the nearest number that to 277 that divides evenly with 20, 280, a clock frequency of $3.571$ MHz, which should be more than sufficient. Therefore a clock is generated with this period time in this VHDL module and put out on an output pin.
 
-In order to keep the abstraction level, that this module is only for communication, it is the \textbf{LED\_driver} module that tells the \textbf{spi\_module} to initiate a sample. When a sample is received the data is just passed on to the LED\_driver, and a flag is set in order to tell the driver that new data has arrived.
+In order to keep the abstraction level, that this module is only for communication, it is the {LED\_driver} module that tells the {spi\_module} to initiate a sample. When a sample is received the data is just passed on to the LED\_driver, and a flag is set in order to tell the driver that new data has arrived.
 
 \subsection{MotorControl}
-In order to make the sorting happen, a servo motor with a mounted plastic rod is used. The colors that the \textbf{LED\_driver} has detected is fed in to the module, one wire for each color. The motor controller then decides which way the rod should point. If there are more than one color wire that is high, the rod is placed in the middle. 
+In order to make the sorting happen, a servo motor with a mounted plastic rod is used. The colors that the {LED\_driver} has detected is fed in to the module, one wire for each color. The motor controller then decides which way the rod should point. If there are more than one color wire that is high, the rod is placed in the middle. 
 
 The servo motor is controlled by a pulse width modulated (PWM) signal. The standard for RC-servo motors\cite[p. 917]{book:prac_ele}, one of which was provided for this project, a pulse width of 1 ms to be on the left extreme and 2 ms for the right extreme, with a PWM period of 20 ms. 
 The pulse width for a desired angle can be calculated using equation \ref{eq:pulse_width}.
