@@ -45,7 +45,7 @@ package body my_functions is
         end minimum;
         
     function maximum( a, b, c, d : integer ) return std_logic_vector is --max among votes
-        variable result : std_logic_vector(2 downto 0) := "000";
+        variable result : std_logic_vector(2 downto 0) := "111";
         variable maxima : integer range 0 to 150 := 0;
         begin
             if a >= maxima then
@@ -62,7 +62,7 @@ package body my_functions is
             end if;
             if d > maxima then
                 maxima := d;
-                result := "000";
+                result := "111";
             end if;
             return result;
         end maximum;

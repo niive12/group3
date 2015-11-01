@@ -311,6 +311,6 @@ if rising_edge(clk) then
   end if;
 end process;
 
-color_val <= "00" & red_data & red_data & red_data;
+color_val <= current_estimate(1 downto 0) & red_data & red_data & red_data;
 
 end Behavioral;
