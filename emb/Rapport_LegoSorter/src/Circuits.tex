@@ -79,13 +79,15 @@ The schematics of the 6 and 12 V supplys can be seen in figure \ref{fig::sch_pow
 One of the problems when designing the circuit, is that the linear regulators.
 The energy used in the regulator is converted into heat.
 The worst case power dissipation can be calculated in equation \ref{eq:pd6} and \ref{eq:pd12}.
+
 \begin{eqnarray}
 pD_{6}  =& (15V - 6V) \cdot 1.5A\ &=\ 13.5\ W \label{eq:pd6}\\
 pD_{12} =& (15V - 12V)\cdot 1.0A\ &=\ 3\ W \label{eq:pd12}
 \end{eqnarray}
-The junction to ambient resistance ($R_{ja}$) is $50^\circ C/W$\cite{ds:L7806CV,ds:LM78XX}%
 
+The junction to ambient resistance ($R_{ja}$) is $50^\circ C/W$\cite{ds:L7806CV,ds:LM78XX}.
 This means the temperature rise can be calculated in equation \ref{eq:tr6} and \ref{eq:tr12}.
+
 \begin{eqnarray}
 T_{r6}  =&  13.5 \cdot 50   &= 675^\circ C \label{eq:tr6}\\
 T_{r12} =&  3 \cdot 50      &= 150^\circ C \label{eq:tr12}

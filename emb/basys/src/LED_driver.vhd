@@ -1,38 +1,9 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 10/07/2015 09:19:35 PM
--- Design Name: 
--- Module Name: LED_driver - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 
 library work;
 use work.my_functions.ALL; --my functions
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity LED_driver is
     Port (
@@ -296,8 +267,6 @@ if rising_edge(clk) then
 					green_votes    <= 0;
 					blue_votes     <= 0;
 					invalid_votes  <= 0;
--- 			elsif invalid_votes > counter_threshold_min then --This is commented out as the sorter should not react to no block.
--- 				detected <= current_estimate;
 			end if;
 		end case;
 	led_state <= red;

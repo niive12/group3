@@ -1,35 +1,5 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 10/20/2015 11:41:49 AM
--- Design Name: 
--- Module Name: MotorControl - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity MotorControl is
 Port (
@@ -84,8 +54,6 @@ if(rising_edge(clk)) then
 	pwm_value <= 27; -- Left (1.35 ms)
   elsif colours_detected = "001" then --red
 	pwm_value <= 33; -- Right (1.65 ms)
-  elsif colours_detected = "111" then --invalid
-	pwm_value <= 21; -- left max (1.05 ms)
   else
 	pwm_value <= 30; -- Center (1.5 ms) --green 
   end if;
