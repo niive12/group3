@@ -53,9 +53,11 @@ adc_read_end   = blue_events[1]+meassured_end
 blue_value = rms(op_amp_out, limits=c(adc_read_start,adc_read_end))
 
 if( i == 6 ) { #print green to the report
+# limit = min(c(length(op_amp_out ),length(light_red  ),length(light_green),length(light_blue )))
+# reduced = seq(1,limit,1)
 setEPS()
 postscript("../Rapport_LegoSorter/img/analog_values.eps",height = 4, width = 8)
-plot(op_amp_out[,4],op_amp_out[,5],ylim=c(0,3.3),type="l",col="yellow",xlab="time [s]",ylab="Voltage [V]")
+plot(  op_amp_out[,4],op_amp_out [,5],ylim=c(0,3.3),type="l",col="yellow",xlab="time [s]",ylab="Voltage [V]")
 lines(light_red  [,4],light_red  [,5],type="l",col="red")
 lines(light_green[,4],light_green[,5],type="l",col="green")
 lines(light_blue [,4],light_blue [,5],type="l",col="blue")
