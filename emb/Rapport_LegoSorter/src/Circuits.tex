@@ -86,17 +86,14 @@ T_{r12} =&  3 \cdot 50      &= 150^\circ C \label{eq:tr12}
 \end{eqnarray}
 The maximum junction temperature is 150 for the LM7812\footnote{LM7812C p3} and 125 for the L7806CV\footnote{L7806CV, p7}, meaning the temperature for the 12 V supply is close to the maximum and the temperature for the 6 V supply is above.
 It is decided to use a heatsink on both.
-\matthias{Beskrive forhold ved belastning efter heat sinks er sat på.}
-\matthias{Lav nye test af powersupply}
+Functionality test of the power supply is tested in section \ref{sec:test_pwr_supply}.
 
 \subsubsection{PCB design}
 The components described above, put together as seen in the block diagram in figure \ref{fig::sch_power}. 
-% One of the things that were taken into account when designing the PCB was, in order to save space, instead of having one capacitor on the each of the regulator input, the 15V input was put roughly in the middle of the regulators with only one input capacitor
-\matthias{Der er en udkommentering af begrundelsen af at vi har valgt at bruge 1 input capacitor, hvorfor}
 The 15 V input was put between the regulators with only one input capacitor to save space.
 A ground plane was added to reduce the resistance to ground.
 This has the added benefit that it will be easier to route and faster to produce as less copper is removed.
-The PCB can be seen in figure \ref{fig::pcb_power}
+The PCB can be seen in figure \ref{fig::pcb_power}.
 
 \begin{figure}[ht]
 \centering

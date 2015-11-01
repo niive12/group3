@@ -1,5 +1,45 @@
 \section{Tests}
 
+\subsection{Power Supply} \label{sec:test_pwr_supply}
+
+In order to test if the power supply works, each source was tested under load.
+The tests are meant to simulate real use cases as prolonged test of the extreme loads might damage components and cause a setback.
+
+The 5 V supply was tested with a constant load of $25 \Omega$, equivalent to the FPGA.
+The voltage of the supply is held steady and within the $75 mV$ tolerance of 5 V.
+The voltage can be seen in figure \ref{fig:5v_supply_test}.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=0.9\linewidth]{img/5vsupply}
+ \caption{5 V supply voltage test.}\label{fig:5v_supply_test}
+\end{figure}
+
+The 6 V supply was tested with the servo motor connected, receiving a change in pulse width, thus forcing the motor to rotate.
+The voltage of the supply is held steady and within $400 mV$ tolerance of 6 V.
+The voltage can be seen in figure \ref{fig:6v_supply_test}.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=0.9\linewidth]{img/6vsupply}
+ \caption{6 V supply voltage test.}\label{fig:6v_supply_test}
+\end{figure}
+
+
+The 12 V supply was tested by using a turning a load on and off with a mosfet.
+The load was a constant $120 \Omega$ resistor and the pulse was added from another $120 \Omega$ resistor, turned on an off with a mosfet.
+This is meant to simulate the turning on and off of a diode.
+In figure \ref{fig:12v_power_supply_voltage_test} can the step response from such a load be seen.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=0.9\linewidth]{img/power_test_12V_pulse}
+ \caption{Step response of the 12 V supply with a changing load.}\label{fig:12v_power_supply_voltage_test}
+\end{figure}
+
+
+
+
 \subsection{Current test of photo diode}
 This test was done in order to dimension the resistor for the operational amplifier (op-amp), for the amplification.
 The desired range of the output of the amplifier is 0 to 3.3 V to make it directly correlated with the ADC, which is powered by 3.3 V. 
@@ -86,9 +126,10 @@ This resulted in a ringing effect and thus the signal could not settle before th
 \matthias{undefined ref. ved ikke lige til hvad}
 In figure \ref{fig:scope_op_amp_no_C} can this effect be seen.
 
-\begin{figure}[ht]
-\includegraphics[width=\linewidth]{img/amp_test_ringing2.jpg}
-\caption{Ringing effect of amplifier. The yellow line shows when the LED is turned on and off, and the blue is the output of the amplifier}
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\linewidth]{img/amp_test_ringing2.jpg}
+\caption[Ringing effect of amplifier.]{Ringing effect of amplifier. The yellow line shows when the LED is turned on and off, and the blue is the output of the amplifier}
 \label{fig:scope_op_amp_no_C}
 \end{figure}
 
@@ -129,8 +170,9 @@ As it can be seen, the signal is readable at $65 kHz$.
 
 
 \begin{figure}[h]
+\centering
 \includegraphics[width=0.9\linewidth]{img/ringing_test_filtered_rise.jpg}
-\caption{Ringing effect of amplifier. The yellow line shows when the LED is turned on and off, and the blue is the output of the amplifier}
+\caption[Ringing effect of amplifier filtered.]{Ringing effect of amplifier filtered. The yellow line shows when the LED is turned on and off, and the blue is the output of the amplifier}
 \label{fig::scope_op_amp_with_C}
 \end{figure}
 
