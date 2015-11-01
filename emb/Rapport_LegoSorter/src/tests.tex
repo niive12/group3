@@ -92,8 +92,8 @@ It is expected that the load of the op-amp is not an ideal resistance.
 Due to the fact that we are not dealing with an ideal op-amp and the circuit introduces capacitance, the amplifier has a capacitive load. 
 The feedback resistor is large enough so the circuit can be simplified by reducing it to a RC circuit.
 A capacitor will always try to minimize the change in voltage, so with a high frequency of switching, the voltage will oscillate. To test the extend of this oscillation, a test setup without compensation is created.
-\begin{wrapfigure}{r}{0.49\linewidth}
 
+\begin{wrapfigure}{r}{0.49\linewidth}
  \centering
   \begin{circuitikz}[scale=\figscale, every node/.style={scale=\figscale}]
   %opamp part
@@ -120,10 +120,9 @@ A capacitor will always try to minimize the change in voltage, so with a high fr
 
 
 A red diode was used for the test, so the expected output voltage is $2 V$.
-To test for ringing effect the naive setup, shown in figure \ref{fig:naive_voltage},
-is used to see if the op-amp can keep up with a high speed signal.\
+To test for ringing effect, a naive setup without the capacitor, $C_f$, shown in figure \ref{fig:photo_diode_voltage_setup},
+is used to see if the op-amp can keep up with a high speed signal.
 This resulted in a ringing effect and thus the signal could not settle before the diode is turned off again.
-\matthias{undefined ref. ved ikke lige til hvad}
 In figure \ref{fig:scope_op_amp_no_C} can this effect be seen.
 
 \begin{figure}[t]
