@@ -51,7 +51,21 @@ This module is only there in order to take the different components and put them
 This module is the brain of the project. This is where it is decided which LED should be on at the given moment, it takes the samples from the ADC, it analyzes the results of the ADC and decides which color the brick is.
 
 \subsubsection{Implementation}
-In order to make this work, a state machine is implemented. A state diagram can be seen figure \ref{fig::state_led}. It starts in in idle state. In this state the red LED is turned on, and a sample from the ADC is done. If this value is bigger than a specific threshold, which mean that a brick is present at the photo diode. The state is then changed and the different LED's are flashed one at a time, and the value of the photo diode is read from the ADC. Instead of just taking one sample of each color, it was chosen to take a number of samples and take the mean in order to ensure that the choice is more reliable. In order to make the mean calculation easier, the number of samples should be a power of 2, since division with a power of 2 is just right shifting the number of times of the power, so 4 samples = 2 $\times$ rightshift. This is what is happening in the Decider state in figure \ref{fig::state_led}, note sample\_count is a counter that counts run-throughs, and not individual colors. When the decider detects a color, i.e the ADC value is bigger than a specified threshold, a bit is set in a signal corresponding to the given color. The thresholds of the colors can be updated from the computer through $\mu$TosNet. 
+In order to make this work, a state machine is implemented. 
+A state diagram of the system can be seen figure \ref{fig::state_led}. 
+It starts in in red state. 
+In this state the red LED is turned on, and a sample from the ADC is done. 
+To make make the system stable to step responses, the two first ADC readouts are thrown away.
+This is discussed further in section \ref{sec:rise_time_test}.
+After the third readout from the ADC, the state is changed and the other LED's are flashed one at a time, and the value of the photo diode is read from the ADC. 
+The last state is the decider state which interprets the values and decides what color the brick is.
+It is shown in section \ref{sec:system_test} that just looking at the highest value is not good enough for classification.
+Instead, a nearest neighbor approach is used.
+This means that each block is compared to all values.
+Ideally a red block would reflect a lot of red light and small amounts of green and blue light.
+So instead of going with the highest value, this method looks at an approximation of the distance between the current measurements and the ideal block.
+This is usually done by comparing euclidean distances, but this has been simplified to the sum of the absolute difference.
+The block values can be updated from the computer through $\mu$TosNet. 
 
 \matthias{Skriv om til Nearest Neighbor implementering}
 
@@ -60,24 +74,34 @@ In order to make this work, a state machine is implemented. A state diagram can 
  \begin{tikzpicture}[node distance=2.5cm]
  
  \node[circle,minimum width = 7 cm,name = c]{};
- \node[accepting,state,	name=state0, minimum width = 1.3 cm] at (c.90)    {Idle}; 
- \node[square,name=start,above of = state0,yshift=-1.2 cm]                {Start};
+%  \node[accepting,state,	name=state0, minimum width = 1.3 cm] at (c.90)    {Idle}; 
  \node[state,name=stateR, minimum width = 1.3 cm]            at (c.18)    {Red};
+ \node[square,name=start,above of = stateR,yshift=-1.2 cm]                {Start};
  \node[state,name=stateG, minimum width = 1.3 cm]            at (c.-56)   {Green};
  \node[state,name=stateB, minimum width = 1.3 cm]            at (c.234)   {Blue};
  \node[state,name=decide, minimum width = 1.3 cm]            at (c.162)   {Decider};
  
- \draw[->] (state0)   edge[bend left=27] node[midway,above,fill=white,xshift=0.9cm,yshift=-0.5cm] {ADC data $>$ threshold}  (stateR);
- \draw[->] (stateR)   edge[bend left=27] node[midway,fill=white]                                  {dummy\_count $=$ 2}            (stateG);
- \draw[->] (stateG)   edge[bend left=27] node[midway,below]                                       {dummy\_count $=$ 2}            (stateB);
- \draw[->] (stateB)   edge[bend left=27] node[midway,fill=white]                                  {dummy\_count $=$ 2}            (decide);
- \draw[->] (decide)   edge[bend left=27] node[midway,below,fill=white]                            {sample\_count $=$ 4}     (state0);
- \draw[->] (decide)   to                 node[midway,above]                                       {sample\_count $!=$ 4}    (stateR);
- \draw[->] (start)    to                                                                                                    (state0);
+%  \draw[->] (state0)   edge[bend left=27] node[midway,above,fill=white,xshift=0.9cm,yshift=-0.5cm] {ADC data $>$ threshold}  (stateR);
+ \draw[->] (stateR)   edge[bend left=27] node[midway,fill=white]                                  {dummy\_count $=$ 2}      (stateG);
+ \draw[->] (stateG)   edge[bend left=27] node[midway,below]                                       {dummy\_count $=$ 2}      (stateB);
+ \draw[->] (stateB)   edge[bend left=27] node[midway,fill=white]                                  {dummy\_count $=$ 2}      (decide);
+%  \draw[->] (decide)   edge[bend left=27] node[midway,below,fill=white]                            {sample\_count $=$ 4}     (state0);
+ \draw[->] (decide)   to                 node[midway,above]                                       {}    (stateR);
+ \draw[->] (start)    to                                                                                                    (stateR);
  
  \end{tikzpicture}
  \caption{State machine of \textbf{LED\_driver}}
  \label{fig::state_led}
+\end{figure}
+
+\subsubsection{Test of Decision state.}
+To find the ideal initial values for the blocks, a test with a each color block and a test without any blocks were 
+
+\begin{figure}[h]
+\centering
+ \includegraphics[width=0.9\linewidth]{img/analog_values}
+ \caption[Analog output with all diodes.]{Analog output with on yellow, red,green,blue signifies when the LED is turned on. The tested color is green.}
+ \label{fig:analog_values}
 \end{figure}
 
 \subsubsection{Extra considerations}

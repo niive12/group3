@@ -1625,13 +1625,13 @@ design rules under a new name.</description>
 <element name="R4" library="rcl" package="0207/10" value="3.3K" x="23.305" y="58.685" rot="R270"/>
 <element name="R3" library="rcl" package="0207/10" value="1.2K" x="26.322" y="58.741" rot="R270"/>
 <element name="LED_RED" library="adafruit" package="LED5MM" value="" x="48.0765" y="49.59" rot="R270"/>
-<element name="Q1" library="adafruit" package="TO220V" value="" x="72.77" y="51.1" rot="R270"/>
+<element name="Q1" library="adafruit" package="TO220V" value="NTD5867NL" x="72.77" y="51.1" rot="R270"/>
 <element name="R5" library="rcl" package="0207/10" value="200" x="39.371" y="46.4515" rot="R225"/>
 <element name="LED_GREEN" library="adafruit" package="LED5MM" value="" x="43.004" y="43.2555"/>
-<element name="Q2" library="adafruit" package="TO220V" value="" x="67.18" y="50.85" rot="R270"/>
+<element name="Q2" library="adafruit" package="TO220V" value="NTD5867NL" x="67.18" y="50.85" rot="R270"/>
 <element name="R6" library="rcl" package="0207/10" value="160" x="36.702" y="39.0025" rot="R180"/>
 <element name="LED_BLUE" library="adafruit" package="LED5MM" value="" x="53.9705" y="43.2555" rot="R180"/>
-<element name="Q3" library="adafruit" package="TO220V" value="" x="61.3" y="51.1" rot="R270"/>
+<element name="Q3" library="adafruit" package="TO220V" value="NTD5867NL" x="61.3" y="51.1" rot="R270"/>
 <element name="R7" library="rcl" package="0207/10" value="160" x="59.24" y="39.45" rot="R270"/>
 <element name="J1" library="con-amp" package="10X08MTA" value="" x="55.84" y="68.327"/>
 <element name="J2" library="my_lbr" package="10X03MTA" value="" x="70.971" y="37.0305" rot="R270"/>
