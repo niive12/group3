@@ -59,9 +59,16 @@ time_between_edges <- function(edges){
     return(time)
 }
 
-rms <- function(data){
-    n = length(data[,5])
-    v = sqrt(1/n * sum( data[,5] * data[,5] ) )
+rms <- function(data, limits=c(0,0)){
+	if(limits[1] != 0){
+		start = which(data[,4]>limits[1])[1]
+		end   = which(data[,4]>limits[2])[1] - 1
+	} else {
+		start = 0
+		end = length(data[,4])
+	}
+    n = length(data[start:end,5])
+    v = sqrt(1/n * sum( data[start:end,5] * data[start:end,5] ) )
     return(v)
 }
 
@@ -128,4 +135,16 @@ binary_to_int <- function(bit_string){
         int = -1
     }
     return(int)
+}
+bin <- function(number, length){
+	res = paste( c("\"", sapply(strsplit(paste(rev(intToBits(number))[-(1:(32 - length))]),""),`[[`,2) ,"\"\n"), collapse="")
+	return(res)
+}
+
+as_bin <- function(numbers,length=10){
+	res = array("nan",length(numbers))
+	for( i in 1:length(numbers) ){
+		res[i] = bin(numbers[i],length) 
+	}
+	return(res)
 }
