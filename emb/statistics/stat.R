@@ -1,6 +1,12 @@
 library(stringr)
 source('functions.R')
 
+fileName = "vin_vs_adc_value.RData"
+
+if ( file.exists(fileName) && 1) {
+	print(paste(c("file exist in", fileName),collapse=""))
+	load(fileName)
+} else {
 cat("---------- Proof of concept ----------\n")
 scope_clk = 3; scope_vin = 1; scope_cs = 2; scope_miso = 4; 
 i = 21
@@ -40,6 +46,8 @@ print(binary_to_int(bit))
 q=dev.off()
 # plot(miso[,4],miso[,5],type="l")
 
+
+
 number_of_meassurements = 34
 bit_value_vs_vin = matrix(0,number_of_meassurements,2)
 for(i in 1:number_of_meassurements){
@@ -61,6 +69,9 @@ for(i in 1:number_of_meassurements){
 
 adc_value  = bit_value_vs_vin[,1]
 v_in       = bit_value_vs_vin[,2]
+
+	save(v_in,adc_value, file=fileName)
+}
 setEPS()
 postscript("../Rapport_LegoSorter/img/ADC_values.eps",height = 4, width = 8)
 plot(v_in,adc_value,type="l")

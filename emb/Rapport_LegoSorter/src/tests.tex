@@ -146,3 +146,30 @@ The data code for the data processing can be found in appendix \ref{app:adc_R_co
             {Oscilloscope output of the ADC connections for the 2.107 V RMS input. The red dots signify when the signal is read.}
             \label{fig:scope_adc}
 \end{figure}
+
+% the figures I like is BACK
+\begin{figure}[h]
+\centering
+\begin{tikztimingtable}[xscale=0.3]
+ slow\_clk       & L2{26{2{T}}          }L\\
+ led\_signal     & Z 1{50D{R}}1{2Z} 1{50D{G}}1{2Z}      L\\
+ adc\_read       & L2{13{2L}2{2H}11{2L} }L\\
+ adc\_transfer   & L2{15{2L}10{2H}1{2L} }L\\
+ signal\_complete& L2{25{2L}1{2H}       }L\\
+\end{tikztimingtable}
+ \caption{ADC communication, naive approach.}\label{fig:naive_communication}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{tikztimingtable}[xscale=0.3]
+ slow\_clk       & L12{2{T}}3{19{2{T}}          }\\
+ led\_signal     & Z 1{38D{R}} 1{38D{G}}1{38D{B}} 1{24D{R}} \\
+ adc\_read       & L12{2L} 3{5{2L}2{2H}11{2L}1{2L} }\\
+ adc\_transfer   & L12{2L} 3{7{2L}1{20D{adc}}1{2L}1{2L} }\\ 
+ sample\_done    & L29{2L} 2{1{2H}16{2L}     2{2L} }1{2H}LL\\ 
+ \extracode
+    \vertlines[dashed]{61,77,99,115} %8 clock cycles
+\end{tikztimingtable}
+\caption{ADC communication optimized.}\label{fig:optimized_communication}
+\end{figure}

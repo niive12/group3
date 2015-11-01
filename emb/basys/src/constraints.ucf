@@ -1,0 +1,37 @@
+ NET "clk"    	LOC = "P60";
+ 
+ NET "SCLK" 	LOC = "P44"; #purple wire //5
+ NET "MISO" 	LOC = "P45"; #grey   wire //6
+ NET "MOSI" 	LOC = "P49"; #yellow wire //7
+ NET "CS"   	LOC = "P50"; #orange wire //8
+ 
+ NET "pwm_out"   	LOC = "P51"; //9
+ NET "red_out"   	LOC = "P54"; //10
+ NET "green_out" 	LOC = "P55"; //11
+ NET "blue_out"  	LOC = "P57"; //12
+
+ NET "Serial_in" LOC = P88; #  USB <-> UART (J2_13)
+ NET "Serial_out" LOC = P90; #  USB <-> UART (J2_15)
+
+#basys constraints
+#NET "clk"        LOC = "B8";    # Signal name = MCLK
+                 
+#NET "SCLK"       LOC = "B2";    # Signal name = JA1
+#NET "MISO"       LOC = "A3";    # Signal name = JA2
+#NET "MOSI"       LOC = "J3";    # Signal name = JA3
+#NET "MISO"       LOC = "B5";    # Signal name = JA4
+                           
+#NET "pwm_out"    LOC = "C6";    # Signal name = JB1
+#NET "red_out"    LOC = "B6";    # Signal name = JB2
+#NET "blue_out"   LOC = "C5";    # Signal name = JB3
+#NET "green_out"  LOC = "B7";    # Signal name = JB4
+                               
+# NET "Serial_in"  LOC = "A9";    # Signal name = JC1
+# NET "Serial_out" LOC = "B9";    # Signal name = JC2
+# # NET "PIO<82>"    LOC = "A10";   # Signal name = JC3
+# # NET "PIO<83>"    LOC = "C9" ;   # Signal name = JC4
+# #                                # 
+# # NET "PIO<84>"    LOC = "C12";   # Signal name = JD1
+# # NET "PIO<85>"    LOC = "A13";   # Signal name = JD2
+# # NET "PIO<86>"    LOC = "C13";   # Signal name = JD3
+# # NET "PIO<87>"    LOC = "D12";   # Signal name = JD4 
