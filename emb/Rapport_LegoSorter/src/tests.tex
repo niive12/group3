@@ -4,7 +4,7 @@
 This test was done in order to dimension the resistor for the operational amplifier (op-amp), for the amplification.
 The desired range of the output of the amplifier is 0 to 3.3 V to make it directly correlated with the ADC, which is powered by 3.3 V. 
 \subsubsection{Setup}
-The photo diode is put in a breadboard and the current through is measured using a multi meter. The different colored LED's are set up with a resistor so that they draw 50 mA of current which is the max DC-current\footnote{Ref to Application note}. The LED's and the photo diode are placed as they would on the final board, with a slight tilt towards the photo diode. A brick is then held over the diodes, and the current is read off the multi meter.
+The photo diode is put in a breadboard and the current through is measured using a multi meter. The different colored LED's are set up with a resistor so that they draw 50 mA of current which is the max DC-current\cite{apnote:led}. The LED's and the photo diode are placed as they would on the final board, with a slight tilt towards the photo diode. A brick is then held over the diodes, and the current is read off the multi meter.
 The setup can be seen in figure \ref{fig:photo_diode_current_setup}.
 
 \begin{figure}[ht]
@@ -42,7 +42,7 @@ This was tested to be accurate with the setup in figure \ref{fig:photo_diode_vol
 
 
 \subsubsection{Conclusion}
-Given the results of the test, and the fact that the current used here is lower than the one used in the project\footnote{Ref to section with LED circuit} it was decided that a value of $100 k\Omega$ would be a reasonable. This gives $0.1 \frac{V}{\mu A}$.
+Given the results of the test it was decided that a value of $100 k\Omega$ would be a reasonable. This gives $0.1 \frac{V}{\mu A}$.
 
 \subsection{Rise time test of amplifier} \label{sec:rise_time_test}
 
@@ -111,8 +111,7 @@ For simplicity the LED signal will be treated as a $63 kHz$ pulse in this sectio
 % \end{tikztimingtable}
 % \caption{Timing table of communication between the ADC and the FPGA. The interval is the data that is actually used. The rest of the data is just overwritten without being used.}\label{fig:communication_dummyreads}
 To avoid the ringing effect, a capacitor is added as seen in figure \ref{fig:photo_diode_voltage_setup}.
-To find a proper capacitance, equation \ref{eq:capacitance_approximate}
-\footnote{Practical Techniques to Avoid Instability due to capacitive load, p2}
+To find a proper capacitance, equation \ref{eq:capacitance_approximate}\cite[p. 2]{art:cap}
 is used to find an approximate.
 The frequency, $f$, is found by measuring the period on the naive signal.
 The period was found to be between $6$ and $7$ $\mu S$.
