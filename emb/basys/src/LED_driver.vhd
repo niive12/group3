@@ -98,29 +98,29 @@ constant head : STD_LOGIC_VECTOR(5 downto 0) := "011000";     --ADC configuratio
 begin
 header <= head;
 
--- u_tos_net_handling: process(clk)
--- begin
--- if rising_edge(clk) then 
--- 	case threshold_container(31 downto 30) is
--- 	when "00" =>
--- 	  red_block_r   <= threshold_container(29 downto 20);
--- 	  red_block_g   <= threshold_container(19 downto 10);
--- 	  red_block_b   <= threshold_container(9 downto 0);
--- 	when "01" =>
--- 	  green_block_r <= threshold_container(29 downto 20);
--- 	  green_block_g <= threshold_container(19 downto 10);
--- 	  green_block_b <= threshold_container(9 downto 0);
--- 	when "10" =>
--- 	  blue_block_r  <= threshold_container(29 downto 20);
--- 	  blue_block_g  <= threshold_container(19 downto 10);
--- 	  blue_block_b  <= threshold_container(9 downto 0);
--- 	when others =>  
--- 	  no_block_r    <= threshold_container(29 downto 20);
--- 	  no_block_g    <= threshold_container(19 downto 10);
--- 	  no_block_b    <= threshold_container(9 downto 0);
--- 	end case;
--- 	end if;
--- end process;
+u_tos_net_handling: process(clk)
+begin
+if rising_edge(clk) then 
+	case threshold_container(31 downto 30) is
+	when "00" =>
+	  red_block_r   <= threshold_container(29 downto 20);
+	  red_block_g   <= threshold_container(19 downto 10);
+	  red_block_b   <= threshold_container(9 downto 0);
+	when "01" =>
+	  green_block_r <= threshold_container(29 downto 20);
+	  green_block_g <= threshold_container(19 downto 10);
+	  green_block_b <= threshold_container(9 downto 0);
+	when "10" =>
+	  blue_block_r  <= threshold_container(29 downto 20);
+	  blue_block_g  <= threshold_container(19 downto 10);
+	  blue_block_b  <= threshold_container(9 downto 0);
+	when others =>  
+	  no_block_r    <= threshold_container(29 downto 20);
+	  no_block_g    <= threshold_container(19 downto 10);
+	  no_block_b    <= threshold_container(9 downto 0);
+	end case;
+	end if;
+end process;
 
 main_process:
 process(clk)
