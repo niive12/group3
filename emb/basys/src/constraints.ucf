@@ -1,0 +1,14 @@
+ NET "clk"    	LOC = "P60";
+ 
+ NET "SCLK" 	LOC = "P44"; #purple wire //5
+ NET "MISO" 	LOC = "P45"; #grey   wire //6
+ NET "MOSI" 	LOC = "P49"; #yellow wire //7
+ NET "CS"   	LOC = "P50"; #orange wire //8
+ 
+ NET "pwm_out"   	LOC = "P51"; //9
+ NET "red_out"   	LOC = "P54"; //10
+ NET "green_out" 	LOC = "P55"; //11
+ NET "blue_out"  	LOC = "P57"; //12
+
+ NET "Serial_in" LOC = P88;  #  USB <-> UART (J2_13)
+ NET "Serial_out" LOC = P90; #  USB <-> UART (J2_15)

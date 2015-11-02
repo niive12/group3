@@ -1,0 +1,1 @@
+-intstyle "pa" -incremental -L "work" -L "unisims_ver" -L "unimacro_ver" -L "xilinxcorelib_ver" -o "sim_tlm_slider.exe" --prj "/home/matthias/RobtekE15/EMB1/group3/emb/Slide_project/Slide_project.sim/sim_1/behav/sim_tlm_slider.prj" -top "work.sim_tlm_slider" -top "work.glbl" 

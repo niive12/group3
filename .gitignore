@@ -83,3 +83,13 @@ xst/
 _ngo/
 _xmsgs/
 
+# Latex
+*.dvi
+*.aux
+*.out
+*.backup
+*.log
+*.toc
+*.pdf
+*.PDF
+*.tdo

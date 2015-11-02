@@ -1,10 +1,29 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{subcaption}
 
 \usetikzlibrary{automata} %state machine stuff
 \usetikzlibrary{positioning} %midway
 \begin{document}
+
+\begin{figure}
+    \begin{subfigure}{0.5\linewidth}
+        \begin{circuitikz}
+            \node[nigfete,name=pnp1] at (0,0) {};
+%             \draw(pnp1.emitter) ++(0,6) node[name=d_top] {};
+%             \draw(pnp1.emitter) ++(0,4) node[name=d_bot] {};
+            \draw 
+                (pnp1.drain) to[R,l=$R_1$] ++(0,2) node[name=d_bot] {}
+                ++(0,2) node[name=d_top]{} to[empty led ,l^=$D_1$] (d_bot)
+                (d_top) to[short, -o] ++(0,1) node[above] {$+12V$}
+            ;
+            \draw (pnp1.source) to[short] ++(0,-1) node[ground] {};
+            \draw (pnp1.G) to[short,-o] ++(-1,0) node[left] {$V_{cc}$};
+        \end{circuitikz}
+    \end{subfigure}
+\end{figure}
 
 \begin{figure}
 \begin{tikzpicture}[node distance=3cm]
