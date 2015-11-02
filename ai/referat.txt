@@ -1,0 +1,17 @@
+30 november competetion
+14 dec handin
+
+
+delmål:
+solver 
+
+opdater design af robot - sensor tættere på jord, afskærmning for extern lys. arm tættere må rotations center. 
+
+lavet robot moves færdig
+
+lav compas / string entrepreter
+
+målt tider for roboto moves
+
+optimeret solver
+test batteri tid - kan den løse 2014 > 3 gange?
