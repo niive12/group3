@@ -1,0 +1,77 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{todonotes}
+% \usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{wrapfig,booktabs}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{cite}
+\usepackage{tikz-timing}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+%Todo notes
+\usepackage{nameref}
+\makeatletter
+\newcommand*{\currentname}{\@currentlabelname}
+\makeatother
+
+\newcommand{\nikolaj}[1]{\todo[inline,color=red!20,author=Nikolaj]{\currentname: ~ #1}}
+\newcommand{\matthias}[1]{\todo[inline,color=blue!20,author=Matthias]{\currentname: ~ #1}}
+
+\begin{document}
+\section{Straight line test} \label{sec:line_time}
+The purpose of this test is to make an estimate of how long time it takes to go 1 square forward. 
+
+\subsection{Execution}
+The robot will be placed on a intersection. It is then told to go forward 1 intersection and stop for 1 second. This is done for the entire length of the test track (5 intersections). This is repeated 10 times and the times are calculated. The sleeps are put in, in order to give the robot time to decelerate to full stop before moving to the next intersection. This is maybe also going to be implemented on the final robot. The time it takes to go one intersection is calculated with equation \ref{eq:line_time}. 
+\matthias{Ved ikke om det bliver nødvendigt med full stop + delay, men det gør ikke noget at have med nu tænker jeg. Det er jo så nemt at trække fra igen}
+
+$t_i$:time of the i'th run through, $T_i$ runtime of i'th run through with delay, delay = 1, n = 5.
+
+\begin{equation}
+t_i = T_i - n\cdot delay
+\end{equation}
+
+\begin{equation}\label{eq:line_time}
+ t_{line} =\frac{ \Sigma_{i=1}^n t_i}{n}
+\end{equation}
+
+
+\section{Turning Test} \label{sec:turn_time}
+
+This test is done in order to get how much time it takes to make a turn. This test builds on the straight line test and results from that, found in section \ref{sec:line_time}.
+
+\subsection{Execution}
+It is done by putting the robot on a square and make it follow the lines around the square when it comes to an intersection the robot should sleep 1 second, make a turn, sleep 1 second and then go to the next intersection. This is done in order to fully isolate the different moves so they do not contribute to each other. The full square is repeated 10 times and the time is noted. 
+
+T = total time, delay = 1, n = 10, t = time after delay and straight line.
+
+\begin{equation}
+t = T - 2\cdot delay\cdot 4\cdot n - 4\cdot n\cdot t_{line}
+\end{equation}
+
+\begin{equation}
+t_{turn} = \frac{t}{4*n}
+\end{equation}
+
+The reason for not just turning on the spot for this test is that there is a risk that the map is extra slippery or have more friction at the specific point, so in order to get a more realistic measurement it was chosen to do the turn test over a square. 
+
+\section{Battery test}
+This test is done in order to find out how the robot handles running for a longer period of time, and see if this effects the performance of the robot. This is done in order to make assumptions about the timing used in the solver, no matter the battery status of the robot. An assumption that has to be made in order for this to work is that the robot is always fully charged when starting.
+
+\subsection{Execution}
+To test this the solution for the 2014 AI course map is used. A solution is found using the solver described in \footnote{Ref to section for solver}. This solution is then run through 3 times in a row after the robot has been fully charged. If the time it takes to run though the solution is within 2 seconds of each other it can be assumed that the robot should be able to keep the characteristics found in section \ref{sec:line_time} and \ref{sec:turn_time} for the entire duration of the 2015 map, given it is fully charged at the start time of the competition.
+
+\end{document}
