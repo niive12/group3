@@ -68,7 +68,6 @@ bool Map::game_complete(node* N){
     }
 }
 
-
 std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction){
     std::queue<node*> neighbohrs;
     std::vector<pos_t> J = N->diamonds;
@@ -100,13 +99,13 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
             ans = copy.valid_pull(J.at(n)); //gets all the directions a diamond can be PULLED
         }
         if(ans){
-            new_man = J.at(n); //New position for the man is where the diamond was
+            new_man = J.at(n); //New position where the man is where the diamond was
             if(ans & east){
                 J.at(n) = N->diamonds.at(n) + right; //move diamond
                 next = new node(new_man,J,par);      //create node
                 next->general_pos = copy.find_general_position();
                 if(N->parent != nullptr)
-                    next->path_length = N->parent->path_length + copy.get(new_man-right) - 2;
+                    next->path_length = N->path_length + copy.get(new_man-right) - 2;
                 J.at(n) = N->diamonds.at(n);         //reset diamond
                 neighbohrs.push(next);
             }
@@ -115,7 +114,7 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 next = new node(new_man,J,par);
                 next->general_pos = copy.find_general_position();
                 if(N->parent != nullptr)
-                    next->path_length = N->parent->path_length + copy.get(new_man-left) - 2;
+                    next->path_length = N->path_length + copy.get(new_man-left) - 2;
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
@@ -124,7 +123,7 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 next = new node(new_man,J,par);
                 next->general_pos = copy.find_general_position();
                 if(N->parent != nullptr)
-                    next->path_length = N->parent->path_length + copy.get(new_man-above) - 2;
+                    next->path_length = N->path_length + copy.get(new_man-above) - 2;
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
@@ -133,7 +132,7 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 next = new node(new_man,J,par);
                 next->general_pos = copy.find_general_position();
                 if(N->parent != nullptr)
-                    next->path_length = N->parent->path_length + copy.get(new_man-below) - 2;
+                    next->path_length = N->path_length + copy.get(new_man-below) - 2;
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
@@ -172,10 +171,11 @@ node* Map::bff_search(Map &copy_map){
                 hash_ptr = closed_set.find(to_string(current_node->diamonds,current_node->general_pos)); //check is visited;
                 if( hash_ptr == closed_set.end() ) {//current_node does not exist in map
                     neighbohrs_neighbohrs.push( current_node );
-//                    search_list.push( current_node );
+//                    search_list.push( current_node ); //if the search list sorts, it will take the best node
                     closed_set.emplace(to_string(current_node->diamonds,current_node->general_pos),current_node);
                     if(game_complete(current_node)){
                         std::cout << (int) runs << " found the goal. Size: " << current_node->path_length << "\n";
+                        print_path(copy_map,current_node);
                         return current_node; //goal node;
                     }
                 } else {

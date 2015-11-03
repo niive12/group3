@@ -80,7 +80,7 @@ std::string Map::calculate_path(Map &wave_map, node *N){
     unsigned char current_distance = max_distance + 1;
     pos_t test_pos;
     pos_t next_move;
-    std::string ans = "AAA";
+    std::string ans;
     while( !(current_pos == target_position) ){
         for(int x = -1; x <= 1; ++x){
             for(int y = -1; y <= 1; ++y){
