@@ -1,0 +1,12 @@
+Rotating clock (with fixed character)
+
+Controller for motor
+LED strip
+Watch
+Timing for flashing LEDS
+
+Subgoals:
+Draw cross on watch
+Set up watch details (numbers and minute lines)
+Add watch pointers
+
