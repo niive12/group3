@@ -1,7 +1,7 @@
 //sort = 35-45
 //hvid = 55-65
 
-#define THRESHOLD 45
+#define THRESHOLD 55
 
 #define MOT_R       OUT_B  //B
 #define MOT_L       OUT_A  //A
@@ -18,22 +18,22 @@ task main(){
   SetSensorLight(RIGHT);
   
   OnFwd(MOTOR, 75);
-  
-  follow_line(40);   Wait(1000);
-//   turn_left();       Wait(3000);
-//   follow_line(50);   Wait(1000);
-  turn_right();      Wait(3000);
-//   follow_line(50);   Wait(1000);
-  follow_line(40);   Wait(1000);
-  turn_right();      Wait(3000);
-//   follow_line(-50);  Wait(5000);
-  follow_line(40);   Wait(1000);
-  turn_right();      Wait(3000);
-//   follow_line(-50);  Wait(5000);
-  follow_line(40);   Wait(1000);
-  turn_right();      Wait(3000);
-//   follow_line(-50);  Wait(5000);
-  
+  for(int i = 0; i<2;i++){
+  follow_line(60);   Wait(1000);
+//  turn_left();       Wait(3000);
+//  follow_line(50);   Wait(1000);
+  turn_right();      Wait(1000);
+  follow_line(60);   Wait(1000);
+//  follow_line(40);   Wait(1000);
+  turn_right();      Wait(1000);
+//  follow_line(-50);  Wait(5000);
+  follow_line(60);   Wait(1000);
+  turn_right();      Wait(1000);
+//  follow_line(-50);  Wait(5000);
+  follow_line(60);   Wait(1000);
+  turn_right();      Wait(1000);
+//  follow_line(-50);  Wait(5000);
+  }
 }
 
 int sign(int a){
@@ -104,7 +104,7 @@ void follow_line(char basespeed = 40){
 	  OnFwd(MOT_L, left_speed);
 	  OnFwd(MOT_R, right_speed);
 	}
-// 	Wait(10); // Generate 100 hz controller
+	Wait(10); // Generate 100 hz controller
   }
 }
 /*
@@ -140,7 +140,7 @@ void turn_left(){
   Wait(500);
   bool turn_completed = false;
   while(!turn_completed){
-	if(Sensor(RIGHT) < 45)
+	if(Sensor(RIGHT) < 55)
 	  turn_completed = true;
   }
   Off(MOTOR);
@@ -155,7 +155,7 @@ void turn_right(){
   Wait(500);
   bool turn_completed = false;
   while(!turn_completed){
-	if(Sensor(LEFT) < 45)
+	if(Sensor(LEFT) < 65)
 	  turn_completed = true;
   }
   Off(MOTOR);
