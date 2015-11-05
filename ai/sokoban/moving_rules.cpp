@@ -143,14 +143,14 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
 
 node* Map::bff_search(Map &copy_map){
     std::queue<node*> search_list;                      //list of current search nodes.
-//    std::priority_queue<node*,queue<node*>,comparator_function> search_list;                      //list of current search nodes.
+    //    std::priority_queue<node*,queue<node*>,comparator_function> search_list;                      //list of current search nodes.
     std::queue<node*> neighbohrs;                       //result fra add_all_possible...
     std::queue<node*> neighbohrs_neighbohrs;            //2nd list of search nodes.
     node start(man,diamond_pos);
     wave(copy_map,man,diamond_pos);
     start.general_pos = copy_map.find_general_position();
     search_list.push(&start);                            //set first target
-    std::unordered_map<std::string,node*> closed_set;
+    closed_set.clear();
     std::unordered_map<std::string,node*>::const_iterator hash_ptr;
     closed_set.emplace(to_string(start.diamonds,start.general_pos),&start);
     char runs = 0;
@@ -162,7 +162,7 @@ node* Map::bff_search(Map &copy_map){
         while( !search_list.empty()) {
             search_complete = false; //prevent the loop to stop when there is more pixels to search for
             current_node = search_list.front();
-//            current_node = search_list.top();
+            //            current_node = search_list.top();
             search_list.pop();
             neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
             while( !neighbohrs.empty() ) {                       //append these nodes to the list.
@@ -171,7 +171,7 @@ node* Map::bff_search(Map &copy_map){
                 hash_ptr = closed_set.find(to_string(current_node->diamonds,current_node->general_pos)); //check is visited;
                 if( hash_ptr == closed_set.end() ) {//current_node does not exist in map
                     neighbohrs_neighbohrs.push( current_node );
-//                    search_list.push( current_node ); //if the search list sorts, it will take the best node
+                    //                    search_list.push( current_node ); //if the search list sorts, it will take the best node
                     closed_set.emplace(to_string(current_node->diamonds,current_node->general_pos),current_node);
                     if(game_complete(current_node)){
                         std::cout << (int) runs << " found the goal. Size: " << current_node->path_length << "\n";
@@ -187,6 +187,47 @@ node* Map::bff_search(Map &copy_map){
         std::cout << "runs: " << (int) runs << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n";
         while(!neighbohrs_neighbohrs.empty()){ //clear the queue
             neighbohrs_neighbohrs.pop();
+        }
+    }
+    return nullptr;
+}
+node* Map::informed_bff_search(Map &copy_map){
+    std::priority_queue<node*,std::vector<node*>,comparator_functor> search_list;                      //list of current search nodes.
+    std::queue<node*> neighbohrs;                       //result fra add_all_possible...
+    node start(man,diamond_pos);
+    wave(copy_map,man,diamond_pos);
+    start.general_pos = copy_map.find_general_position();
+    search_list.push(&start);                            //set first target
+    closed_set.clear();
+    std::unordered_map<std::string,node*>::const_iterator hash_ptr;
+    closed_set.emplace(to_string(start.diamonds,start.general_pos),&start);
+    char runs = 0;
+    bool search_complete = false;
+    node *current_node;
+    while( !search_complete ) {
+        search_complete = true;
+        ++runs;
+        while( !search_list.empty()) {
+            search_complete = false; //prevent the loop to stop when there is more pixels to search for
+            current_node = search_list.top();
+            search_list.pop();
+            neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
+            while( !neighbohrs.empty() ) {                       //append these nodes to the list.
+                current_node = neighbohrs.front();
+                neighbohrs.pop();
+                hash_ptr = closed_set.find(to_string(current_node->diamonds,current_node->general_pos)); //check is visited;
+                if( hash_ptr == closed_set.end() ) {//current_node does not exist in map
+                    search_list.push( current_node ); //the search list sorts, it will take the best node
+                    closed_set.emplace(to_string(current_node->diamonds,current_node->general_pos),current_node);
+                    if(game_complete(current_node)){
+                        std::cout << (int) runs << " found the goal. Size: " << current_node->path_length << "\n";
+                        print_path(copy_map,current_node);
+                        return current_node; //goal node;
+                    }
+                } else { //if the node is in the closed set
+                    delete current_node;
+                }
+            }
         }
     }
     return nullptr;

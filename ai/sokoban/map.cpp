@@ -80,7 +80,7 @@ void Map::read_file(std::string file_name){
         data_file.close();
         std::cout << "file loaded\n";
     } else {
-        std::cout << "File does not exist\n";
+        std::cout << file_name << " does not exist\n";
     }
 }
 

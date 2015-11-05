@@ -7,6 +7,7 @@
 #include <sstream>
 #include "position_t.h"
 #include "node.h"
+#include <unordered_map>
 
 #define DIAMOND  2
 #define OBSTACLE 1
@@ -31,6 +32,7 @@ private:
     pos_t find_general_position();
 
     bool boundry_check(const pos_t &pos);
+    std::unordered_map<std::string,node*> closed_set;
 public:
     //data:
     int width, height;
@@ -48,6 +50,7 @@ public:
     void print_path(Map &wave_map, node* path, bool first = true);
     node *bff_search(Map &copy);
     node *idf_search(node *start, Map &copy);
+    node *informed_bff_search(Map &copy_map);
 
     //operator overloads
     Map& operator=(const Map& other );
@@ -56,6 +59,7 @@ public:
     Map();
     Map(std::string file_name );
     ~Map() {
+        closed_set.clear();
         for(int i = 0; i < width; ++i){
             delete[] data[i];
         }

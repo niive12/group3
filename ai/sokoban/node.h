@@ -27,3 +27,9 @@ public:
         return path_length > rhs.path_length;
     }
 };
+
+struct comparator_functor {
+  bool operator() (const node* a, const node* b) const {
+    return a->path_length > b->path_length; //calls your operator
+  }
+};
