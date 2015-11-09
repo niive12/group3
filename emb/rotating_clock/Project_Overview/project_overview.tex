@@ -1,8 +1,12 @@
 \documentclass[a4paper,12pt,journal]{IEEEtran}
 \usepackage[utf8]{inputenc}
-
+\usepackage{tikz}
 \title{Digital rotating clock}
 \author{Nikolaj Iversen, Matthias Harald Hessels}
+
+\newcommand{\ringwidth}{0.2}
+\newcommand{\offA}{0.3}
+\newcommand{\offB}{-0.5}
 
 \begin{document}
 
@@ -57,5 +61,36 @@ $9000$ RPM means the arm will make up to 150 revolutions per second.
 If the control is $\frac{1}{60}$ of a revolution, the time to send the I2C signal is $111.1 \mu s$.
 A complete signal is $30$ bits so a minimum of 270 kHz is needed.
 The IO expander can operate up to 400 kHz making this possible.
+
+\section{Ring Connector}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[node distance=2cm]
+        %rings
+        \node[draw, circle, line width=\ringwidth cm, rotate=0  ,  color = red    , minimum width=2.0cm, name=3v3    ] at (0,0) {}; 
+        \node[draw, circle, line width=\ringwidth cm, rotate=45 ,  color = blue   , minimum width=4.0cm, name=gnd    ] at (0,0) {}; 
+        \node[draw, circle, line width=\ringwidth cm, rotate=50 ,  color = green  , minimum width=5.0cm, name=clk    ] at (0,0) {}; 
+        \node[draw, circle, line width=\ringwidth cm, rotate=75 ,  color = orange , minimum width=7.0cm, name=signal1] at (0,0) {}; 
+        \node[draw, circle, line width=\ringwidth cm, rotate=100,  color = purple , minimum width=8.0cm, name=signal2] at (0,0) {}; 
+        
+        %pads
+        \draw[red    , line width=\ringwidth cm, rotate=0  ]     (3v3.0) -- ++(\offA,0) node[draw, circle, fill= red    , minimum width=0.25cm] {};
+        \draw[blue   , line width=\ringwidth cm, rotate=45 ]     (gnd.0) -- ++(\offB,0) node[draw, circle, fill= blue   , minimum width=0.25cm] {};
+        \draw[green  , line width=\ringwidth cm, rotate=50 ]     (clk.0) -- ++(\offA,0) node[draw, circle, fill= green  , minimum width=0.25cm] {};
+        \draw[orange , line width=\ringwidth cm, rotate=75 ] (signal1.0) -- ++(\offB,0) node[draw, circle, fill= orange , minimum width=0.25cm] {};
+        \draw[purple , line width=\ringwidth cm, rotate=100] (signal2.0) -- ++(\offA,0) node[draw, circle, fill= purple , minimum width=0.25cm] {};
+        
+        %legend
+        \draw 
+        (0,0) ++( 5  ,-2) node[draw, circle, right, fill = red   ] {} ++(0.5,0) node[right] {3v3    }
+              ++(-0.5, 1) node[draw, circle, right, fill = blue  ] {} ++(0.5,0) node[right] {gnd    }
+              ++(-0.5, 1) node[draw, circle, right, fill = green ] {} ++(0.5,0) node[right] {clk    }
+              ++(-0.5, 1) node[draw, circle, right, fill = orange] {} ++(0.5,0) node[right] {signal1}
+              ++(-0.5, 1) node[draw, circle, right, fill = purple] {} ++(0.5,0) node[right] {signal2}
+        ;
+    \end{tikzpicture}
+    \caption{Sketch of the schematic side of the slip ring.}
+\end{figure}
+
 
 \end{document}
