@@ -1,62 +1,378 @@
 //sort = 35-45
 //hvid = 55-65
 
-#define THRESHOLD 55
+#define THRESHOLD 50
 
 #define MOT_R       OUT_B  //B
 #define MOT_L       OUT_A  //A
 #define MOTOR       OUT_AB //C
 #define LEFT        IN_1
+#define CENTER     	IN_2
 #define RIGHT       IN_3
 
-void follow_line(char basespeed);
-void turn_right();
+void follow_line_f(char basespeed=80);
+void turn_right(bool forward=true);
 void turn_left();
+void back();
 
 task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
+  SetSensorLight(CENTER);
   
-  OnFwd(MOTOR, 75);
-  for(int i = 0; i<2;i++){
-  follow_line(60);   Wait(1000);
-//  turn_left();       Wait(3000);
-//  follow_line(50);   Wait(1000);
-  turn_right();      Wait(1000);
-  follow_line(60);   Wait(1000);
-//  follow_line(40);   Wait(1000);
-  turn_right();      Wait(1000);
-//  follow_line(-50);  Wait(5000);
-  follow_line(60);   Wait(1000);
-  turn_right();      Wait(1000);
-//  follow_line(-50);  Wait(5000);
-  follow_line(60);   Wait(1000);
-  turn_right();      Wait(1000);
-//  follow_line(-50);  Wait(5000);
+  char moves[300];
+  char solution[200];
+  bool running = true;
+  char current = solution[1];
+  char previous = solution[0];
+  int index = 1;
+  while(running){
+	switch(current){
+	  case 'l':
+		switch(previous){
+		  case 'l':
+			follow_line_f();
+			break;
+		  case 'u':
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'd':
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'r':
+			turn_left();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'L':
+			TextOut(40,24,  "ERROR");
+			running = false;
+			break;
+		  case 'U':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'D':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'R':
+			back();
+			follow_line_f();
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 'u':
+		switch(previous){
+		  case 'l':
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'u':
+			follow_line_f();
+			break;
+		  case 'd':
+			turn_right();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'r':
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'L':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'U':
+			TextOut(40,24,  "ERROR");
+			running = false;
+			break;
+		  case 'D':
+			back();
+			follow_line_f();
+			break;
+		  case 'R':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 'd':
+	    switch(previous){
+		  case 'l':
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'u':
+			turn_left();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'd':
+			follow_line_f();
+			break;
+		  case 'r':
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'L':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'U':
+			back();
+			follow_line_f();
+			break;
+		  case 'D':
+			TextOut(40,24,  "ERROR");
+			running = false;
+			break;
+		  case 'R':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 'r':
+		switch(previous){
+		  case 'l':
+			turn_right();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'u':
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'd':
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'r':
+			follow_line_f();
+			break;
+		  case 'L':
+			back();
+			follow_line_f();
+			break;
+		  case 'U':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'D':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'R':
+			TextOut(40,24,  "ERROR");
+			running = false;
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 'L':
+		switch(previous){
+		  case 'l':
+		    follow_line_f();
+			break;
+		  case 'u':
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'd':
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'r':
+			turn_left();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'L':
+			follow_line_f();
+			break;
+		  case 'U':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'D':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'R':
+			back();
+			follow_line_f();
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 'U':
+		switch(previous){
+		  case 'l':
+            turn_right();
+			follow_line_f();
+			break;
+		  case 'u':
+			follow_line_f();
+			break;
+		  case 'd':
+			turn_right();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'r':
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'L':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'U':
+			follow_line_f();
+			break;
+		  case 'D':
+			back();
+			follow_line_f();
+			break;
+		  case 'R':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 'D':
+		switch(previous){
+		  case 'l':
+            turn_left();
+			follow_line_f();
+			break;
+		  case 'u':
+			turn_right();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'd':
+			follow_line_f();
+			break;
+		  case 'r':
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'L':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'U':
+			back();
+			follow_line_f();
+			break;
+		  case 'D':
+			follow_line_f();
+			break;
+		  case 'R':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 'R':
+		switch(previous){
+		  case 'l':
+            turn_right();
+            turn_right();
+			follow_line_f();
+			break;
+		  case 'u':
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'd':
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'r':
+			follow_line_f();
+			break;
+		  case 'L':
+			back();
+			follow_line_f();
+			break;
+		  case 'U':
+			back();
+			turn_left();
+			follow_line_f();
+			break;
+		  case 'D':
+			back();
+			turn_right();
+			follow_line_f();
+			break;
+		  case 'R':
+			follow_line_f();
+			break;
+		  default:
+			break;
+		}
+		break;
+	  case 's':
+		TextOut(40,24,  "FINISH");
+		running = false;
+		Wait(10000);
+		break;
+	}
   }
-}
-
-int sign(int a){
-  return a > 0 ? 1 : -1;
-}
-
-void follow_line(char basespeed = 40){
-  const char EXPECTED_SENSOR_ERROR = 1; //mismatch i lys fra rummet.
   
+}
+
+void follow_line_f(char basespeed = 80){
+  const char EXPECTED_SENSOR_ERROR = 1; //mismatch i lys fra rummet.
   char left_error;
   char left_speed;
   char right_speed;
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 1.3;
+  float kP = 1.5;
   float kI = 0.02;
   float kD = 0.01;
   if(basespeed < 0){
-	kP = 1.2;
-	kI = 0.00;
+	kP = 1.5;
+	kI = 0;
 	kD = 0.01;
   }
+  OnFwd(MOT_L, 60);
+  OnFwd(MOT_R, 60);
+  Wait(400);
   int correction = 0;
   bool line_has_ended = false;
   while(!line_has_ended){
@@ -66,7 +382,7 @@ void follow_line(char basespeed = 40){
 	TextOut(85,1, NumToStr(Sensor(RIGHT)));
 	
 	if( (Sensor(LEFT)  < THRESHOLD) &&
-	    (Sensor(RIGHT) < THRESHOLD)
+	  (Sensor(RIGHT) < THRESHOLD)
 	){
 	  Off(MOTOR);
 	  TextOut(40,24,  "KRYDS");
@@ -91,8 +407,6 @@ void follow_line(char basespeed = 40){
 	  D = left_error - left_previous_error;
 	  left_previous_error = left_error;
 	  correction = P * kP + I * kI + D * kD;
-	  correction *= sign(left_speed); // Når man kører baglæns skal fortegnet for correction vel vendes op? 
-	  
 	  //roundoff to avoid mayhem
 	  if(correction > 25 ){
 		correction = 25;
@@ -101,35 +415,45 @@ void follow_line(char basespeed = 40){
 	  }
 	  left_speed =  basespeed + correction;
 	  right_speed = basespeed - correction;
+	  
 	  OnFwd(MOT_L, left_speed);
 	  OnFwd(MOT_R, right_speed);
 	}
 	Wait(10); // Generate 100 hz controller
   }
 }
+
+void back(){
+  OnFwd(MOT_L, -30);
+  OnFwd(MOT_R, -30);
+  Wait(700);
+  turn_right(false);
+  Wait(1000);
+  follow_line_f(80);
+}
 /*
- void turn(byte chosen_motor, byte sensor){
- OnFwd(chosen_motor, 60);
- Wait(1000);
- bool turn_completed = false;
- while(!turn_completed){
-   if(Sensor(sensor) < 55)
-	 turn_completed = true;
-   }
-   Off(chosen_motor);
-   }
-   
-   void turn_right(){
-   TextOut(40,24,  "Turn R");
-   Off(MOT_R);
-   turn(MOT_L, LEFT);
-   }
-   
-   void turn_left(){
-   TextOut(40,24,  "Turn L");
-   Off(MOT_L);
-   turn(MOT_R,RIGHT);
-   }*/
+ * void turn(byte chosen_motor, byte sensor){
+ * OnFwd(chosen_motor, 60);
+ * Wait(1000);
+ * bool turn_completed = false;
+ * while(!turn_completed){
+ *  if(Sensor(sensor) < 55)
+ * turn_completed = true;
+ *  }
+ *  Off(chosen_motor);
+ *  }
+ *  
+ *  void turn_right(){
+ *  TextOut(40,24,  "Turn R");
+ *  Off(MOT_R);
+ *  turn(MOT_L, LEFT);
+ *  }
+ *  
+ *  void turn_left(){
+ *  TextOut(40,24,  "Turn L");
+ *  Off(MOT_L);
+ *  turn(MOT_R,RIGHT);
+ *  }*/
 
 void turn_left(){
   OnFwd(MOT_L, 30);
@@ -140,22 +464,24 @@ void turn_left(){
   Wait(500);
   bool turn_completed = false;
   while(!turn_completed){
-	if(Sensor(RIGHT) < 55)
+	if(Sensor(CENTER) < 65)
 	  turn_completed = true;
   }
   Off(MOTOR);
 } 
 
-void turn_right(){
-  OnFwd(MOT_L, 30);
-  OnFwd(MOT_R, 30);
-  Wait(650);
-  OnFwd(MOT_L, 60);
-  OnFwd(MOT_R, -60);
-  Wait(500);
+void turn_right(bool forward = true){
+  if(forward){
+	OnFwd(MOT_L, 30);
+	OnFwd(MOT_R, 30);
+	Wait(650);
+  }
+  OnFwd(MOT_L, 50);
+  OnFwd(MOT_R, -50);
+  Wait(700);
   bool turn_completed = false;
   while(!turn_completed){
-	if(Sensor(LEFT) < 65)
+	if(Sensor(CENTER) < 65)
 	  turn_completed = true;
   }
   Off(MOTOR);

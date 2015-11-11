@@ -1,9 +1,11 @@
-Rotating clock (with fixed character)
+Rotating clock
 
 Controller for motor
 LED strip
 Watch
 Timing for flashing LEDS
+Communication with LEDS
+Power for LEDS
 
 Subgoals:
 Draw cross on watch
