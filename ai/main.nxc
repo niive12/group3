@@ -14,19 +14,35 @@ void follow_line_f(char basespeed=80);
 void turn_right(bool forward=true);
 void turn_left();
 void back();
+void execute();
 
 task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
   
-  char moves[300];
-  char solution[200];
+  /*follow_line_f(); Wait(1000);
+  back();
+  back();*/
+  execute();
+}
+
+void execute(){
+ char moves[300];
+  moves[0]='r';
+  moves[1]='r';
+  moves[2]='u';
+  moves[3]='l';
+  moves[4]='d';
+  moves[5]='s';
+  moves[6]='s';
   bool running = true;
-  char current = solution[1];
-  char previous = solution[0];
+  char current = moves[1];
+  char previous = moves[0];
   int index = 1;
   while(running){
+	TextOut(40,24, NumToStr(current)+ " " +NumToStr(index));
+	Wait(2000);
 	switch(current){
 	  case 'l':
 		switch(previous){
@@ -347,10 +363,16 @@ task main(){
 	  case 's':
 		TextOut(40,24,  "FINISH");
 		running = false;
-		Wait(10000);
+		Wait(1000);
 		break;
 	}
+  
+    index++;
+	previous = current;
+	current = moves[index];
+	
   }
+  
   
 }
 
@@ -362,7 +384,7 @@ void follow_line_f(char basespeed = 80){
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 1.5;
+  float kP = 1;
   float kI = 0.02;
   float kD = 0.01;
   if(basespeed < 0){
@@ -431,29 +453,6 @@ void back(){
   Wait(1000);
   follow_line_f(80);
 }
-/*
- * void turn(byte chosen_motor, byte sensor){
- * OnFwd(chosen_motor, 60);
- * Wait(1000);
- * bool turn_completed = false;
- * while(!turn_completed){
- *  if(Sensor(sensor) < 55)
- * turn_completed = true;
- *  }
- *  Off(chosen_motor);
- *  }
- *  
- *  void turn_right(){
- *  TextOut(40,24,  "Turn R");
- *  Off(MOT_R);
- *  turn(MOT_L, LEFT);
- *  }
- *  
- *  void turn_left(){
- *  TextOut(40,24,  "Turn L");
- *  Off(MOT_L);
- *  turn(MOT_R,RIGHT);
- *  }*/
 
 void turn_left(){
   OnFwd(MOT_L, 30);
