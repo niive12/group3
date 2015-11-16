@@ -229,7 +229,8 @@ void clear_hashtable(std::unordered_map<std::string,node*> &table, const std::st
     for(std::unordered_map<std::string,node*>::iterator i =table.begin(); i != table.end() ; ++i){
         if( i->first != start_node_index ){ //Don't delete start node
             delete i->second;
-            table.erase(i);
+//            table.erase(i);
         }
+//        table.clear();
     }
 }

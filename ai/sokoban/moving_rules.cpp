@@ -213,8 +213,6 @@ node* Map::bff_search(Map &copy_map){
     return nullptr;
 }
 node* Map::informed_bff_search(Map &copy_map){
-    const std::string bad = {1, 4, 1, 3, 2, 3, 32, 3, 33, 3};
-    const std::string bad_p = {1,1,1,3,3,3,32,3,33,3};
     std::priority_queue<node*,std::vector<node*>,comparator_functor> search_list;                      //list of current search nodes.
     std::queue<node*> neighbohrs;                       //result fra add_all_possible...
     node start(man,diamond_pos);
@@ -235,9 +233,11 @@ node* Map::informed_bff_search(Map &copy_map){
             if(game_complete(current_node)){
                 std::cout << (int) current_cost << " found the goal. Size: " << current_node->path_length << "\n";
                 print_path(copy_map,current_node);
+                std::cout << "\n\n\n";
+                print_path_as_C_code(copy_map,current_node);
                 clear_hashtable(closed_set,start_node_index);
                 std::cout << "Press <RETURN> twice to close this window..."; std::cin.get();
-                return current_node; //goal node;
+                return nullptr; //goal node;
             }
             search_list.pop();
             if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n"; }
@@ -246,12 +246,6 @@ node* Map::informed_bff_search(Map &copy_map){
                 current_node = neighbohrs.front();
                 neighbohrs.pop();
                 hash_index = to_string(current_node->diamonds,current_node->general_pos);
-                if(hash_index == bad){
-                    std::cout << "I GOT IT " << current_node << current_node->general_pos;
-                    for(auto i : current_node->diamonds)
-                        std::cout << i;
-                    std::cout << "\n";
-                }
                 if( closed_set.emplace(hash_index,current_node).second){
                     search_list.push(current_node);
                 } else {
@@ -378,11 +372,11 @@ node* Map::idf_search(Map &copy_map){
                 }
             } else if(n_children > 0) {
                     hash_index = to_string(current_node->diamonds,current_node->general_pos);
+                    hash_ptr = closed_set.find(hash_index);
                     if( hash_index != start_node_index){
-                        hash_ptr = closed_set.find(hash_index);
                         delete hash_ptr->second;
-                        closed_set.erase(hash_ptr);
                     }
+                    closed_set.erase(hash_ptr);
                     --n_children;
                     if(n_children == 0)
                         --depth;

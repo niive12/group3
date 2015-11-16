@@ -142,6 +142,34 @@ std::string Map::calculate_path(Map &wave_map, node *N){
     return ans;
 }
 
+void Map::print_path_as_C_code(Map &wave_map, node* path, bool first){
+    static std::string final_path;
+    static std::string c_variable;
+    if(first){
+        final_path = "";
+    }
+    if(path->parent != nullptr){
+        print_path_as_C_code(wave_map, path->parent,false);
+        final_path += calculate_path(wave_map,path);
+        if(first){
+            for(int i = 0; i < final_path.size();++i){
+                if( i == 0 ){
+                    c_variable = "const char[";
+                    c_variable += final_path.size(); //WRONG WAY TO DO IT... CONVERT TO STRING BEFORE
+                    c_variable += "] = {";
+                    c_variable += final_path[i];
+                } else {
+                    c_variable += " , ";
+                    c_variable += final_path[i];
+                }
+            }
+            c_variable += "}\n";
+            std::cout << final_path << "\n\n\n";
+            std::cout << c_variable << '\n';
+        }
+    }
+}
+
 void Map::print_path(Map &wave_map, node* path, bool first){
     if ( path->parent != nullptr ){
         print_path(wave_map, path->parent,false);

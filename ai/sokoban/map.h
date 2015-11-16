@@ -49,6 +49,7 @@ public:
 
     unsigned char wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &diamonds); //stored in wavefront.cpp
     void print_path(Map &wave_map, node* path, bool first = true);
+    void print_path_as_C_code(Map &wave_map, node* path, bool first = true);
     node *bff_search(Map &copy);
     node *idf_search(Map &copy);
     node *informed_bff_search(Map &copy_map);
