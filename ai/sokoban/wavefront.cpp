@@ -1,6 +1,28 @@
 #include "map.h"
 #include <queue>
 
+void Map::color_diamonds(std::vector<pos_t> diamonds, Map &wave_map){
+    unsigned char min;
+    pos_t testing_pos;
+    for(auto n : diamonds){
+        min = 99;
+        for(int x = -1; x <= 1; ++x){
+            for(int y = -1; y <= 1; ++y){
+                if((x == 0) || (y == 0)){
+                    testing_pos.x = n.x + x;
+                    testing_pos.y = n.y + y;
+                    if ( boundry_check(testing_pos) ) {
+                        if(wave_map.get( testing_pos ) > 2 && wave_map.get( testing_pos ) < min) {
+                           min = wave_map.get( testing_pos );
+                        }
+                    }
+                }
+            }
+        }
+        wave_map.set(n,min + 1);
+    }
+}
+
 std::queue<pos_t> Map::wave_color(pos_t pos, int previous_color, Map &wave_map){
     std::queue<pos_t> colored_positions;
     //color 4 surrounding pixels
@@ -59,6 +81,7 @@ unsigned char Map::wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &
         }
         color++;
     }
+//    color_diamonds(diamonds,wave_map);
     return color;
 }
 
@@ -123,7 +146,6 @@ void Map::print_path(Map &wave_map, node* path, bool first){
     if ( path->parent != nullptr ){
         print_path(wave_map, path->parent,false);
         std::cout << calculate_path(wave_map,path) << std::flush;
-//        std::cout << path->path_length << " " << path->parent->path_length << std::endl;
         if(first)
             std::cout << "\n";
     }

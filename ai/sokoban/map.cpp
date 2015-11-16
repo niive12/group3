@@ -65,6 +65,16 @@ void Map::read_file(std::string file_name){
                         data[x][y] = FREE;
                         man = pos_t(x,y);
                         break;
+                    case '+': //man + goal
+                        data[x][y] = FREE;
+                        man = pos_t(x,y);
+                        goals.push_back(pos_t(x,y));
+                        break;
+                    case '*': //diamand + goal
+                        data[x][y] = FREE;
+                        goals.push_back(pos_t(x,y));
+                        diamond_pos.push_back(pos_t(x,y));
+                        break;
                     default:
                         if(x > 0){
                             x = -1;
@@ -110,6 +120,7 @@ void Map::print(){
     }
     data[man.x][man.y] = FREE;
 }
+
 
 std::vector<pos_t> Map::find_all_general_positions(Map copy, node* N){
     pos_t res(-1,-1);
@@ -161,12 +172,12 @@ pos_t Map::find_general_position(){ //should be done on a already waved map
 }
 
 Map& Map::operator=(const Map& other ) {
-    if(height != other.height || width != other.width){
+//    if(height != other.height || width != other.width){
         for(int i = 0; i < width; ++i){
             delete[] data[i];
         }
         delete[] data;
-    }
+//    }
     height = other.height;
     width  = other.width;
     n_diamonds = other.n_diamonds;
@@ -203,11 +214,22 @@ unsigned char Map::get(const pos_t &pos){
     return OBSTACLE;
 }
 
-std::string Map::to_string(const std::vector<pos_t> &J,pos_t &general_position){
+std::string Map::to_string(const std::vector<pos_t> &J,const pos_t &general_position){
     std::string final_string;
-    final_string += general_position.x + (general_position.y * width);
+    final_string += general_position.x;
+    final_string += general_position.y;
     for(auto n : J){
-        final_string += n.x + (n.y * width);
+        final_string += n.x;
+        final_string += n.y;
     }
-    return final_string;
+    return std::move(final_string);
+}
+
+void clear_hashtable(std::unordered_map<std::string,node*> &table, const std::string start_node_index){
+    for(std::unordered_map<std::string,node*>::iterator i =table.begin(); i != table.end() ; ++i){
+        if( i->first != start_node_index ){ //Don't delete start node
+            delete i->second;
+            table.erase(i);
+        }
+    }
 }

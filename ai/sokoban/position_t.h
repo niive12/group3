@@ -42,4 +42,4 @@ const pos_t above(0,-1);
 const pos_t below(0,1);
 const pos_t right(1,0);
 const pos_t left(-1,0);
-enum answers{south=1,north=2,east=4,west=8};
+enum answers{north=1,south=2,east=4,west=8};

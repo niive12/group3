@@ -13,13 +13,14 @@ int main(int argc, char** argv){
         std::cout << "argument: " << argv[1] << '\n';
         map.read_file(argv[1]);
     } else {
-        map.read_file("map_one.txt");
+        map.read_file("solvertest002.txt");
     }
 //    Map map("map_easy.txt");
     Map copy;
-    node *goal;
-    map.bff_search(copy);
+//    node *goal;
+//    map.bff_search(copy);
     map.informed_bff_search(copy);
+//    map.idf_search(copy);
     return 0;
 }
 

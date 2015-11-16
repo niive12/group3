@@ -25,12 +25,13 @@ private:
     std::string calculate_path(Map &wave_map, node *N);                              //stored in wavefront.cpp
     std::queue<node*> add_all_possible_paths(node *N, Map &copy, char direction = DIRECTION_PUSH);
     bool locked_in(pos_t diamond); //sees if a diamond is locked into a corner.
+    bool dead_lock(pos_t diamond); //sees if a diamond is in a dead lock.
     char valid_push(pos_t diamond); //sees a diamond is movable
     char valid_pull(pos_t diamond); //sees a diamond is movable
+    void color_diamonds(std::vector<pos_t> diamonds, Map &wave_map);
     bool game_complete(node* N);
     std::vector<pos_t> find_all_general_positions(Map copy, node* N);
     pos_t find_general_position();
-
     bool boundry_check(const pos_t &pos);
     std::unordered_map<std::string,node*> closed_set;
 public:
@@ -49,7 +50,7 @@ public:
     unsigned char wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &diamonds); //stored in wavefront.cpp
     void print_path(Map &wave_map, node* path, bool first = true);
     node *bff_search(Map &copy);
-    node *idf_search(node *start, Map &copy);
+    node *idf_search(Map &copy);
     node *informed_bff_search(Map &copy_map);
 
     //operator overloads
@@ -65,6 +66,7 @@ public:
         }
         delete[] data;
     }
-    std::string to_string(const std::vector<pos_t> &J, pos_t &general_position);
+    std::string to_string(const std::vector<pos_t> &J,const pos_t &general_position);
 };
 
+void clear_hashtable(std::unordered_map<std::string,node*> &table, std::string start_node_index);
