@@ -13,8 +13,8 @@ int main(int argc, char** argv){
         std::cout << "argument: " << argv[1] << '\n';
         map.read_file(argv[1]);
     } else {
-//        map.read_file("solvertest002.txt");
-        map.read_file("map_spec.txt");
+        map.read_file("solvertest02.txt");
+//        map.read_file("map_spec.txt");
     }
 //    Map map("map_easy.txt");
     Map copy;

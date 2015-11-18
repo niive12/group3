@@ -24,8 +24,8 @@ private:
     std::queue<pos_t> wave_color( pos_t pos, int previous_color, Map &wave_map); //stored in wavefront.cpp
     std::string calculate_path(Map &wave_map, node *N);                              //stored in wavefront.cpp
     std::queue<node*> add_all_possible_paths(node *N, Map &copy, char direction = DIRECTION_PUSH);
-    bool locked_in(pos_t diamond); //sees if a diamond is locked into a corner.
-    bool dead_lock(pos_t diamond); //sees if a diamond is in a dead lock.
+    bool locked_in(pos_t diamond);  //sees if a diamond is locked into a corner.
+    bool dead_lock(pos_t diamond);  //sees if a diamond is in a dead lock.
     char valid_push(pos_t diamond); //sees a diamond is movable
     char valid_pull(pos_t diamond); //sees a diamond is movable
     void color_diamonds(std::vector<pos_t> diamonds, Map &wave_map);
@@ -40,6 +40,10 @@ public:
     char n_diamonds;
     std::vector<pos_t> diamond_pos;
     std::vector<pos_t> goals; //constant
+    std::vector<pos_t> dead_locked_wall;
+
+    void find_dead_lock_pos(Map &wave_map);
+
     pos_t man;
     //functions:
     void read_file(std::string file_name);
@@ -68,6 +72,7 @@ public:
         delete[] data;
     }
     std::string to_string(const std::vector<pos_t> &J,const pos_t &general_position);
+    std::string to_string(node *N);
 };
 
 void clear_hashtable(std::unordered_map<std::string,node*> &table, std::string start_node_index);

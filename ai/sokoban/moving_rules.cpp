@@ -72,6 +72,12 @@ bool Map::dead_lock(pos_t diamond){
     if( (U == DIAMOND) && (L == DIAMOND) && (UL == DIAMOND) ){ ans = true; }
     if( (D == DIAMOND) && (R == DIAMOND) && (DR == DIAMOND) ){ ans = true; }
     if( (D == DIAMOND) && (L == DIAMOND) && (DL == DIAMOND) ){ ans = true; }
+
+    for(auto wall : dead_locked_wall){
+        if( wall == diamond)
+            ans = true;
+    }
+
     return ans;
 }
 
@@ -220,12 +226,12 @@ node* Map::informed_bff_search(Map &copy_map){
     start.general_pos = copy_map.find_general_position();
     search_list.push(&start);                            //set first target
     closed_set.clear();
-    std::string start_node_index = to_string(start.diamonds,start.general_pos);
-    closed_set.emplace(start_node_index,&start);
+    std::string start_node_index = to_string(start.diamonds,start.man);
     size_t last_cost    = 0;
     size_t current_cost = 0;
     std::string hash_index;
     node *current_node;
+    std::unordered_map<std::string,node*>::iterator hash_ptr;
         while( !search_list.empty()) {
             last_cost = current_cost;
             current_node = search_list.top();
@@ -236,20 +242,34 @@ node* Map::informed_bff_search(Map &copy_map){
                 std::cout << "\n\n\n";
                 print_path_as_C_code(copy_map,current_node);
                 clear_hashtable(closed_set,start_node_index);
+                while(!search_list.empty()){
+                    current_node = search_list.top();
+                    delete current_node;
+                    search_list.pop();
+                }
                 std::cout << "Press <RETURN> twice to close this window..."; std::cin.get();
                 return nullptr; //goal node;
             }
             search_list.pop();
-            if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n"; }
-            neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
-            while( !neighbohrs.empty() ) {                       //append these nodes to the list.
-                current_node = neighbohrs.front();
-                neighbohrs.pop();
-                hash_index = to_string(current_node->diamonds,current_node->general_pos);
-                if( closed_set.emplace(hash_index,current_node).second){
-                    search_list.push(current_node);
-                } else {
-                    delete current_node;
+
+            hash_index = to_string(current_node->diamonds,current_node->man);
+            if( closed_set.emplace(hash_index,current_node).second){//if successfully inserted
+
+                if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n"; }
+
+                neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
+                while( !neighbohrs.empty() ) {                       //append these nodes to the list.
+                    current_node = neighbohrs.front();
+                    neighbohrs.pop();
+
+                    hash_index = to_string(current_node->diamonds,current_node->man);
+                    hash_ptr = closed_set.find(hash_index); //check is visited;
+
+                    if( hash_ptr != closed_set.end() ){ //if it exists
+                        delete current_node;
+                    } else {
+                        search_list.push(current_node);
+                    }
                 }
             }
         }

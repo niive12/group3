@@ -151,11 +151,14 @@ void Map::print_path_as_C_code(Map &wave_map, node* path, bool first){
     if(path->parent != nullptr){
         print_path_as_C_code(wave_map, path->parent,false);
         final_path += calculate_path(wave_map,path);
+        std::cout << path->path_length << " moves\n";
         if(first){
-            for(int i = 0; i < final_path.size();++i){
+            for(unsigned int i = 0; i < final_path.size();++i){
                 if( i == 0 ){
                     c_variable = "const char[";
-                    c_variable += final_path.size(); //WRONG WAY TO DO IT... CONVERT TO STRING BEFORE
+                    c_variable += final_path.size() / 100     + '0';
+                    c_variable += final_path.size() / 10 % 10 + '0';
+                    c_variable += final_path.size()      % 10 + '0';
                     c_variable += "] = {";
                     c_variable += final_path[i];
                 } else {
