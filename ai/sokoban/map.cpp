@@ -97,28 +97,27 @@ void Map::read_file(std::string file_name){
 }
 
 void Map::find_dead_lock_pos(Map &wave_map){
+    enum colors{reachable=3, cleared = 4, dead_wall = 6, corner = 7, diamond = 9};
     std::unordered_map<int,pos_t> walls;
     wave_map = *this;
     std::queue<pos_t> search_list;
     std::queue<pos_t> surrounding_points;
 
-    unsigned char color = 3;                // this means distance is (color - 3)
-    wave_map.set(man, color);             //set first value
+    wave_map.set(man, reachable);             //set first value
     search_list.push(man);           //set first target
-
+//    --color;
     pos_t current_pos, testing_pos;
     //find walls
     while ( !search_list.empty() ) {
         current_pos = search_list.front();
         search_list.pop();
-        surrounding_points = wave_color( current_pos, color, wave_map); //this gives the surrounding coordinates
         for(int x = -1; x <= 1; ++x){
             for(int y = -1; y <= 1; ++y){
                 if((x == 0) || (y == 0)){
                     testing_pos.x = current_pos.x + x;
                     testing_pos.y = current_pos.y + y;
                     if(wave_map.get( testing_pos ) == FREE) {
-                        wave_map.set(testing_pos, color);
+                        wave_map.set(testing_pos, reachable);
                         surrounding_points.push( testing_pos );
                     } else if(wave_map.get(testing_pos) == OBSTACLE){
                         walls.emplace(current_pos.x + width * current_pos.y, current_pos);
@@ -133,7 +132,7 @@ void Map::find_dead_lock_pos(Map &wave_map){
     }
 
     for(auto n : goals){
-        wave_map.set(n, 9);
+        wave_map.set(n, diamond);
     }
 
     char v = 0;
@@ -142,43 +141,54 @@ void Map::find_dead_lock_pos(Map &wave_map){
     //remove corners
 
     for(std::unordered_map<int,pos_t>::iterator i =walls.begin(); i != walls.end() ; ++i){
-        if( wave_map.get(i->second) == 4){
+        if( wave_map.get(i->second) == reachable){
             if(locked_in(i->second)){
-                wave_map.set(i->second,7);
+                wave_map.set(i->second,corner);
             }
         }
     }
     bool wall_has_goal = false;
+    bool wall_has_clearance = false;
     char pull;
     for(std::unordered_map<int,pos_t>::iterator i =walls.begin(); i != walls.end() ; ++i){
-        if(wave_map.get(i->second) == 7){
+        if(wave_map.get(i->second) == corner){
             for(int x = -1; x <= 1; ++x){
                 for(int y = -1; y <= 1; ++y){
                     if((x == 0) ^ (y == 0)){
                         testing_pos = i->second;
                         direction = pos_t(x,y);
                         wall_has_goal = false;
+                        wall_has_clearance = false;
                         do{
                             search_list.push(testing_pos); //add all locked in values
                             testing_pos = testing_pos + direction; //check in all directions until a wall occour
                             v = wave_map.get(testing_pos);
                             pull = wave_map.valid_push(testing_pos);
-                            if(v == 9 || pull == (north | south | east | west) ){
-
+                            if(v == diamond ){
                                 wall_has_goal = true;
+                                break;
+                            }
+                            if (v == cleared || pull == (north | south | east | west) ){
+                                wall_has_clearance = true;
                                 break;
                             }
                         }while( v != OBSTACLE);
 
-                        if(wall_has_goal){
-//                            std::cout << "direction: " << direction << " had goal " << testing_pos << "\n";
+                        if(wall_has_goal){ // ignore them
                             while(!search_list.empty()){
+                                search_list.pop();
+                            }
+                        } else if(wall_has_clearance) {
+                            search_list.pop();
+                            while(!search_list.empty()){
+                                testing_pos = search_list.front();
+                                wave_map.set(testing_pos,cleared);
                                 search_list.pop();
                             }
                         } else {
                             while(!search_list.empty()){
                                 testing_pos = search_list.front();
-                                wave_map.set(testing_pos,6);
+                                wave_map.set(testing_pos,dead_wall);
                                 search_list.pop();
                             }
                         }
@@ -188,7 +198,7 @@ void Map::find_dead_lock_pos(Map &wave_map){
         }
     }
     for(std::unordered_map<int,pos_t>::iterator i =walls.begin(); i != walls.end() ; ++i){
-        if(wave_map.get(i->second) == 6 || wave_map.get(i->second) == 7){
+        if(wave_map.get(i->second) == dead_wall || wave_map.get(i->second) == corner){
             dead_locked_wall.push_back(i->second);
         }
     }
@@ -196,7 +206,7 @@ void Map::find_dead_lock_pos(Map &wave_map){
 }
 
 void Map::print(){
-    data[man.x][man.y] = 'M';
+//    data[man.x][man.y] = 'M';
     for(int h=0; h<height; ++h){
         for(int w=0; w<width; ++w){
             switch(data[w][h]){
@@ -322,11 +332,9 @@ unsigned char Map::get(const pos_t &pos){
 
 std::string Map::to_string(const std::vector<pos_t> &J,const pos_t &general_position){
     std::string final_string;
-    final_string += general_position.x;
-    final_string += general_position.y;
+    final_string += general_position.x + general_position.y * width;
     for(auto n : J){
-        final_string += n.x;
-        final_string += n.y;
+        final_string += n.x + n.y * width;
     }
     return std::move(final_string);
 }

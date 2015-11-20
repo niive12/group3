@@ -132,36 +132,44 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
         if(ans){
             new_man = J.at(n); //New position where the man is where the diamond was
             if(ans & east){
-                J.at(n) = N->diamonds.at(n) + right; //move diamond
-                node *next = new node(new_man,J,par);      //create node
-                next->general_pos = copy.find_general_position();
-                next->path_length = N->path_length + copy.get(new_man-right) - 2;
-                J.at(n) = N->diamonds.at(n);         //reset diamond
-                neighbohrs.push(next);
+                if( (new_man + right) != N->man )  {
+                    J.at(n) = N->diamonds.at(n) + right; //move diamond
+                    node *next = new node(new_man,J,par);      //create node
+                    next->general_pos = copy.find_general_position();
+                    next->path_length = N->path_length + copy.get(new_man-right) - 2;
+                    J.at(n) = N->diamonds.at(n);         //reset diamond
+                    neighbohrs.push(next);
+                }
             }
             if(ans & west){
-                J.at(n) = N->diamonds.at(n) + left;
-                node *next = new node(new_man,J,par);
-                next->general_pos = copy.find_general_position();
-                next->path_length = N->path_length + copy.get(new_man-left) - 2;
-                J.at(n) = N->diamonds.at(n);
-                neighbohrs.push(next);
+                if( (new_man + left) != N->man )  {
+                    J.at(n) = N->diamonds.at(n) + left;
+                    node *next = new node(new_man,J,par);
+                    next->general_pos = copy.find_general_position();
+                    next->path_length = N->path_length + copy.get(new_man-left) - 2;
+                    J.at(n) = N->diamonds.at(n);
+                    neighbohrs.push(next);
+                }
             }
             if(ans & north){
-                J.at(n) = N->diamonds.at(n) + above;
-                node *next = new node(new_man,J,par);
-                next->general_pos = copy.find_general_position();
-                next->path_length = N->path_length + copy.get(new_man-above) - 2;
-                J.at(n) = N->diamonds.at(n);
-                neighbohrs.push(next);
+                if( (new_man + above) != N->man )  {
+                    J.at(n) = N->diamonds.at(n) + above;
+                    node *next = new node(new_man,J,par);
+                    next->general_pos = copy.find_general_position();
+                    next->path_length = N->path_length + copy.get(new_man-above) - 2;
+                    J.at(n) = N->diamonds.at(n);
+                    neighbohrs.push(next);
+                }
             }
             if(ans & south){
-                J.at(n) = N->diamonds.at(n) + below;
-                node *next = new node(new_man,J,par);
-                next->general_pos = copy.find_general_position();
-                next->path_length = N->path_length + copy.get(new_man-below) - 2;
-                J.at(n) = N->diamonds.at(n);
-                neighbohrs.push(next);
+                if( (new_man + below) != N->man )  {
+                    J.at(n) = N->diamonds.at(n) + below;
+                    node *next = new node(new_man,J,par);
+                    next->general_pos = copy.find_general_position();
+                    next->path_length = N->path_length + copy.get(new_man-below) - 2;
+                    J.at(n) = N->diamonds.at(n);
+                    neighbohrs.push(next);
+                }
             }
         }
     }
@@ -227,52 +235,56 @@ node* Map::informed_bff_search(Map &copy_map){
     search_list.push(&start);                            //set first target
     closed_set.clear();
     std::string start_node_index = to_string(start.diamonds,start.man);
+//    std::string start_node_index = to_string(start.diamonds,start.general_pos);
     size_t last_cost    = 0;
     size_t current_cost = 0;
     std::string hash_index;
     node *current_node;
     std::unordered_map<std::string,node*>::iterator hash_ptr;
-        while( !search_list.empty()) {
-            last_cost = current_cost;
-            current_node = search_list.top();
-            current_cost = current_node->path_length;
-            if(game_complete(current_node)){
-                std::cout << (int) current_cost << " found the goal. Size: " << current_node->path_length << "\n";
-                print_path(copy_map,current_node);
-                std::cout << "\n\n\n";
-                print_path_as_C_code(copy_map,current_node);
-                clear_hashtable(closed_set,start_node_index);
-                while(!search_list.empty()){
-                    current_node = search_list.top();
-                    delete current_node;
-                    search_list.pop();
-                }
-                std::cout << "Press <RETURN> twice to close this window..."; std::cin.get();
-                return nullptr; //goal node;
+    while( !search_list.empty()) {
+        last_cost = current_cost;
+        current_node = search_list.top();
+        current_cost = current_node->path_length;
+        if(game_complete(current_node)){
+            std::cout << (int) current_cost << " found the goal. Size: " << current_node->path_length << "\n";
+            print_path(copy_map,current_node);
+            std::cout << "\n\n\n";
+            print_path_as_C_code(copy_map,current_node);
+            clear_hashtable(closed_set,start_node_index);
+            while(!search_list.empty()){
+                current_node = search_list.top();
+                delete current_node;
+                search_list.pop();
             }
-            search_list.pop();
+            std::cout << "Press <RETURN> twice to close this window..."; std::cin.get();
+            return nullptr; //goal node;
+        }
+        search_list.pop();
 
-            hash_index = to_string(current_node->diamonds,current_node->man);
-            if( closed_set.emplace(hash_index,current_node).second){//if successfully inserted
+        hash_index = to_string(current_node->diamonds,current_node->man);
+        //            hash_index = to_string(current_node->diamonds,current_node->general_pos);
+        if( closed_set.emplace(hash_index,current_node).second){//if successfully inserted
 
-                if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n"; }
+            if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n"; }
 
-                neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
-                while( !neighbohrs.empty() ) {                       //append these nodes to the list.
-                    current_node = neighbohrs.front();
-                    neighbohrs.pop();
+            neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
+            while( !neighbohrs.empty() ) {                       //append these nodes to the list.
+                current_node = neighbohrs.front();
+                neighbohrs.pop();
 
-                    hash_index = to_string(current_node->diamonds,current_node->man);
-                    hash_ptr = closed_set.find(hash_index); //check is visited;
+                hash_index = to_string(current_node->diamonds,current_node->man);
+                //                    hash_index = to_string(current_node->diamonds,current_node->general_pos);
+                hash_ptr = closed_set.find(hash_index); //check is visited;
 
-                    if( hash_ptr != closed_set.end() ){ //if it exists
-                        delete current_node;
-                    } else {
-                        search_list.push(current_node);
-                    }
+                if( hash_ptr != closed_set.end() ){ //if it exists
+                    delete current_node;
+                } else {
+                    search_list.push(current_node);
                 }
             }
         }
+    }
+    std::cout << "no solution\n";
     return nullptr;
 }
 //node* Map::idf_search(Map &copy_map){

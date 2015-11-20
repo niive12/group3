@@ -151,7 +151,7 @@ void Map::print_path_as_C_code(Map &wave_map, node* path, bool first){
     if(path->parent != nullptr){
         print_path_as_C_code(wave_map, path->parent,false);
         final_path += calculate_path(wave_map,path);
-        std::cout << path->path_length << " moves\n";
+//        std::cout << path->path_length << " moves\n";
         if(first){
             for(unsigned int i = 0; i < final_path.size();++i){
                 if( i == 0 ){

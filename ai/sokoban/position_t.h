@@ -36,6 +36,13 @@ struct pos_t{
         }
         return ans;
     }
+    bool operator!=( const pos_t& other){
+        bool ans = true;
+        if(x == other.x && y == other.y){
+            ans = false;
+        }
+        return ans;
+    }
 };
 
 const pos_t above(0,-1);
