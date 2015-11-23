@@ -23,7 +23,8 @@ private:
     //data:
     unsigned char **data;
     std::queue<pos_t> wave_color( pos_t pos, int previous_color, Map &wave_map); //stored in wavefront.cpp
-    std::string calculate_path(Map &wave_map, node *N);                              //stored in wavefront.cpp
+    std::string calculate_path(Map &wave_map, node *N);                          //stored in wavefront.cpp
+    float robot_move_time(node* N);                                              //stored in robot_moving.cpp
     std::queue<node*> add_all_possible_paths(node *N, Map &copy, char direction = DIRECTION_PUSH);
     bool locked_in(pos_t diamond);  //sees if a diamond is locked into a corner.
     bool dead_lock(pos_t diamond);  //sees if a diamond is in a dead lock.

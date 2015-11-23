@@ -7,7 +7,8 @@ SOURCES += main.cpp \
     map.cpp \
     wavefront.cpp \
     moving_rules.cpp \
-    node.cpp
+    node.cpp \
+    robot_moving.cpp
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wunused
 
