@@ -86,7 +86,6 @@ void Map::read_file(std::string file_name){
                             ++y;
                         } else { //in case of windows break lines
                             --x;
-                            std::cout << "error\n";
                         }
                         break;
             }

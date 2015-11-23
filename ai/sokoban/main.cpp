@@ -10,7 +10,7 @@ int main(int argc, char** argv){
 //    Map map("map_one.txt");
     Map map;
     if(argc == 2){
-        std::cout << "argument: " << argv[1] << '\n';
+//        std::cout << "argument: " << argv[1] << '\n';
         map.read_file(argv[1]);
     } else {
 //        map.read_file("map_2014.txt");

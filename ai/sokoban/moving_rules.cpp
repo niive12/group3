@@ -239,12 +239,12 @@ node* Map::informed_bff_search(Map &copy_map){
         current_node = search_list.top();
         current_cost = current_node->path_length;
         if(game_complete(current_node)){
-            std::cout << (int) current_cost << " found the goal. Size: " << current_node->path_length << "\n";
+//            std::cout << (int) current_cost << " found the goal. Size: " << current_node->path_length << "\n";
 //            print_path(copy_map,current_node);
 //            std::cout << "\n\n\n";
             print_path_as_C_code(copy_map,current_node);
             clear_hashtable(closed_set,start_node_index);
-            std::cout << "We didn't die\n";
+//            std::cout << "We didn't die\n";
             while(!search_list.empty()){
                 current_node = search_list.top();
                 delete current_node;
@@ -258,7 +258,7 @@ node* Map::informed_bff_search(Map &copy_map){
         hash_index = to_string(current_node->diamonds,current_node->man);
         //            hash_index = to_string(current_node->diamonds,current_node->general_pos);
         if( closed_set.emplace(hash_index,current_node).second){//if successfully inserted
-            if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() << " max buckets: " << closed_set.bucket_count() <<'\n'; }
+//            if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() << " max buckets: " << closed_set.bucket_count() <<'\n'; }
 
             neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
             while( !neighbohrs.empty() ) {                       //append these nodes to the list.
