@@ -159,14 +159,14 @@ void Map::print_path_as_C_code(Map &wave_map, node* path, bool first){
                     c_variable += final_path.size() / 100     + '0';
                     c_variable += final_path.size() / 10 % 10 + '0';
                     c_variable += final_path.size()      % 10 + '0';
-                    c_variable += "] = {";
+                    c_variable += "] = {\'";
                     c_variable += final_path[i];
                 } else {
-                    c_variable += " , ";
+                    c_variable += "\' , \'";
                     c_variable += final_path[i];
                 }
             }
-            c_variable += "}\n";
+            c_variable += "\'};\n";
             std::cout << c_variable;
         }
     }
