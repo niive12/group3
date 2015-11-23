@@ -16,6 +16,7 @@
 //directions for add_all_possible_paths()
 #define DIRECTION_PUSH 0
 #define DIRECTION_PULL 1
+void clear_hashtable(std::unordered_map<std::string,node*> &table, std::string start_node_index = "n");
 
 class Map {
 private:
@@ -65,7 +66,7 @@ public:
     Map();
     Map(std::string file_name );
     ~Map() {
-        closed_set.clear();
+        clear_hashtable(closed_set);
         for(int i = 0; i < width; ++i){
             delete[] data[i];
         }
@@ -75,4 +76,3 @@ public:
     std::string to_string(node *N);
 };
 
-void clear_hashtable(std::unordered_map<std::string,node*> &table, std::string start_node_index);

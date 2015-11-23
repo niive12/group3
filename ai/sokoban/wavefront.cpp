@@ -155,7 +155,7 @@ void Map::print_path_as_C_code(Map &wave_map, node* path, bool first){
         if(first){
             for(unsigned int i = 0; i < final_path.size();++i){
                 if( i == 0 ){
-                    c_variable = "const char[";
+                    c_variable = "const char path[";
                     c_variable += final_path.size() / 100     + '0';
                     c_variable += final_path.size() / 10 % 10 + '0';
                     c_variable += final_path.size()      % 10 + '0';
@@ -167,8 +167,7 @@ void Map::print_path_as_C_code(Map &wave_map, node* path, bool first){
                 }
             }
             c_variable += "}\n";
-            std::cout << final_path << "\n\n\n";
-            std::cout << c_variable << '\n';
+            std::cout << c_variable;
         }
     }
 }

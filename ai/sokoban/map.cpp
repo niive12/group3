@@ -1,6 +1,7 @@
 #include "map.h"
 #include <stdlib.h> //atoi
 #include <iomanip> //hex
+#include <algorithm>
 
 Map::Map() : data(0), width(0), height(0){
     //Empty constructor
@@ -17,6 +18,10 @@ void Map::read_file(std::string file_name){
         delete[] data[i];
     }
     delete[] data;
+    clear_hashtable(closed_set);
+    diamond_pos.clear();
+    goals.clear();
+
 
     std::ifstream data_file;
     data_file.open(file_name.c_str(),std::ios::in);
@@ -26,14 +31,14 @@ void Map::read_file(std::string file_name){
         //get dimensions
         std::getline(data_file, str_value, ' ');
         width = atoi(str_value.c_str());
-        std::cout <<"width: " << width << "\n";
+//        std::cout <<"width: " << width << "\n";
         std::getline(data_file, str_value, ' ');
         height = atoi(str_value.c_str());
-        std::cout <<"height: "<< height << "\n";
+//        std::cout <<"height: "<< height << "\n";
 
         std::getline(data_file,str_value);
         n_diamonds = atoi(str_value.c_str());
-        std::cout <<"diamonds: "<< (int) n_diamonds << "\n";
+//        std::cout <<"diamonds: "<< (int) n_diamonds << "\n";
         //create array
         data = new unsigned char*[width];
         for(int w=0;w<width;++w){
@@ -88,9 +93,9 @@ void Map::read_file(std::string file_name){
                 ++x;
         }
         data_file.close();
-        std::cout << "file loaded\n";
+//        std::cout << "file loaded\n";
     } else {
-        std::cout << file_name << " does not exist\n";
+//        std::cout << file_name << " does not exist\n";
     }
     Map wave_map;
     find_dead_lock_pos(wave_map);
@@ -164,7 +169,7 @@ void Map::find_dead_lock_pos(Map &wave_map){
                             testing_pos = testing_pos + direction; //check in all directions until a wall occour
                             v = wave_map.get(testing_pos);
                             pull = wave_map.valid_push(testing_pos);
-                            if(v == diamond ){
+                            if(v == diamond || v == OBSTACLE){
                                 wall_has_goal = true;
                                 break;
                             }
@@ -172,7 +177,7 @@ void Map::find_dead_lock_pos(Map &wave_map){
                                 wall_has_clearance = true;
                                 break;
                             }
-                        }while( v != OBSTACLE);
+                        }while( v != corner);
 
                         if(wall_has_goal){ // ignore them
                             while(!search_list.empty()){
@@ -332,10 +337,11 @@ unsigned char Map::get(const pos_t &pos){
 
 std::string Map::to_string(const std::vector<pos_t> &J,const pos_t &general_position){
     std::string final_string;
-    final_string += general_position.x + general_position.y * width;
     for(auto n : J){
         final_string += n.x + n.y * width;
     }
+    std::sort(final_string.begin(), final_string.end()); //lukas is a genius. The order of the diamonds does not matter
+    final_string += general_position.x + general_position.y * width;
     return std::move(final_string);
 }
 
@@ -355,9 +361,12 @@ void clear_hashtable(std::unordered_map<std::string,node*> &table, const std::st
     for(std::unordered_map<std::string,node*>::iterator i =table.begin(); i != table.end() ; ++i){
         if( i->first != start_node_index ){ //Don't delete start node
             delete i->second;
+//            i->second = nullptr;
 //            table.erase(i);
         }
-//        table.clear();
+    }
+    if(!table.empty()){
+        table.clear();
     }
 }
 
