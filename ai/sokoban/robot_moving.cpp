@@ -1,10 +1,16 @@
 #include "map.h"
 
-#define FORWARD_COST 4
-#define LEFT_COST    4
-#define RIGHT_COST   4
-#define BACK_COST    4
-
+#if 1 //timing based on meassurements
+    #define FORWARD_COST 1.092
+    #define LEFT_COST    1.9517
+    #define RIGHT_COST   0.78
+    #define BACK_COST    2.69
+#else //wavefront cost
+    #define FORWARD_COST 1
+    #define LEFT_COST    0
+    #define RIGHT_COST   0
+    #define BACK_COST    0
+#endif
 std::string robot_moves(std::string moves, char previous);
 
 float Map::robot_move_time(node* N){
@@ -12,13 +18,13 @@ float Map::robot_move_time(node* N){
     //TODO: make a better path planning than using wavefront.
     //Alternative would be to give the
     std::string moves;
-    char current;// = moves[0];
+    char previous;// = moves[0];
     if(N->parent != nullptr){
         moves = calculate_path(copy,N);
         std::string par_path = calculate_path(copy,N->parent);
-        current = par_path[par_path.size()-1];
+        previous = par_path[par_path.size()-1];
     }
-    std::string path = robot_moves(moves, current);
+    std::string path = robot_moves(moves, previous);
 
     float cost = 0;
     for(size_t i = 0; i < path.length(); ++i){
