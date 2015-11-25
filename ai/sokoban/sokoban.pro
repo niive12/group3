@@ -11,8 +11,7 @@ SOURCES += main.cpp \
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wunused
 
-include(deployment.pri)
-qtcAddDeployment()
+#include(deployment.pri)
 
 HEADERS += \
     map.h \

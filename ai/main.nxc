@@ -1,7 +1,8 @@
 //sort = 35-45
 //hvid = 55-65
+#include "result2014_m.h"
 
-#define THRESHOLD 50
+#define THRESHOLD 60
 
 #define MOT_R       OUT_B  //B
 #define MOT_L       OUT_A  //A
@@ -12,7 +13,7 @@
 
 void follow_line_f(char basespeed=90);
 void turn_right(bool forward=true);
-void turn_left();
+void turn_left(bool forward=true);
 void back();
 void execute();
 
@@ -21,22 +22,24 @@ task main(){
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
   
-  /*follow_line_f(); Wait(1000);
-  back();
-  back();*/
   execute();
 }
 
 void execute(){
  char moves[300];
   moves[0]='u';
-  moves[1]='U';
-  moves[2]='r';
+  moves[1]='u';
+  moves[2]='u';
   moves[3]='u';
-  moves[4]='l';
-  moves[5]='L';
+  moves[4]='u';
+  moves[5]='l';
+  moves[6]='d';
+  moves[7]='r';
+  moves[8]='d';
+  moves[9]='d';
+  moves[10]='\0';
   bool running = true;
-  char current = moves[0];
+  char current = path[0];
   char previous = current;
   int index = 0;
   while(running){
@@ -368,7 +371,7 @@ void execute(){
   
     index++;
 	previous = current;
-	current = moves[index];
+	current = path[index];
 	
   }
   
@@ -385,15 +388,15 @@ void follow_line_f(char basespeed = 90){
   int   D;
   float kP = 1.2;
   float kI = 0.0;
-  float kD = 0.03;
+  float kD = 0.2;
   if(basespeed < 0){
-	kP = 1.5;
+	kP = 1.2;
 	kI = 0;
 	kD = 0.01;
   }
-  OnFwd(MOT_L, 60);
-  OnFwd(MOT_R, 60);
-  Wait(400);
+  OnFwd(MOT_L, basespeed);
+  OnFwd(MOT_R, basespeed);
+  Wait(200);
   int correction = 0;
   bool line_has_ended = false;
   while(!line_has_ended){
@@ -448,15 +451,16 @@ void back(){
   OnFwd(MOT_L, -60);
   OnFwd(MOT_R, -60);
   Wait(700);
-  turn_right(false);
-  Wait(1000);
+  turn_left(false);
   follow_line_f(80);
 }
 
-void turn_left(){
-  OnFwd(MOT_L, 60);
-  OnFwd(MOT_R, 60);
-  Wait(200);
+void turn_left(bool forward = true){
+  if(forward){
+	OnFwd(MOT_L, 80);
+	OnFwd(MOT_R, 80);
+	Wait(100);
+  }
   OnFwd(MOT_L, -70);
   OnFwd(MOT_R, 70);
   Wait(400);
@@ -471,9 +475,9 @@ void turn_left(){
 
 void turn_right(bool forward = true){
   if(forward){
-	OnFwd(MOT_L, 60);
-	OnFwd(MOT_R, 60);
-	Wait(200);
+	OnFwd(MOT_L, 80);
+	OnFwd(MOT_R, 80);
+	Wait(100);
   }
   OnFwd(MOT_L, 70);
   OnFwd(MOT_R, -70);

@@ -50,9 +50,31 @@ constant output_control_1 	: STD_LOGIC_VECTOR(7 downto 0) := "00000010";  --0x02
 constant output_control_2 	: STD_LOGIC_VECTOR(7 downto 0) := "00000011";  --0x03 Control for each diode
 constant general_control_1 	: STD_LOGIC_VECTOR(7 downto 0) := "00000110";  --0x06 Needed for initialization of IO extender
 constant general_control_2 	: STD_LOGIC_VECTOR(7 downto 0) := "00000111";  --0x07 Needed for initialization of IO extender
+signal initialized       	: STD_LOGIC := '0';
 
 BEGIN 
 
+control_process:
+process(clk)
+variable busy_counter 	:= integer range 0 to 2;
+variable prev_busy   	:= STD_LOGIC := '1s';
+begin
+if rising_edge(clk) then
+  
+  if initialized = '0' then
+	if busy_counter = 0 then
+	  data_wr <= general_control_1;
+	elsif busy_counter = 3 then
+	  data_wr <= general_control_2;
+	else
+	  data_wr <= (others => '0');
+	end if;
+  else
+	
+  end if;
+  
+end if;
+end process;
 
-
+addr <= addr;
 END Behavioral;
