@@ -262,7 +262,7 @@ node* Map::informed_bff_search(Map &copy_map){
         hash_index = to_string(current_node->diamonds,current_node->man);
         //            hash_index = to_string(current_node->diamonds,current_node->general_pos);
         if( closed_set.emplace(hash_index,current_node).second){//if successfully inserted
-            if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() << " max buckets: " << closed_set.bucket_count() <<'\n'; }
+//            if(current_cost > last_cost) { std::cout << "moves: " << current_cost << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() << " max buckets: " << closed_set.bucket_count() <<'\n'; }
 
             neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
             while( !neighbohrs.empty() ) {                       //append these nodes to the list.
