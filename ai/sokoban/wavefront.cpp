@@ -1,5 +1,4 @@
 #include "map.h"
-#include <queue>
 
 void Map::color_diamonds(std::vector<pos_t> diamonds, Map &wave_map){
     unsigned char min;
@@ -88,17 +87,28 @@ unsigned char Map::wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &
 std::string Map::calculate_path(Map &wave_map, node *N){
     pos_t target_position = N->man;
     char diamond_n = 0;
+    std::vector<pos_t> old_diamond_pos;
+    pos_t current_pos;
+    if( N->parent != nullptr){
+        current_pos = N->parent->man;
+        old_diamond_pos = N->parent->diamonds;
+    } else {
+        current_pos = man;
+        old_diamond_pos = diamond_pos;
+    }
+
+    //find which diamond has been moved
     for(size_t n=0; n < goals.size(); ++n){
-        if(!(N->parent->diamonds.at(n) == N->diamonds.at(n))){
-            target_position = N->parent->diamonds.at(n) + N->parent->diamonds.at(n) - N->diamonds.at(n);
+        if(!(old_diamond_pos.at(n) == N->diamonds.at(n))){
+            target_position = old_diamond_pos.at(n) + old_diamond_pos.at(n) - N->diamonds.at(n);
             diamond_n = n;
             break;
         }
     }
+
     //create a wavefront
-    wave(wave_map,target_position,N->parent->diamonds);
+    wave(wave_map,target_position,old_diamond_pos);
     //follow that to destination
-    pos_t current_pos = N->parent->man;
     unsigned char max_distance = wave_map.get(current_pos);
     unsigned char current_distance = max_distance + 1;
     pos_t test_pos;
@@ -129,7 +139,7 @@ std::string Map::calculate_path(Map &wave_map, node *N){
         current_pos = current_pos + next_move;
     }
     //final move
-    next_move = N->parent->diamonds.at(diamond_n) - target_position;
+    next_move = old_diamond_pos.at(diamond_n) - target_position;
     if(next_move == above){
         ans += "U";
     }else if(next_move == below){
