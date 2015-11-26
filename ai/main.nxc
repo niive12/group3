@@ -10,23 +10,38 @@
 #define CENTER     	IN_2
 #define RIGHT       IN_3
 
-void follow_line_f(char basespeed=80);
+void follow_line_f(char basespeed=90);
 void turn_right(bool forward=true);
 void turn_left();
 void back();
+void execute();
 
 task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
   
-  char moves[300];
-  char solution[200];
+  /*follow_line_f(); Wait(1000);
+  back();
+  back();*/
+  execute();
+}
+
+void execute(){
+ char moves[300];
+  moves[0]='u';
+  moves[1]='U';
+  moves[2]='r';
+  moves[3]='u';
+  moves[4]='l';
+  moves[5]='L';
   bool running = true;
-  char current = solution[1];
-  char previous = solution[0];
-  int index = 1;
+  char current = moves[0];
+  char previous = current;
+  int index = 0;
   while(running){
+	TextOut(40,24, NumToStr(current)+ " " +NumToStr(index));
+// 	Wait(2000);
 	switch(current){
 	  case 'l':
 		switch(previous){
@@ -344,17 +359,23 @@ task main(){
 			break;
 		}
 		break;
-	  case 's':
+	  default:
 		TextOut(40,24,  "FINISH");
 		running = false;
-		Wait(10000);
+		Wait(1000);
 		break;
 	}
+  
+    index++;
+	previous = current;
+	current = moves[index];
+	
   }
+  
   
 }
 
-void follow_line_f(char basespeed = 80){
+void follow_line_f(char basespeed = 90){
   const char EXPECTED_SENSOR_ERROR = 1; //mismatch i lys fra rummet.
   char left_error;
   char left_speed;
@@ -362,9 +383,9 @@ void follow_line_f(char basespeed = 80){
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 1.5;
-  float kI = 0.02;
-  float kD = 0.01;
+  float kP = 1.2;
+  float kI = 0.0;
+  float kD = 0.03;
   if(basespeed < 0){
 	kP = 1.5;
 	kI = 0;
@@ -424,61 +445,39 @@ void follow_line_f(char basespeed = 80){
 }
 
 void back(){
-  OnFwd(MOT_L, -30);
-  OnFwd(MOT_R, -30);
+  OnFwd(MOT_L, -60);
+  OnFwd(MOT_R, -60);
   Wait(700);
   turn_right(false);
   Wait(1000);
   follow_line_f(80);
 }
-/*
- * void turn(byte chosen_motor, byte sensor){
- * OnFwd(chosen_motor, 60);
- * Wait(1000);
- * bool turn_completed = false;
- * while(!turn_completed){
- *  if(Sensor(sensor) < 55)
- * turn_completed = true;
- *  }
- *  Off(chosen_motor);
- *  }
- *  
- *  void turn_right(){
- *  TextOut(40,24,  "Turn R");
- *  Off(MOT_R);
- *  turn(MOT_L, LEFT);
- *  }
- *  
- *  void turn_left(){
- *  TextOut(40,24,  "Turn L");
- *  Off(MOT_L);
- *  turn(MOT_R,RIGHT);
- *  }*/
 
 void turn_left(){
-  OnFwd(MOT_L, 30);
-  OnFwd(MOT_R, 30);
-  Wait(600);
-  OnFwd(MOT_L, -60);
+  OnFwd(MOT_L, 60);
   OnFwd(MOT_R, 60);
-  Wait(500);
+  Wait(200);
+  OnFwd(MOT_L, -70);
+  OnFwd(MOT_R, 70);
+  Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
 	if(Sensor(CENTER) < 65)
 	  turn_completed = true;
   }
   Off(MOTOR);
+  Wait(200);
 } 
 
 void turn_right(bool forward = true){
   if(forward){
-	OnFwd(MOT_L, 30);
-	OnFwd(MOT_R, 30);
-	Wait(650);
+	OnFwd(MOT_L, 60);
+	OnFwd(MOT_R, 60);
+	Wait(200);
   }
-  OnFwd(MOT_L, 50);
-  OnFwd(MOT_R, -50);
-  Wait(700);
+  OnFwd(MOT_L, 70);
+  OnFwd(MOT_R, -70);
+  Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
 	if(Sensor(CENTER) < 65)
