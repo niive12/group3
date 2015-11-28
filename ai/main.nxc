@@ -5,12 +5,14 @@
 #define THRESHOLD 60
 #define THRESHOLD_CENTER 50
 
-#define MOT_R       OUT_B  //B
-#define MOT_L       OUT_A  //A
-#define MOTOR       OUT_AB //C
-#define LEFT        IN_1
-#define CENTER     	IN_2
-#define RIGHT       IN_3
+#define THRESHOLD_WHITE 65
+
+#define MOT_R       OUT_B  //wheel right of line
+#define MOT_L       OUT_A  //wheel left of line
+#define MOTOR       OUT_AB //both wheels
+#define LEFT        IN_1   //sensor left of line
+#define CENTER      IN_2   //sensor center of crossing line
+#define RIGHT       IN_3   //sensor right of line
 
 void follow_line_f(char basespeed=90);
 void turn_right(bool forward=true);
@@ -489,7 +491,8 @@ void back(){
 }
 
 void turn_left(bool forward = true){
-  if(forward){
+  if(forward){ //move until the robot axis is over the intersection
+// 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
 	OnFwd(MOT_L, 80);
 	OnFwd(MOT_R, 80);
 	Wait(300);
@@ -499,8 +502,7 @@ void turn_left(bool forward = true){
   Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
-// 	if(Sensor(CENTER) < 65)
-	if(Sensor(LEFT) < 65)
+	if(Sensor(LEFT) < THRESHOLD_WHITE)
 	  turn_completed = true;
   }
   OnFwd(MOT_L, -40);
@@ -511,7 +513,8 @@ void turn_left(bool forward = true){
 } 
 
 void turn_right(bool forward = true){
-  if(forward){
+  if(forward){ //move until the robot axis is over the intersection
+// 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
 	OnFwd(MOT_L, 80);
 	OnFwd(MOT_R, 80);
 	Wait(300);
@@ -521,8 +524,7 @@ void turn_right(bool forward = true){
   Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
-// 	if(Sensor(CENTER) < 65)
-	if(Sensor(RIGHT) < 65)
+	if(Sensor(RIGHT) < THRESHOLD_WHITE)
 	  turn_completed = true;
   }
    OnFwd(MOT_L, 40);

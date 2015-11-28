@@ -243,7 +243,7 @@ node* Map::informed_bff_search(Map &copy_map){
         current_node = search_list.top();
         current_cost = current_node->path_length;
         if(game_complete(current_node)){
-//            std::cout << (int) current_cost << " found the goal. Size: " << current_node->path_length << "\n";
+            std::cout << "//" <<  (int) current_cost << " found the goal. Size: " << current_node->path_length << "\n";
 //            print_path(copy_map,current_node);
 //            std::cout << "\n\n\n";
             print_path_as_C_code(copy_map,current_node);
