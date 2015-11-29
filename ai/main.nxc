@@ -24,9 +24,12 @@ task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
+  follow_line_f();
   
-  execute();
+  for(int i = 0;i<20;i++){
   back();
+  follow_line_f();
+  }
 }
 
 void execute(){
@@ -415,7 +418,7 @@ void follow_line_f(char basespeed = 90){
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 1.3;
+  float kP = 1.7;
   float kI = 0;
   float kD = 0;
   if(basespeed < 0){
@@ -485,7 +488,7 @@ void back(){
   //   OnFwd(MOT_L, -60);
   //   OnFwd(MOT_R, -60);
   
-  RotateMotorEx(OUT_AB,-60,120,0,true,false);
+  RotateMotorEx(OUT_AB,-60,135,0,true,false);
   turn_left(false);
   follow_line_f(60);
 }
@@ -505,11 +508,12 @@ void turn_left(bool forward = true){
 	if(Sensor(LEFT) < THRESHOLD_WHITE)
 	  turn_completed = true;
   }
-  OnFwd(MOT_L, -40);
-  OnFwd(MOT_R, 40);
+  OnFwd(MOT_L, -70);
+  OnFwd(MOT_R, 70);
   
-  while(Sensor(RIGHT)-Sensor(LEFT) > 4);
-  Off(MOTOR);
+  while(Sensor(RIGHT) - Sensor(LEFT) > 3);
+//   Wait(80);
+//   Off(MOTOR);
 } 
 
 void turn_right(bool forward = true){

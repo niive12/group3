@@ -1,0 +1,95 @@
+ 
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{todonotes}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{wrapfig,booktabs}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{cite}
+\usepackage{tikz-timing}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\usepackage{pgf}
+\usetikzlibrary{arrows,automata}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows, decorations.markings}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{automata} %state machine stuff
+\usetikzlibrary{positioning} %midway
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position
+   1 with {\arrow[semithick]{open triangle 60}}},
+   double distance=1.4pt, shorten >= 5.5pt,
+   preaction = {decorate},
+   postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+\tikzstyle{module} = [rectangle, minimum width = 2 cm,minimum height = 2 cm, draw]
+
+%opening
+\title{Brick sorter}
+\author{Nikolaj Iversen, Matthias Harald Hessels}
+
+
+%Todo notes
+\usepackage{nameref}
+\makeatletter
+\newcommand*{\currentname}{\@currentlabelname}
+\makeatother
+
+\newcommand{\nikolaj}[1]{\todo[inline,color=red!20,author=Nikolaj]{\currentname: ~ #1}}
+\newcommand{\matthias}[1]{\todo[inline,color=blue!20,author=Matthias]{\currentname: ~ #1}}
+
+\newcommand{\figscale}{0.8}
+
+\usepackage{diagbox}
+\usepackage{amsmath}
+\input{todoextend}
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE University of Southern Denmark \par}
+	\vspace{1cm}
+	{\scshape\Large Introduction to Artificial intelligence (RMAI1) \par}
+	\vspace{1.5cm}
+	{\huge\bfseries Sokoban Robot\par}
+	\vspace{2cm}
+	{\Large\itshape Group 3 \\ Nikolaj Iversen \{nive12\} \\ \& \\ Matthias Harald Hessels \{mahes12\} \par}
+	\vspace{1cm}
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/sdu}\par
+	\vfill
+	Supervised by\par
+	John Hallam \& Morten Wollsen
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\tableofcontents
+\listoftodos
+\thispagestyle{empty}
+\addtocounter{page}{-1}
+\newpage
+
+%\bibliographystyle{ieeetr}
+%\bibliography{src/bibtex}
+
+\end{document}
