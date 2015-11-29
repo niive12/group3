@@ -24,37 +24,28 @@ task main(){
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
 
-  follow_line_f();
+//   follow_line_f();
   
 //   for(int i = 0;i<20;i++){
-  follow_line_f();
 //   follow_line_f();
-  back();
+//   follow_line_f();
+//   back();
 //   follow_line_f();
 //   turn_left();
 //   follow_line_f();
 //   follow_line_f();
 //   back();
 //   follow_line_f();
-  turn_right();
+//   turn_right();
 //   }
-// execute();
+execute();
 PlayTone(2000,500);
 PlayTone(2500,500);
 PlayTone(1500,500);
 }
 
 void execute(){
- char moves[300];
-  moves[0]='u';
-  moves[1]='u';
-  moves[2]='L';
-  moves[3]='r';
-  moves[4]='d';
-  moves[5]='d';
-  moves[6]='\0';
   bool running = true;
-//   char current = moves[0];
   char current = path[0];
   char previous = current;
   int index = 0;
@@ -429,7 +420,7 @@ void follow_line_f(char basespeed = 95){
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 30;
+  float kP = 5;
   float kI = 0;
   float kD = 0;
 
@@ -527,6 +518,7 @@ void turn_left(bool forward = true){
 	if(Sensor(LEFT) < THRESHOLD)
 	  turn_completed = true;
   }
+  PlayTone(1500,500);
   OnFwd(MOT_L, -70);
   OnFwd(MOT_R, 70);
     Wait(100);
@@ -555,6 +547,7 @@ void turn_right(bool forward = true){
   }
    OnFwd(MOT_L, 70);
   OnFwd(MOT_R, -70);
+  PlayTone(1500,500);
   Wait(100);
   while(Sensor(RIGHT) > THRESHOLD);
  
