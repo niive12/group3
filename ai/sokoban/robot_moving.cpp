@@ -1,6 +1,6 @@
 #include "map.h"
 
-#if 1 //timing based on meassurements
+#if 0 //timing based on meassurements
     #define FORWARD_COST 1.092
     #define LEFT_COST    1.9517
     #define RIGHT_COST   0.78

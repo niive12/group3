@@ -2,6 +2,8 @@
 #include <stack>
 #include <unordered_map>
 
+#define optimize_for_robot_moves 0
+
 char Map::valid_push(pos_t diamond){
     //a diamond is pushable if the diamond if the origin is reachable,
     //the destination is not a wall or diamond
@@ -136,8 +138,11 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + right; //move diamond
                 node *next = new node(new_man,J,par);      //create node
                 next->general_pos = copy.find_general_position();
-//                next->path_length = N->path_length + copy.get(new_man-right) - 2; //wavefront approach
+#if optimize_for_robot_moves
                 next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+#else
+                next->path_length = N->path_length + copy.get(new_man-right) - 2; //wavefront approach
+#endif
                 J.at(n) = N->diamonds.at(n);         //reset diamond
                 neighbohrs.push(next);
             }
@@ -145,7 +150,11 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + left;
                 node *next = new node(new_man,J,par);
                 next->general_pos = copy.find_general_position();
-//                next->path_length = N->path_length + copy.get(new_man-left) - 2;
+#if optimize_for_robot_moves
+                next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+#else
+                next->path_length = N->path_length + copy.get(new_man-left) - 2; //wavefront approach
+#endif
                 next->path_length = N->path_length + robot_move_time(next);
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
@@ -154,8 +163,11 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + above;
                 node *next = new node(new_man,J,par);
                 next->general_pos = copy.find_general_position();
-//                next->path_length = N->path_length + copy.get(new_man-above) - 2;
-                next->path_length = N->path_length + robot_move_time(next);
+#if optimize_for_robot_moves
+                next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+#else
+                next->path_length = N->path_length + copy.get(new_man-above) - 2; //wavefront approach
+#endif
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
@@ -163,8 +175,11 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + below;
                 node *next = new node(new_man,J,par);
                 next->general_pos = copy.find_general_position();
-//                next->path_length = N->path_length + copy.get(new_man-below) - 2;
-                next->path_length = N->path_length + robot_move_time(next);
+#if optimize_for_robot_moves
+                next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+#else
+                next->path_length = N->path_length + copy.get(new_man-below) - 2; //wavefront approach
+#endif
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
