@@ -5,6 +5,7 @@
 #define THRESHOLD 50
 #define THRESHOLD_CENTER 50
 #define EXPECTED_SENSOR_ERROR 1 //mismatch i lys fra rummet.
+#define THRESHOLD_DIFF_SENSOR 5
 
 #define MOT_R       OUT_B  //wheel right of line
 #define MOT_L       OUT_A  //wheel left of line
@@ -19,12 +20,40 @@ void turn_left(bool forward=true);
 void back();
 void execute();
 
+char sensor_left   = THRESHOLD + 1;
+char sensor_right  = THRESHOLD + 1;
+char sensor_center = THRESHOLD + 1;
+
+char diff_sensor_left   = 0;
+char diff_sensor_right  = 0;
+char diff_sensor_center = 0;
+
+char last_left  ; //static failed
+char last_right ;
+char last_center;
+
+void update_sensor_values(){
+	last_left   = sensor_left  ;
+	last_right  = sensor_right ;
+	last_center = sensor_center;
+	
+	sensor_left   = Sensor(LEFT)  ;
+	sensor_right  = Sensor(RIGHT) ;
+	sensor_center = Sensor(CENTER);
+
+	diff_sensor_left   = sensor_left   - last_left   ;
+	diff_sensor_right  = sensor_right  - last_right  ;
+	diff_sensor_center = sensor_center - last_center ;
+	Wait(10);
+}
+
 task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
-
 //   follow_line_f();
+
+/*
   
 //   for(int i = 0;i<20;i++){
 //   follow_line_f();
@@ -36,10 +65,18 @@ task main(){
 //   follow_line_f();
 //   back();
 //   follow_line_f();
+
 //   turn_right();
 //   }
 execute();
+
+turn_right();
+//   }*/
+update_sensor_values();
 PlayTone(2000,500);
+OnFwd(OUT_AB,80);
+Wait(100);
+execute();
 PlayTone(2500,500);
 PlayTone(1500,500);
 }
@@ -262,7 +299,7 @@ void execute(){
 	  case 'U':
 		switch(previous){
 		  case 'l':
-            turn_right();
+			turn_right();
 			follow_line_f();
 			follow_line_f();
 			break;
@@ -308,7 +345,7 @@ void execute(){
 	  case 'D':
 		switch(previous){
 		  case 'l':
-            turn_left();
+			turn_left();
 			follow_line_f();
 			follow_line_f();
 			break;
@@ -354,8 +391,8 @@ void execute(){
 	  case 'R':
 		switch(previous){
 		  case 'l':
-            turn_right();
-            turn_right();
+			turn_right();
+			turn_right();
 			follow_line_f();
 			follow_line_f();
 			break;
@@ -407,7 +444,6 @@ void execute(){
 	previous = current;
 // 	current = moves[index];
 	current = path[index];
-	
   }
   
   
@@ -430,17 +466,20 @@ void follow_line_f(char basespeed = 95){
   int correction = 0;
   bool line_has_ended = false;
   
+	update_sensor_values(); // call once to reset the difference
   while(!line_has_ended){
 	TextOut(1,8,  "left");
 	TextOut(75,8,  "right");
-	TextOut(1,1,  NumToStr(Sensor(LEFT)));
-	TextOut(85,1, NumToStr(Sensor(RIGHT)));
-	TextOut(40,24,NumToStr(Sensor(CENTER)));
+	update_sensor_values();
+	TextOut(1,1,  NumToStr(sensor_left));
+	TextOut(85,1, NumToStr(sensor_right));
+	TextOut(40,24,NumToStr(sensor_center));
 
-// 	if( (Sensor(LEFT)  < THRESHOLD) &&
-// 	  (Sensor(RIGHT) < THRESHOLD)
+// 	if( (sensor_left  < THRESHOLD) &&
+// 	  (sensor_right < THRESHOLD)
 // 	){
-	if(Sensor(CENTER) < THRESHOLD_CENTER){
+// 	if(sensor_center < THRESHOLD_CENTER){
+	if(diff_sensor_center < -THRESHOLD_DIFF_SENSOR){ //going from white (high) to dark (low)
 	  Off(MOTOR);
 // 	  TextOut(40,24,  "KRYDS");
 	  line_has_ended = true;
@@ -449,9 +488,9 @@ void follow_line_f(char basespeed = 95){
 	  TextOut(40,24,  "     ");
 	  TextOut(1,16, NumToStr(left_speed));
 	  TextOut(80,16, NumToStr(right_speed));
-	  left_error = Sensor(LEFT) - Sensor(RIGHT);
+	  left_error = sensor_left - sensor_right;
 	  TextOut(30,1,"        ");
-	  TextOut(40,24,NumToStr(Sensor(CENTER)));
+	  TextOut(40,24,NumToStr(sensor_center));
 	  // lighting mismatch correction
 	  if(left_error > EXPECTED_SENSOR_ERROR){
 		left_error -= EXPECTED_SENSOR_ERROR;
@@ -503,28 +542,31 @@ void back(){
 
 void turn_left(bool forward = true){
   if(forward){ //move until the robot axis is over the intersection
-// 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
-	OnFwd(MOT_L, 80);
-	OnFwd(MOT_R, 80);
-	Wait(300);
+	RotateMotorEx(OUT_AB,80,190,0,true,false); //use motor ticks instead of time
+// 	OnFwd(MOT_L, 80);
+// 	OnFwd(MOT_R, 80);
+// 	Wait(300);
   }
   OnFwd(MOT_L, -80);
   OnFwd(MOT_R, 80);
   Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
-	
-// 	if(Sensor(CENTER) < 65)
-	if(Sensor(LEFT) < THRESHOLD)
+	update_sensor_values();
+// 	if(sensor_center < 65)
+// 	if(sensor_left < THRESHOLD)
+	if(diff_sensor_left < -THRESHOLD_DIFF_SENSOR) //white to black
 	  turn_completed = true;
   }
-  PlayTone(1500,500);
+
+  PlayTone(1500,500); 	
   OnFwd(MOT_L, -70);
   OnFwd(MOT_R, 70);
     Wait(100);
 
-  while(Sensor(LEFT) > THRESHOLD);
-//   while(Sensor(RIGHT) - Sensor(LEFT) > EXPECTED_SENSOR_ERROR + 3);
+//   while(sensor_left > THRESHOLD);
+  while(diff_sensor_left > THRESHOLD_DIFF_SENSOR){ update_sensor_values(); }; //until it goes from black to white
+//   while(sensor_right - sensor_left > EXPECTED_SENSOR_ERROR + 3);
 //   Wait(80);
 //   Off(MOTOR);
 }  
@@ -532,24 +574,26 @@ void turn_left(bool forward = true){
 void turn_right(bool forward = true){
   if(forward){ //move until the robot axis is over the intersection
 // 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
-	OnFwd(MOT_L, 80);
-	OnFwd(MOT_R, 80);
-	Wait(300);
+	RotateMotorEx(OUT_AB,80,190,0,true,false);
+
   }
   OnFwd(MOT_L, 80);
   OnFwd(MOT_R, -80);
   Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
-// 	if(Sensor(CENTER) < 65)
-	if(Sensor(RIGHT) < THRESHOLD)
+	update_sensor_values();
+// 	if(sensor_right < THRESHOLD)
+	if(diff_sensor_right < -THRESHOLD_DIFF_SENSOR) //if going from white to black
 	  turn_completed = true;
   }
-   OnFwd(MOT_L, 70);
+  PlayTone(1500,500);
+  OnFwd(MOT_L, 70);
   OnFwd(MOT_R, -70);
   PlayTone(1500,500);
   Wait(100);
-  while(Sensor(RIGHT) > THRESHOLD);
+//   while(sensor_right > THRESHOLD);
+  while(diff_sensor_right > THRESHOLD_DIFF_SENSOR){ update_sensor_values(); }; //until it goes from black to white
  
   Off(MOTOR);
 }
