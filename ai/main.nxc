@@ -51,27 +51,30 @@ task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
+//   follow_line_f();
+
 /*
   
 //   for(int i = 0;i<20;i++){
-  follow_line_f();
 //   follow_line_f();
-  back();
+//   follow_line_f();
+//   back();
 //   follow_line_f();
 //   turn_left();
 //   follow_line_f();
 //   follow_line_f();
 //   back();
 //   follow_line_f();
-  turn_right();
-//   }*/
-update_sensor_values();
-PlayTone(2000,500);
-OnFwd(OUT_AB,80);
-Wait(100);
+
+//   turn_right();
+//   }
 execute();
+
+turn_right();
+//   }*/
 PlayTone(2500,500);
-PlayTone(1500,500);
+update_sensor_values();
+execute();
 }
 
 void execute(){
@@ -449,7 +452,7 @@ void follow_line_f(char basespeed = 95){
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 30;
+  float kP = 5;
   float kI = 0;
   float kD = 0;
 
@@ -535,7 +538,7 @@ void back(){
 
 void turn_left(bool forward = true){
   if(forward){ //move until the robot axis is over the intersection
-	RotateMotorEx(OUT_AB,80,190,0,true,false); //use motor ticks instead of time
+	RotateMotorEx(OUT_AB,80,165,0,true,false); //use motor ticks instead of time
 // 	OnFwd(MOT_L, 80);
 // 	OnFwd(MOT_R, 80);
 // 	Wait(300);
@@ -550,23 +553,28 @@ void turn_left(bool forward = true){
 // 	if(sensor_left < THRESHOLD)
 	if(diff_sensor_left < -THRESHOLD_DIFF_SENSOR) //white to black
 	  turn_completed = true;
+
   }
+  Off(MOTOR);
+  Wait(1000);
+
   PlayTone(1500,500); 	
   OnFwd(MOT_L, -70);
   OnFwd(MOT_R, 70);
-    Wait(100);
+//     Wait(100);
 
 //   while(sensor_left > THRESHOLD);
   while(diff_sensor_left > THRESHOLD_DIFF_SENSOR){ update_sensor_values(); }; //until it goes from black to white
 //   while(sensor_right - sensor_left > EXPECTED_SENSOR_ERROR + 3);
 //   Wait(80);
-//   Off(MOTOR);
+  Wait(1000);
+  Off(MOTOR);
 }  
 
 void turn_right(bool forward = true){
   if(forward){ //move until the robot axis is over the intersection
 // 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
-	RotateMotorEx(OUT_AB,80,190,0,true,false);
+	RotateMotorEx(OUT_AB,80,165,0,true,false);
 
   }
   OnFwd(MOT_L, 80);
@@ -582,9 +590,13 @@ void turn_right(bool forward = true){
   PlayTone(1500,500);
   OnFwd(MOT_L, 70);
   OnFwd(MOT_R, -70);
-  Wait(100);
+  PlayTone(1500,500);
+  Off(MOTOR);
+  Wait(1000);
+//   Wait(100);
 //   while(sensor_right > THRESHOLD);
   while(diff_sensor_right > THRESHOLD_DIFF_SENSOR){ update_sensor_values(); }; //until it goes from black to white
  
   Off(MOTOR);
+  Wait(1000);
 }
