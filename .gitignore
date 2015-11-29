@@ -1,6 +1,7 @@
 #qtcreator
 *.pri
 *.user
+*.o
 
 #These should be added manually:
 *.xsl
@@ -93,3 +94,5 @@ _xmsgs/
 *.pdf
 *.PDF
 *.tdo
+*.bbl
+*.blg
