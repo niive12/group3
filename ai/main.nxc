@@ -2,19 +2,18 @@
 //hvid = 55-65
 #include "competition_result.h"
 
-#define THRESHOLD 65
-#define THRESHOLD_CENTER 45
+#define THRESHOLD 50
+#define THRESHOLD_CENTER 50
 #define EXPECTED_SENSOR_ERROR 1 //mismatch i lys fra rummet.
 
+#define MOT_R       OUT_B  //wheel right of line
+#define MOT_L       OUT_A  //wheel left of line
+#define MOTOR       OUT_AB //both wheels
+#define LEFT        IN_1   //sensor left of line
+#define CENTER      IN_2   //sensor center of crossing line
+#define RIGHT       IN_3   //sensor right of line
 
-#define MOT_R       OUT_B  //B
-#define MOT_L       OUT_A  //A
-#define MOTOR       OUT_AB //C
-#define LEFT        IN_1
-#define CENTER     	IN_2
-#define RIGHT       IN_3
-
-void follow_line_f(char basespeed=99);
+void follow_line_f(char basespeed=95);
 void turn_right(bool forward=true);
 void turn_left(bool forward=true);
 void back();
@@ -24,16 +23,25 @@ task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
-//   follow_line_f();
+
+  follow_line_f();
   
-  for(int i = 0;i<20;i++){
+//   for(int i = 0;i<20;i++){
   follow_line_f();
+//   follow_line_f();
   back();
+//   follow_line_f();
+//   turn_left();
+//   follow_line_f();
+//   follow_line_f();
+//   back();
+//   follow_line_f();
   turn_right();
-  follow_line_f();
-  back();
-  turn_left();
-  }
+//   }
+// execute();
+PlayTone(2000,500);
+PlayTone(2500,500);
+PlayTone(1500,500);
 }
 
 void execute(){
@@ -414,14 +422,14 @@ void execute(){
   
 }
 
-void follow_line_f(char basespeed = 99){
+void follow_line_f(char basespeed = 95){
   char left_error;
   char left_speed;
   char right_speed;
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 8;
+  float kP = 30;
   float kI = 0;
   float kD = 0;
 
@@ -503,7 +511,8 @@ void back(){
 }
 
 void turn_left(bool forward = true){
-  if(forward){
+  if(forward){ //move until the robot axis is over the intersection
+// 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
 	OnFwd(MOT_L, 80);
 	OnFwd(MOT_R, 80);
 	Wait(300);
@@ -513,6 +522,7 @@ void turn_left(bool forward = true){
   Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
+	
 // 	if(Sensor(CENTER) < 65)
 	if(Sensor(LEFT) < THRESHOLD)
 	  turn_completed = true;
@@ -528,7 +538,8 @@ void turn_left(bool forward = true){
 }  
 
 void turn_right(bool forward = true){
-  if(forward){
+  if(forward){ //move until the robot axis is over the intersection
+// 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
 	OnFwd(MOT_L, 80);
 	OnFwd(MOT_R, 80);
 	Wait(300);
@@ -542,8 +553,8 @@ void turn_right(bool forward = true){
 	if(Sensor(RIGHT) < THRESHOLD)
 	  turn_completed = true;
   }
-   OnFwd(MOT_L, 40);
-  OnFwd(MOT_R, -40);
+   OnFwd(MOT_L, 70);
+  OnFwd(MOT_R, -70);
   Wait(100);
   while(Sensor(RIGHT) > THRESHOLD);
  
