@@ -1,9 +1,11 @@
 //sort = 35-45
 //hvid = 55-65
-#include "result_2014.h"
+#include "competition_result.h"
 
-#define THRESHOLD 60
-#define THRESHOLD_CENTER 50
+#define THRESHOLD 65
+#define THRESHOLD_CENTER 45
+#define EXPECTED_SENSOR_ERROR 1 //mismatch i lys fra rummet.
+
 
 #define MOT_R       OUT_B  //B
 #define MOT_L       OUT_A  //A
@@ -12,7 +14,7 @@
 #define CENTER     	IN_2
 #define RIGHT       IN_3
 
-void follow_line_f(char basespeed=90);
+void follow_line_f(char basespeed=99);
 void turn_right(bool forward=true);
 void turn_left(bool forward=true);
 void back();
@@ -22,11 +24,15 @@ task main(){
   SetSensorLight(LEFT);
   SetSensorLight(RIGHT);
   SetSensorLight(CENTER);
-  follow_line_f();
+//   follow_line_f();
   
   for(int i = 0;i<20;i++){
-  back();
   follow_line_f();
+  back();
+  turn_right();
+  follow_line_f();
+  back();
+  turn_left();
   }
 }
 
@@ -408,22 +414,17 @@ void execute(){
   
 }
 
-void follow_line_f(char basespeed = 90){
-  const char EXPECTED_SENSOR_ERROR = 1; //mismatch i lys fra rummet.
+void follow_line_f(char basespeed = 99){
   char left_error;
   char left_speed;
   char right_speed;
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 1.7;
+  float kP = 8;
   float kI = 0;
   float kD = 0;
-  if(basespeed < 0){
-	kP = 1.4;
-	kI = 0;
-	kD = 0.01;
-  }
+
   OnFwd(MOT_L, basespeed);
   OnFwd(MOT_R, basespeed);
   Wait(200);
@@ -437,7 +438,6 @@ void follow_line_f(char basespeed = 90){
 	TextOut(85,1, NumToStr(Sensor(RIGHT)));
 	TextOut(40,24,NumToStr(Sensor(CENTER)));
 
-	
 // 	if( (Sensor(LEFT)  < THRESHOLD) &&
 // 	  (Sensor(RIGHT) < THRESHOLD)
 // 	){
@@ -445,7 +445,7 @@ void follow_line_f(char basespeed = 90){
 	  Off(MOTOR);
 // 	  TextOut(40,24,  "KRYDS");
 	  line_has_ended = true;
-// 	  PlayTone(1000,200);
+	  PlayTone(1000,200);
 	} else {
 	  TextOut(40,24,  "     ");
 	  TextOut(1,16, NumToStr(left_speed));
@@ -466,19 +466,30 @@ void follow_line_f(char basespeed = 90){
 	  D = left_error - left_previous_error;
 	  left_previous_error = left_error;
 	  correction = P * kP + I * kI + D * kD;
-	  //roundoff to avoid mayhem
-	  if(correction > 20 ){
+
+	  if(correction > 20)
 		correction = 20;
-	  } else if(correction < -20){
+	  else if(correction < -20)
 		correction = -20;
-	  }
+
 	  left_speed =  basespeed + correction;
 	  right_speed = basespeed - correction;
+	  /*
+	  char min_speed = 60;
+	  if(left_speed > 100)
+		left_speed = 100;
+	  else if(left_speed < min_speed)
+		left_speed = min_speed;
 	  
+	  if(right_speed > 100)
+		right_speed = 100;
+	  else if(right_speed < min_speed)
+		right_speed = min_speed;
+	  */
 	  OnFwd(MOT_L, left_speed);
 	  OnFwd(MOT_R, right_speed);
 	}
-	Wait(10); // Generate 100 hz controller
+// 	Wait(1); // Generate 100 hz controller
   }
 }
 
@@ -503,16 +514,18 @@ void turn_left(bool forward = true){
   bool turn_completed = false;
   while(!turn_completed){
 // 	if(Sensor(CENTER) < 65)
-	if(Sensor(LEFT) < 65)
+	if(Sensor(LEFT) < THRESHOLD)
 	  turn_completed = true;
   }
   OnFwd(MOT_L, -70);
   OnFwd(MOT_R, 70);
-  
-  while(Sensor(RIGHT) - Sensor(LEFT) > 3);
+    Wait(100);
+
+  while(Sensor(LEFT) > THRESHOLD);
+//   while(Sensor(RIGHT) - Sensor(LEFT) > EXPECTED_SENSOR_ERROR + 3);
 //   Wait(80);
 //   Off(MOTOR);
-} 
+}  
 
 void turn_right(bool forward = true){
   if(forward){
@@ -526,13 +539,13 @@ void turn_right(bool forward = true){
   bool turn_completed = false;
   while(!turn_completed){
 // 	if(Sensor(CENTER) < 65)
-	if(Sensor(RIGHT) < 65)
+	if(Sensor(RIGHT) < THRESHOLD)
 	  turn_completed = true;
   }
    OnFwd(MOT_L, 40);
   OnFwd(MOT_R, -40);
-  
-  while(Sensor(LEFT)-Sensor(RIGHT) > 4);
+  Wait(100);
+  while(Sensor(RIGHT) > THRESHOLD);
  
   Off(MOTOR);
 }
