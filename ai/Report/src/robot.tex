@@ -22,10 +22,71 @@ It was quickly established that two sensors were needed for a line follow contro
 \subsection{Line Following}
 To follow a line a proportional controller is used.
 The light sensors gives a value to the controller and the speed of the motors are modified to be proportional to the error term between the two sensors.
-This is added to a desired speed which the robot will move with, given the error is zero.
+The error term is calculated in equation \ref{eq:left_error}.
 
+\begin{equation}
+  \epsilon = \text{S}_{\text{left}} - \text{S}_{\text{right}}
+ \label{eq:left_error}
+\end{equation}
+\begin{equation}
+  V_\text{left} = V_\text{base} + P \epsilon
+ \label{eq:left_speed}
+\end{equation}
+\begin{equation}
+  V_\text{right} = V_\text{base} - P \epsilon
+ \label{eq:right_speed}
+\end{equation}
+
+That error term is then multiplied by a constant, $P$, and added to the base speed, $V_\text{base}$.
+The right motor gets the error term subtracted.
+This allows for the motor to move at the base speed if the error term is zero and move towards the center of the line if it is not.
+The robot configuration which generates this error can be seen in figure \ref{fig:line_follow}.
+
+\nikolaj{Should this figure even exist? Maybe if it had arrows?}
 \begin{figure}
- \missingfigure{Should we add a figure which shows the robot correcting for the error?}
+ \begin{subfigure}{0.32\textwidth}
+ \centering
+    \begin{tikzpicture}
+      \draw[ultra thick] (0,-1.5) to (0,1.5);
+      \draw[ultra thick] (-1.5,0) to (1.5,0);
+      
+      \begin{scope}[rotate=-95]
+	\draw node[robot,rotate=-95] at (0,0) {};
+      \end{scope}
+    \end{tikzpicture}
+  \caption{Negative error term.}
+ \end{subfigure}
+ %
+ \begin{subfigure}{0.32\textwidth}
+ \centering
+    \begin{tikzpicture}
+      \draw[ultra thick] (0,-1.5) to (0,1.5);
+      \draw[ultra thick] (-0.5,0) to (3.5,0);
+      \draw[ultra thick] (3,-1.5) to (3,1.5);
+      \node[name=P_r] at (0.5,0) {};
+      \begin{scope}[rotate=-85]
+	\draw node[robot,rotate=-85] at (P_r) {};
+      \end{scope}
+    \end{tikzpicture}
+  \caption{Positive error term.}
+ \end{subfigure}
+ %
+ \begin{subfigure}{0.32\textwidth}
+ \centering
+    \begin{tikzpicture}
+      \draw[ultra thick] (0,-1.5) to (0,1.5);
+      \draw[ultra thick] (-0.5,0) to (3.5,0);
+      \draw[ultra thick] (3,-1.5) to (3,1.5);
+      \node[name=P_r] at (1,0) {};
+      
+      \begin{scope}[rotate=-90]
+	\draw node[robot,rotate=-90] at (P_r) {};
+      \end{scope}
+    \end{tikzpicture}
+  \caption{Equilibrium.}
+ \end{subfigure}
+\caption{Error term as a result of the robot configuration.}
+\label{fig:line_follow}
 \end{figure}
 
 
