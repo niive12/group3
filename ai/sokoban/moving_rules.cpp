@@ -2,7 +2,7 @@
 #include <stack>
 #include <unordered_map>
 
-#define optimize_for_robot_moves 0
+#define optimize_for_robot_moves 1
 
 char Map::valid_push(pos_t diamond){
     //a diamond is pushable if the diamond if the origin is reachable,
