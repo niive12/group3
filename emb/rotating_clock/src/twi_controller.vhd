@@ -1,33 +1,3 @@
---------------------------------------------------------------------------------
---
---   FileName:         i2c_master.vhd
---   Dependencies:     none
---   Design Software:  Quartus II 64-bit Version 13.1 Build 162 SJ Full Version
---
---   HDL CODE IS PROVIDED "AS IS."  DIGI-KEY EXPRESSLY DISCLAIMS ANY
---   WARRANTY OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT
---   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
---   PARTICULAR PURPOSE, OR NON-INFRINGEMENT. IN NO EVENT SHALL DIGI-KEY
---   BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR CONSEQUENTIAL
---   DAMAGES, LOST PROFITS OR LOST DATA, HARM TO YOUR EQUIPMENT, COST OF
---   PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS
---   BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF),
---   ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER SIMILAR COSTS.
---
---   Version History
---   Version 1.0 11/01/2012 Scott Larson
---     Initial Public Release
---   Version 2.0 06/20/2014 Scott Larson
---     Added ability to interface with different slaves in the same transaction
---     Corrected ack_error bug where ack_error went 'Z' instead of '1' on error
---     Corrected timing of when ack_error signal clears
---   Version 2.1 10/21/2014 Scott Larson
---     Replaced gated clock with clock enable
---     Adjusted timing of SCL during start and stop conditions
---   Version 2.2 02/05/2015 Scott Larson
---     Corrected small SDA glitch introduced in version 2.1
--- 
---------------------------------------------------------------------------------
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
@@ -35,6 +5,7 @@ USE ieee.std_logic_unsigned.all;
 
 entity twi_controller IS
   PORT(
+<<<<<<< HEAD
     clk       : IN      STD_LOGIC;                    --system clock
     reset_n   : OUT     STD_LOGIC;                    --active low reset
     ena       : OUT     STD_LOGIC;                    --latch in command
@@ -42,6 +13,17 @@ entity twi_controller IS
     rw        : OUT     STD_LOGIC;                    --'0' is write, '1' is read
     data_wr   : OUT     STD_LOGIC_VECTOR(7 DOWNTO 0); --data to write to slave
     busy      : IN      STD_LOGIC);                   --indicates transaction in progress
+=======
+    clk       	: IN	STD_LOGIC;                     --system clock
+    reset_n   	: OUT 	STD_LOGIC;                    --active low reset
+    ena       	: OUT 	STD_LOGIC;                    --latch in command
+    addr      	: OUT 	STD_LOGIC_VECTOR(6 DOWNTO 0); --address of target slave
+    rw        	: OUT	STD_LOGIC;                    --'0' is write, '1' is read
+    data_wr   	: OUT	STD_LOGIC_VECTOR(7 DOWNTO 0); --data to write to slave
+    busy      	: IN	STD_LOGIC);                     --indicates transaction in progress
+    
+	led_config 	: IN 	STD_LOGIC_VECTOR(15 downto 0);   -- LED configuration to be send to IO extender
+>>>>>>> 61fc18978c66e253011a75ed76acbcd456ac160a
 END twi_controller;
 
 architecture Behavioral of twi_controller IS
@@ -50,9 +32,47 @@ constant output_control_1 	: STD_LOGIC_VECTOR(7 downto 0) := "00000010";  --0x02
 constant output_control_2 	: STD_LOGIC_VECTOR(7 downto 0) := "00000011";  --0x03 Control for each diode
 constant general_control_1 	: STD_LOGIC_VECTOR(7 downto 0) := "00000110";  --0x06 Needed for initialization of IO extender
 constant general_control_2 	: STD_LOGIC_VECTOR(7 downto 0) := "00000111";  --0x07 Needed for initialization of IO extender
+signal initialized       	: STD_LOGIC := '0';
 
 BEGIN 
 
+control_process:
+process(clk)
+variable busy_counter 	:= integer range 0 to 4 := 0;
+variable prev_busy   	:= STD_LOGIC := '1';
+begin
+if rising_edge(clk) then
+  if (busy = '0') and (prev_busy = '1') then
+	busy_counter := busy_counter + 1;
+  end if;
+  if initialized = '0' then                          -- If the LED board has not been initialized it should set up the IO extenders
+	if busy_counter = 1 then
+	  data_wr <= general_control_1;                  -- General control register address
+	elsif busy_counter = 3 then
+	  data_wr <= general_control_2;
+	else
+	  data_wr <= (others => '0');                    -- Set general control to 0 for output
+	end if;
+	if busy_counter = 4 then                         -- If 3 busy signals has been recevied, the initialization is done.
+	  initiialized <= '1';
+	  busy_counter := 0;
+	end if;
+  else
+	if busy_counter = 0 then
+	  data_wr <= output_control_1;
+	elsif busy_counter = 1 then
+	  data_wr <= led_config(7 downto 0);
+	elsif busy_counter = 2 then
+	  data_wr <= output_control_2;
+	else
+	  data_wr <= led_config(15 downto 8);
+	  busy_counter := 0;
+	end if;
+  end if;
+  
+end if;
+end process;
 
-
+rw <= '0';
+addr <= address;
 END Behavioral;

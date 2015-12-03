@@ -1,0 +1,25 @@
+\tikzset{robot/.style={ 
+    minimum width = 1.5cm, minimum height =2cm,
+%     fill=blue!10,
+    draw, 
+    % wheels
+    % wheels
+    append after command={
+      [shorten >=0.5cm, shorten <=0.5cm]
+      (\tikzlastnode.north west)edge[very thick, color=black!70](\tikzlastnode.south west)
+    },
+    append after command={
+      [shorten >=0.5cm, shorten <=0.5cm]
+      (\tikzlastnode.north east)edge[very thick, color=black!70](\tikzlastnode.south east)
+    },
+    append after command={
+      (\tikzlastnode.north west) ++(0.4,-0.25) circle(0.25cm)
+    },
+    append after command={
+      (\tikzlastnode.north east) ++(-0.4,-0.25) circle(0.25cm)
+    },
+    append after command={
+      (\tikzlastnode.north east) ++(0.25,0.25) circle(0.25cm)
+    }
+  }
+}

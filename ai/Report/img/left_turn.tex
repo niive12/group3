@@ -1,0 +1,50 @@
+ \begin{subfigure}{0.24\textwidth}
+    \begin{tikzpicture}
+      \draw[ultra thick] (0,-1.5) to (0,1.5);
+      \draw[ultra thick] (-1.5,0) to (1.5,0);
+      
+      \begin{scope}[rotate=-90]
+	\draw node[robot,rotate=-90] at (0,-1.25) {};
+      \end{scope}
+    \end{tikzpicture}
+  \caption{Robot at line.}\label{left_turn_a}
+  \end{subfigure}
+%
+ \begin{subfigure}{0.24\textwidth}
+    \begin{tikzpicture}
+      \draw[ultra thick] (0,-1.5) to (0,1.5);
+      \draw[ultra thick] (-1.5,0) to (1.5,0);
+      
+      \begin{scope}[rotate=-90]
+	\draw node[robot,rotate=-90] at (0,0) {};
+      \end{scope}
+    \end{tikzpicture}
+  \caption{Center at axis.}\label{left_turn_b}
+ \end{subfigure}
+%
+ \begin{subfigure}{0.24\textwidth}
+    \begin{tikzpicture}
+      \draw[ultra thick] (0,-1.5) to (0,1.5);
+      \draw[ultra thick] (-1.5,0) to (1.5,0);
+      
+      \draw[red, very thick] (1,0) arc(0:65:1cm);
+      \begin{scope}[rotate=-25]
+	\draw node[robot,rotate=-25] at (0,0) {};
+      \end{scope}
+    \end{tikzpicture}
+  \caption{Turn until line is found.}\label{left_turn_c}
+ \end{subfigure}
+%
+ \begin{subfigure}{0.24\textwidth}
+    \begin{tikzpicture}
+      \draw[ultra thick] (0,-1.5) to (0,1.5);
+      \draw[ultra thick] (-1.5,0) to (1.5,0);
+      
+      \begin{scope}[rotate=-5]
+	\draw node[robot,rotate=-5,name=wallE] at (0,0) {};
+      \end{scope}
+      
+      \draw[red, very thick] (wallE.north) arc(85:65:1cm);
+    \end{tikzpicture}
+  \caption{Turn until line is lost.}\label{left_turn_d}
+ \end{subfigure}
