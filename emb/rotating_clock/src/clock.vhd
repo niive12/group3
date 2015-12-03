@@ -4,7 +4,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity clock is
 Port (
-  clk           : in STD_LOGIC
+  clk           : in STD_LOGIC;
   
   minute        : out integer range 0 to 60;
   second        : out integer range 0 to 60;

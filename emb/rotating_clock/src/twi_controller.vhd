@@ -35,13 +35,13 @@ USE ieee.std_logic_unsigned.all;
 
 entity twi_controller IS
   PORT(
-    clk       : IN     STD_LOGIC;                    --system clock
+    clk       : IN      STD_LOGIC;                    --system clock
     reset_n   : OUT     STD_LOGIC;                    --active low reset
     ena       : OUT     STD_LOGIC;                    --latch in command
     addr      : OUT     STD_LOGIC_VECTOR(6 DOWNTO 0); --address of target slave
     rw        : OUT     STD_LOGIC;                    --'0' is write, '1' is read
     data_wr   : OUT     STD_LOGIC_VECTOR(7 DOWNTO 0); --data to write to slave
-    busy      : IN    STD_LOGIC);                    --indicates transaction in progress
+    busy      : IN      STD_LOGIC);                   --indicates transaction in progress
 END twi_controller;
 
 architecture Behavioral of twi_controller IS
