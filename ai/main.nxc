@@ -475,7 +475,7 @@ void follow_line_f(char basespeed = speed){
   int correction = 0;
   bool line_has_ended = false;
   
-	update_sensor_values(); // call once to reset the difference
+  update_sensor_values(); // call once to reset the difference
   while(!line_has_ended){
 	TextOut(1,8,  "left");
 	TextOut(75,8,  "right");
