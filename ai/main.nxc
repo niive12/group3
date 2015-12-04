@@ -5,7 +5,19 @@
 #define THRESHOLD 50
 #define THRESHOLD_CENTER 50
 #define EXPECTED_SENSOR_ERROR 1 //mismatch i lys fra rummet.
-#define THRESHOLD_DIFF_SENSOR 5
+#define THRESHOLD_DIFF_SENSOR_R 6	
+#define THRESHOLD_DIFF_SENSOR_L 3	
+#define speed 75         // 90 Optimal ATM
+#define kP 1.5             //  1.7
+#define kI 0
+#define kD 0
+
+#define forward_left 165
+#define forward_right 173
+#define turn_speed_left 80
+#define turn_speed_right 80
+
+#define can_speed 80
 
 #define MOT_R       OUT_B  //wheel right of line
 #define MOT_L       OUT_A  //wheel left of line
@@ -14,7 +26,7 @@
 #define CENTER      IN_2   //sensor center of crossing line
 #define RIGHT       IN_3   //sensor right of line
 
-void follow_line_f(char basespeed=95);
+void follow_line_f(char basespeed=speed);
 void turn_right(bool forward=true);
 void turn_left(bool forward=true);
 void back();
@@ -31,13 +43,12 @@ char diff_sensor_center = 0;
 char last_left  ; //static failed
 char last_right ;
 char last_center;
-
 void update_sensor_values(){
 	last_left   = sensor_left  ;
 	last_right  = sensor_right ;
 	last_center = sensor_center;
 	
-	sensor_left   = Sensor(LEFT)  ;
+	sensor_left   = Sensor(LEFT) - 3  ;
 	sensor_right  = Sensor(RIGHT) ;
 	sensor_center = Sensor(CENTER);
 
@@ -53,9 +64,12 @@ task main(){
   SetSensorLight(CENTER);
 //   follow_line_f();
 
-/*
-  
-//   for(int i = 0;i<20;i++){
+
+// float temp = 0.0;
+// for(int j = 0;j<10;j++){
+//   kP += temp;
+//   temp += 0.1;
+//   for(int i = 0;i<5;i++){
 //   follow_line_f();
 //   follow_line_f();
 //   back();
@@ -65,16 +79,18 @@ task main(){
 //   follow_line_f();
 //   back();
 //   follow_line_f();
-
+// // // Wait(1000);
 //   turn_right();
 //   }
+// // //   PlayTone(1000,500);
+// // }
 execute();
 
-turn_right();
+// turn_right();
 //   }*/
 PlayTone(2500,500);
-update_sensor_values();
-execute();
+// update_sensor_values();
+// execute();
 }
 
 void execute(){
@@ -111,16 +127,16 @@ void execute(){
 		  case 'U':
 			back();
 			turn_right();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'D':
 			back();
 			turn_left();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'R':
 			back();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  default:
 			break;
@@ -147,7 +163,7 @@ void execute(){
 		  case 'L':
 			back();
 			turn_left();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'U':
 			TextOut(40,24,  "ERROR");
@@ -155,12 +171,12 @@ void execute(){
 			break;
 		  case 'D':
 			back();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'R':
 			back();
 			turn_right();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  default:
 			break;
@@ -187,11 +203,11 @@ void execute(){
 		  case 'L':
 			back();
 			turn_right();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'U':
 			back();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'D':
 			TextOut(40,24,  "ERROR");
@@ -200,7 +216,7 @@ void execute(){
 		  case 'R':
 			back();
 			turn_left();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  default:
 			break;
@@ -226,17 +242,17 @@ void execute(){
 			break;
 		  case 'L':
 			back();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'U':
 			back();
 			turn_left();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'D':
 			back();
 			turn_right();
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'R':
 			TextOut(40,24,  "ERROR");
@@ -269,24 +285,24 @@ void execute(){
 			follow_line_f();
 			break;
 		  case 'L':
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'U':
 			back();
 			turn_right();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'D':
 			back();
 			turn_left();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'R':
 			back();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  default:
 			break;
@@ -317,22 +333,22 @@ void execute(){
 		  case 'L':
 			back();
 			turn_left();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'U':
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'D':
 			back();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'R':
 			back();
 			turn_right();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  default:
 			break;
@@ -363,22 +379,22 @@ void execute(){
 		  case 'L':
 			back();
 			turn_right();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'U':
 			back();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'D':
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  case 'R':
 			back();
 			turn_left();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  default:
 			break;
@@ -408,23 +424,23 @@ void execute(){
 			break;
 		  case 'L':
 			back();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'U':
 			back();
 			turn_left();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'D':
 			back();
 			turn_right();
-			follow_line_f();
-			follow_line_f();
+			follow_line_f(can_speed);
+			follow_line_f(can_speed);
 			break;
 		  case 'R':
-			follow_line_f();
+			follow_line_f(can_speed);
 			break;
 		  default:
 			break;
@@ -445,16 +461,13 @@ void execute(){
   
 }
 
-void follow_line_f(char basespeed = 95){
+void follow_line_f(char basespeed = speed){
   char left_error;
   char left_speed;
   char right_speed;
   char left_previous_error = 0;
   float P, I = 0;
   int   D;
-  float kP = 5;
-  float kI = 0;
-  float kD = 0;
 
   OnFwd(MOT_L, basespeed);
   OnFwd(MOT_R, basespeed);
@@ -475,11 +488,11 @@ void follow_line_f(char basespeed = 95){
 // 	  (sensor_right < THRESHOLD)
 // 	){
 // 	if(sensor_center < THRESHOLD_CENTER){
-	if(diff_sensor_center < -THRESHOLD_DIFF_SENSOR){ //going from white (high) to dark (low)
+	if(diff_sensor_center < -THRESHOLD_DIFF_SENSOR_L){ //going from white (high) to dark (low)
 	  Off(MOTOR);
 // 	  TextOut(40,24,  "KRYDS");
 	  line_has_ended = true;
-	  PlayTone(1000,200);
+// 	  PlayTone(1000,200);
 	} else {
 	  TextOut(40,24,  "     ");
 	  TextOut(1,16, NumToStr(left_speed));
@@ -488,13 +501,13 @@ void follow_line_f(char basespeed = 95){
 	  TextOut(30,1,"        ");
 	  TextOut(40,24,NumToStr(sensor_center));
 	  // lighting mismatch correction
-	  if(left_error > EXPECTED_SENSOR_ERROR){
+	  /*if(left_error > EXPECTED_SENSOR_ERROR){
 		left_error -= EXPECTED_SENSOR_ERROR;
 	  } else if(left_error < -EXPECTED_SENSOR_ERROR){
 		left_error += EXPECTED_SENSOR_ERROR;
 	  } else {
 		left_error = 0;
-	  }
+	  }*/
 	  P = left_error;
 	  I = I + left_error;
 	  D = left_error - left_previous_error;
@@ -533,70 +546,74 @@ void back(){
   
   RotateMotorEx(OUT_AB,-60,135,0,true,false);
   turn_left(false);
-  follow_line_f(60);
+  Wait(100);
+  follow_line_f(80);
 }
 
 void turn_left(bool forward = true){
+//   Off(MOTOR);
+//   Wait(1000);
   if(forward){ //move until the robot axis is over the intersection
-	RotateMotorEx(OUT_AB,80,165,0,true,false); //use motor ticks instead of time
+	RotateMotorEx(OUT_AB,80,forward_left,0,true,false); //use motor ticks instead of time
 // 	OnFwd(MOT_L, 80);
 // 	OnFwd(MOT_R, 80);
 // 	Wait(300);
   }
-  OnFwd(MOT_L, -80);
-  OnFwd(MOT_R, 80);
+  OnFwd(MOT_L, -turn_speed_left);
+  OnFwd(MOT_R, turn_speed_left);
   Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
 	update_sensor_values();
-// 	if(sensor_center < 65)
-// 	if(sensor_left < THRESHOLD)
-	if(diff_sensor_left < -THRESHOLD_DIFF_SENSOR) //white to black
+
+	if(diff_sensor_left < -THRESHOLD_DIFF_SENSOR_L) //white to black
 	  turn_completed = true;
 
   }
+//   PlayTone(1500,500); 	
   Off(MOTOR);
-  Wait(1000);
+  Wait(300);
 
-  PlayTone(1500,500); 	
-  OnFwd(MOT_L, -70);
-  OnFwd(MOT_R, 70);
-//     Wait(100);
+  OnFwd(MOT_L, -40);
+  OnFwd(MOT_R, 40);
+  
+//   Wait(30);
+  
+//   if(Sensor(RIGHT) > THRESHOLD) // If the turn stops before the line, add wait
+  
+  while(diff_sensor_left > THRESHOLD_DIFF_SENSOR_L){ update_sensor_values(); }; //until it goes from black to white
 
-//   while(sensor_left > THRESHOLD);
-  while(diff_sensor_left > THRESHOLD_DIFF_SENSOR){ update_sensor_values(); }; //until it goes from black to white
-//   while(sensor_right - sensor_left > EXPECTED_SENSOR_ERROR + 3);
-//   Wait(80);
-  Wait(1000);
-  Off(MOTOR);
+//    Off(MOTOR);
+//    Wait(1000);
 }  
 
 void turn_right(bool forward = true){
+//   Off(MOTOR);
+//   Wait(1000);
   if(forward){ //move until the robot axis is over the intersection
 // 	RotateMotorEx(OUT_AB,80,120,0,true,false); //use motor ticks instead of time
-	RotateMotorEx(OUT_AB,80,165,0,true,false);
+	RotateMotorEx(OUT_AB,80,forward_right,0,true,false);
 
   }
-  OnFwd(MOT_L, 80);
-  OnFwd(MOT_R, -80);
+  OnFwd(MOT_L, turn_speed_right);
+  OnFwd(MOT_R, -turn_speed_right);
   Wait(400);
   bool turn_completed = false;
   while(!turn_completed){
 	update_sensor_values();
 // 	if(sensor_right < THRESHOLD)
-	if(diff_sensor_right < -THRESHOLD_DIFF_SENSOR) //if going from white to black
+	if(diff_sensor_right < -THRESHOLD_DIFF_SENSOR_R) //if going from white to black
 	  turn_completed = true;
   }
-  PlayTone(1500,500);
-  OnFwd(MOT_L, 70);
-  OnFwd(MOT_R, -70);
-  PlayTone(1500,500);
-  Off(MOTOR);
-  Wait(1000);
-//   Wait(100);
-//   while(sensor_right > THRESHOLD);
-  while(diff_sensor_right > THRESHOLD_DIFF_SENSOR){ update_sensor_values(); }; //until it goes from black to white
+   Off(MOTOR);
+   Wait(300);
+
+  OnFwd(MOT_L, 40);
+  OnFwd(MOT_R, -40);
+//   Wait(50);
+  
+  while(diff_sensor_right > THRESHOLD_DIFF_SENSOR_R){ update_sensor_values(); }; //until it goes from black to white
  
-  Off(MOTOR);
-  Wait(1000);
+//   Off(MOTOR);
+//   Wait(1000);
 }
