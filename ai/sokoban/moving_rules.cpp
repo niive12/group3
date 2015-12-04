@@ -176,7 +176,6 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
 
 node* Map::bff_search(Map &copy_map){
     std::queue<node*> search_list;                      //list of current search nodes.
-    //    std::priority_queue<node*,queue<node*>,comparator_function> search_list;                      //list of current search nodes.
     std::queue<node*> neighbohrs;                       //result fra add_all_possible...
     std::queue<node*> neighbohrs_neighbohrs;            //2nd list of search nodes.
     node start(man,diamond_pos);
@@ -225,8 +224,8 @@ node* Map::bff_search(Map &copy_map){
 }
 
 node* Map::informed_bff_search(Map &copy_map){
-    std::priority_queue<node*,std::vector<node*>,comparator_functor> search_list;                      //list of current search nodes.
-    std::queue<node*> neighbohrs;                       //result fra add_all_possible...
+    std::priority_queue<node*,std::vector<node*>,comparator_functor> search_list; //list of current search nodes.
+    std::queue<node*> neighbohrs;                       //results from add_all_possible
     node start(man,diamond_pos);
     wave(copy_map,man,diamond_pos);
     search_list.push(&start);                            //set first target
@@ -251,22 +250,22 @@ node* Map::informed_bff_search(Map &copy_map){
         search_list.pop();
 
         hash_index = to_string(current_node->diamonds,current_node->man);
-        if( closed_set.emplace(hash_index,current_node).second){//if successfully inserted
-            neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
-            while( !neighbohrs.empty() ) {                       //append these nodes to the list.
+        if( closed_set.emplace(hash_index,current_node).second){         //if the configuration has not been visited
+            neighbohrs = add_all_possible_paths(current_node,copy_map);  //this gives the possible paths
+            while( !neighbohrs.empty() ) {                               //append these nodes to the list.
                 current_node = neighbohrs.front();
                 neighbohrs.pop();
 
                 hash_index = to_string(current_node->diamonds,current_node->man);
-                hash_ptr = closed_set.find(hash_index); //check is visited;
+                hash_ptr = closed_set.find(hash_index); ;
 
-                if( hash_ptr != closed_set.end() ){ //if it exists
+                if( hash_ptr != closed_set.end() ){ //if already visited
                     delete current_node;
                 } else {
                     search_list.push(current_node);
                 }
             }
-        } else {
+        } else { //if already visited
             delete current_node;
         }
     }

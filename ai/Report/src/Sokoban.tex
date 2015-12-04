@@ -7,18 +7,7 @@ The variation for this project is pushing cans of tomato paste.
 
 The notation for the map uses J for jewels, M for the man, X for walls and G for goals.
 To visualize the maps and the solutions, the maps is put into an existing application \cite{url:qml-sokoban} is used.
-In figure \ref{fig:sokoban_map_2015_img} is the sokoban map, which has been used in the competition, shown.
-
-\nikolaj{Shall we use images or text for visualizing maps?}
-
-% \begin{figure}
-%  \centering
-%  \begin{minipage}{0.1\textwidth}
-%       \verbatiminput{../map_2015.txt}
-%  \end{minipage}
-%  \caption{Sokoban map used in the competition.}
-%  \label{fig:sokoban_map_2015}
-% \end{figure}
+In figure \ref{fig:sokoban_map_2015_img} is the Sokoban map, which has been used in the competition and all tests, shown.
 
 \begin{figure}
  \centering
@@ -63,6 +52,17 @@ while( !search_list.empty() ){
  \label{code:sokoban_solver}
 \end{figure}
 
+In order to easily check the if a node exist in the closed list, the closed list was implemented as a hash table.
+The indexing was done as a string, using a hashing function for the diamond positions.
+Each position is described as the position in a one dimension array.
+% \( C = x + w \cdot y \).
+The ordering of the diamonds does not matter to the solution, so the string gets sorted before the mans position is added.
+
+%%% this can be tested by commenting out moving_rules.cpp:290; 
+To test if sorting the string has any impact on the size of the graph, the solver was tested on the competition map.
+Without the sorting, 467003 nodes were created before a solution was found.
+With the sorting, 33160 nodes were created. 
+This is a reduction of 93.37\%.
 
 \subsection{Valid Moves}
 A valid move is where a diamond has a reachable position from one direction and the other direction is either reachable or free space.
@@ -162,6 +162,7 @@ XXXXXXXXXXXX
   \label{fig:deadlock_hard}
 \end{figure}
 
+%%% To test this, comment out moving_rules.cpp:106 , dead_end = true; and deadlock would stop working
 To test the strength of using deadlock detection, the sum of nodes in search list and closed list was compared.
 Without any deadlock detection, the graph contained 217288 nodes.
 With deadlock detection, the graph contained 33160 nodes when the solution was found.

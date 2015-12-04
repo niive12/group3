@@ -71,7 +71,7 @@ public:
         }
         delete[] data;
     }
-    std::string to_string(const std::vector<pos_t> &J,const pos_t &man);
+    std::string to_string(const std::vector<pos_t> &J, const pos_t &man_pos);
     std::string to_string(node *N);
 };
 

@@ -282,13 +282,13 @@ unsigned char Map::get(const pos_t &pos){
     return OBSTACLE;
 }
 
-std::string Map::to_string(const std::vector<pos_t> &J, const pos_t &man){
+std::string Map::to_string(const std::vector<pos_t> &J, const pos_t &man_pos){
     std::string final_string;
     for(auto n : J){
         final_string += n.x + n.y * width;
     }
-    std::sort(final_string.begin(), final_string.end()); //lukas is a genius. The order of the diamonds does not matter
-    final_string += man.x + man.y * width;
+    std::sort(final_string.begin(), final_string.end()); //The order of the diamonds does not matter
+    final_string += man_pos.x + man_pos.y * width;
     return std::move(final_string);
 }
 
