@@ -14,7 +14,6 @@ public:
     node *parent = nullptr;      //8 bytes
     float path_length;           //4 byte
     pos_t man;                   //2 bytes
-    pos_t general_pos;           //2 bytes
     std::vector<pos_t> diamonds; //24 + 2*n (38 in this example)
 
     node(const pos_t &man, const std::vector<pos_t> &diamonds_pos, node *par=nullptr);

@@ -20,6 +20,7 @@ int main(int argc, char** argv){
     }
 //    Map map("map_easy.txt");
     Map copy;
+
 //    node *goal;
 //    map.bff_search(copy);
     map.informed_bff_search(copy);
