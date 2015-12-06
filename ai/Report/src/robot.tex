@@ -63,7 +63,7 @@ In figure \ref{fig:left_turn} is a left turn shown.
 The final state of the turn is not perfect as the positioning of the sensors position cannot be placed in a perfect desired location.
 This is compensated by the line following that is guaranteed to follow a turn.
 
-\begin{figure}
+\begin{figure}[H]
 \input{img/left_turn}
  \caption{A left turn for the robot.}
  \label{fig:left_turn}
@@ -138,6 +138,7 @@ A way to use the sensors is to just use thresholding on the intensity to indicat
 This is not very robust.
 If one assume that the sensor is linear over the entire range, lines can be detected by looking at the change of intensity.
 This was implemented and was found very useful.
+
 \subsection{Sokoban execution}
 
 In order to execute the solution given by the solver, which is in game moves a translator needed to be implemented. This is due to the grid structure of the map, and a can push not being instantaneous in the real world.
@@ -155,3 +156,5 @@ Input to lookup: current = u, previous = L.
 
 \noindent
 Output from lookup: \textit{back, turn left, go forwards}
+
+\matthias{Skal vi have test afsnittet her eller for sig selv?}
