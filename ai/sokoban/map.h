@@ -32,8 +32,6 @@ private:
     char valid_pull(pos_t diamond); //sees a diamond is movable
     void color_diamonds(std::vector<pos_t> diamonds, Map &wave_map);
     bool game_complete(node* N);
-    std::vector<pos_t> find_all_general_positions(Map copy, node* N);
-    pos_t find_general_position();
     bool boundry_check(const pos_t &pos);
     std::unordered_map<std::string,node*> closed_set;
 public:
@@ -73,7 +71,7 @@ public:
         }
         delete[] data;
     }
-    std::string to_string(const std::vector<pos_t> &J,const pos_t &general_position);
+    std::string to_string(const std::vector<pos_t> &J, const pos_t &man_pos);
     std::string to_string(node *N);
 };
 

@@ -20,7 +20,7 @@
     linkcolor=black,
     urlcolor=black
 }
-
+\usepackage{verbatim}
 \usepackage{pgf}
 \usetikzlibrary{arrows,automata}
 \usetikzlibrary{patterns}
@@ -89,10 +89,11 @@
 \addtocounter{page}{-1}
 \newpage
 
+\input{src/abstract}
 \input{src/introduction}
 \input{src/robot}
 \input{src/Sokoban}
-%\bibliographystyle{ieeetr}
-%\bibliography{src/bibtex}
+\bibliographystyle{ieeetr}
+\bibliography{src/bibtex}
 
 \end{document}

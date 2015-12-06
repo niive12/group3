@@ -5,6 +5,7 @@ The robot is made using a Lego Mindstorm kit, with a NXT brick and a few differe
 \subsection{Behavior}
 
 \subsubsection{Line Following}
+
 To follow a line a proportional controller is used.
 The light sensors gives a value to the controller and the speed of the motors are modified to be proportional to the error term between the two sensors.
 The error term is calculated in equation \ref{eq:left_error}.
@@ -111,4 +112,3 @@ It was quickly established that two sensors were needed for a line follow contro
 \missingfigure{Tikz of configurations}
 
 The first configuration, with no third sensor failed at turning properly, which led to the basis of the line following being poor. This made the line follow fail every now and then. Putting a sensor on the back solved this problem. The placement can be seen in figure \footnote{Ref to tikz with this configuration}. The problem of pushing the can too far off an intersection, giving the robot problems when having to move the same can from another direction, could be solve by putting the third sensor on the gripper so that the center of the can is in line with the sensor, see figure \ref{fig:final_robot}. By doing this the can would always end on the intersection. 
-
