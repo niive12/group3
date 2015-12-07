@@ -1,7 +1,7 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{todonotes}
-% \usepackage{fullpage}
+\usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{multirow}
@@ -31,12 +31,15 @@
 \newcommand{\matthias}[1]{\todo[inline,color=blue!20,author=Matthias]{\currentname: ~ #1}}
 
 \begin{document}
-\section{Straight line test} \label{sec:line_time}
+\section{Tests}
+This section is describing the tests that was made in order to find out how long it takes the robot to do the different types of moves.
+These are used in the solver as heuristics.
+
+\subsection{Straight line test} \label{sec:line_time}
 The purpose of this test is to make an estimate of how long time it takes to go 1 square forward. 
 
-\subsection{Execution}
+\subsubsection{Execution}
 The robot will be placed on a intersection. It is then told to go forward 1 intersection and stop for 1 second. This is done for the entire length of the test track (5 intersections). This is repeated 10 times and the times are calculated. The sleeps are put in, in order to give the robot time to decelerate to full stop before moving to the next intersection. This is maybe also going to be implemented on the final robot. The time it takes to go one intersection is calculated with equation \ref{eq:line_time}. 
-\matthias{Ved ikke om det bliver nødvendigt med full stop + delay, men det gør ikke noget at have med nu tænker jeg. Det er jo så nemt at trække fra igen}
 
 $t_i$:time of the i'th run through, $T_i$ runtime of i'th run through with delay, delay = 1, n = 5 , m = 10.
 
@@ -48,7 +51,7 @@ t_i = T_i - n\cdot delay
  t_{line} =\frac{ \Sigma_{i=1}^n t_i}{n\cdot m}
 \end{equation}
 
-\subsection{Results}
+\subsubsection{Results}
 The results of the test can be seen in table \ref{tab:time_straight}
 
 \begin{table} [H]
@@ -76,11 +79,11 @@ $$
 t_{line} = \frac{54.6\ s}{50} = 1.092\ s
 $$
 
-\section{Turning Test} \label{sec:turn_time}
+\subsection{Turning Test} \label{sec:turn_time}
 
 This test is done in order to get how much time it takes to make a turn. This test builds on the straight line test and results from that, found in section \ref{sec:line_time}.
 
-\subsection{Execution}
+\subsubsection{Execution}
 It is done by putting the robot on a square and make it follow the lines around the square when it comes to an intersection the robot should sleep 1 second, make a turn, sleep 1 second and then go to the next intersection. This is done in order to fully isolate the different moves so they do not contribute to each other. The full square is repeated 10 times and the time is noted. 
 
 T = total time, delay = 1, t = time after delay and straight line, n = 3, m = 10.
@@ -95,7 +98,7 @@ t_{turn} = \frac{\sum_{i=1}^m t_i}{n\cdot m}
 
 The reason for not just turning on the spot for this test is that there is a risk that the map is extra slippery or have more friction at the specific point, so in order to get a more realistic measurement it was chosen to do the turn test over a square. 
 
-\subsection{Result}
+\subsubsection{Result}
 Table \ref{tab:time_left} shows the results from turning left.
 \begin{table} [H]
 \centering
@@ -151,13 +154,13 @@ $$
 t_{turn}^{right} = \frac{\sum^{m}_{i=1}t_i}{n\cdot m} = \frac{23.42\ s}{30} = 0.78\ s
 $$
 
-\section{Reversing}
+\subsection{Reversing}
 The purpose of this test is to see how long time it takes to do a u-turn. The u-turn is needed in order to get away from a can when this has been pushed 1 square.
 
-\subsection{Execution}
+\subsubsection{Execution}
 The robot is placed on a line and is set to follow this line until an intersection has been hit. The time is then started. The robot makes 11 u turns and stops. This procedure is repeated 3 times in order to get more than 30 data points, which should be sufficient in order to make a decent estimate.
 
-\subsection{Results}
+\subsubsection{Results}
 
 \begin{table} [H]
 \centering
@@ -174,11 +177,5 @@ The robot is placed on a line and is set to follow this line until an intersecti
 $$
 t_{uturn} = \frac{\sum_{t_i}}{n\cdot m} = \frac{88.7\ s}{33} = 2.687\ s
 $$
-
-\section{Battery test}
-This test is done in order to find out how the robot handles running for a longer period of time, and see if this effects the performance of the robot. This is done in order to make assumptions about the timing used in the solver, no matter the battery status of the robot. An assumption that has to be made in order for this to work is that the robot is always fully charged when starting.
-
-\subsection{Execution}
-To test this the solution for the 2014 AI course map is used. A solution is found using the solver described in \footnote{Ref to section for solver}. This solution is then run through 3 times in a row after the robot has been fully charged. If the time it takes to run though the solution is within 2 seconds of each other it can be assumed that the robot should be able to keep the characteristics found in section \ref{sec:line_time} and \ref{sec:turn_time} for the entire duration of the 2015 map, given it is fully charged at the start time of the competition.
 
 \end{document}

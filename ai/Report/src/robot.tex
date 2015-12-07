@@ -1,25 +1,34 @@
 \section{Robot} 
 
-The robot is made using a Lego Mindstorm kit, with a NXT brick and a few different sensors, like light sensors, push sensors, etc. There was also a lot of Lego at disposal so there were free reins, construction wise. Sensor wise there were more limitations, i.e. only sensors from the given kit could be used.
-\subsection{Behavior}
+The robot is made using a Lego Mindstorm kit, with a NXT brick and a few different sensors, like light sensors, push sensors, etc. There was also a lot of Lego at disposal so there were free reins, construction wise. Sensor wise there were more limitations, i.e. only sensors from the given kit could be used. The robot should implement some different behaviors in order to complete the task.
 
-\subsection{Construction}
-The skeleton of the robot was designed to be as low as possible, in order to get the light sensors as close to the ground as possible. A side effect of this is that it makes the robot more stable when turning. In front of the robot a gripper was placed, with room for two sensors in between the robot and the gripper. The final choice of design and sensor placement can be seen in figure \ref{fig:final_robot}. Other constructions was tried, but discarded for different reasons.
+\subsection{Behavior} \label{sec:behavior}
+The task of driving the around the map is solved by creating different simple behaviors and combine them to deal with different situations. For example pushing a can is divided into \textit{Go forward} and \textit{back}, where \textit{back} is a combination it self of \textit{turn left} and \textit{go forwards}. A complete list of behaviors can be seen in table \ref{tab:movset}. All of the behaviors are based on the reactive control principle. The different behaviors will be described in the next sections.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
- \includegraphics[scale = 0.1]{img/robot.jpg}
- \caption{Final design of the robot}
- \label{fig:final_robot}
-\end{figure}
+ \begin{tabular}{|l|l|}
+  \hline
+  Move set: &  Combined moves: \\
+  \hline
+   Detect intersection & Go forwards\\
+   Follow line & Back\\
+   Turn left 90$^{\circ}$  &\\
+   Turn right 90$^{\circ}$ & \\
+   \hline
+ \end{tabular}
+\caption{Moveset of the robot}
+\label{tab:movset}
+\end{table}
 
+\subsubsection{Detect intersection}
+In order to detect an intersection a light sensor is placed on the gripper. When this sensor detects a line the robot turns the motors off and stops. 
+The sensor placement means that the robot stops quite far from the intersection, making turning harder from the initial point.
+This is however solved in the turning.
+The choice of sensor placement is described later.
 
-\subsection{Sensing}
-In order to sense the world around it, the robot was fitted with three light sensors, the maximum number there was. Because there were only three light sensors, a decision had to be made on what to use the sensors for. All of the other types of sensors were deemed useless for this project.
+\subsubsection{Follow line}
 
-It was quickly established that two sensors were needed for a line follow controller. The last sensor could then be used for a few things, e.g as indicator that a turn was completed or a detector of intersection. Both uses were tried and pros and cons were noted, and a decision was made on what was the best configuration. 
-
-\subsection{Line Following}
 To follow a line a proportional controller is used.
 The light sensors gives a value to the controller and the speed of the motors are modified to be proportional to the error term between the two sensors.
 The error term is calculated in equation \ref{eq:left_error}.
@@ -42,66 +51,110 @@ The right motor gets the error term subtracted.
 This allows for the motor to move at the base speed if the error term is zero and move towards the center of the line if it is not.
 The robot configuration which generates this error can be seen in figure \ref{fig:line_follow}.
 
-\nikolaj{Should this figure even exist? Maybe if it had arrows?}
-\begin{figure}
+\subsubsection{Turning}
+Turning the robot is split up into a few steps.
+If both motors turn in opposite direction, the robot will turn around the axis between the wheel.
+This means the robot must be positioned with the axis over the intersection.
+This is done by going forward a specific distance.
+It is not perfect, however it is good enough in order to make the turn.
+The robot turns until the sensor in the middle corresponding to the turn direction of the robot sees the line.
+As an extra calibration, the robot will then complete the turn by turning until the line is not visible anymore.
+In figure \ref{fig:left_turn} is a left turn shown.
+The final state of the turn is not perfect as the positioning of the sensors position cannot be placed in a perfect desired location.
+This is compensated by the line following that is guaranteed to follow a turn.
+
+\begin{figure}[H]
+\input{img/left_turn}
+ \caption{A left turn for the robot.}
+ \label{fig:left_turn}
+\end{figure}
+
+\subsection{Construction}
+The skeleton of the robot was designed to be as low as possible, in order to get the light sensors as close to the ground as possible. A side effect of the low construction is that it makes the robot more stable when turning. In front of the robot a gripper was placed, with room for two sensors in between the robot and the gripper. The final choice of design and sensor placement can be seen in figure \ref{fig:final_robot}. Other constructions was tried, but discarded for different reasons, explained in the following section.
+
+\begin{figure}[H]
+\centering
+ \includegraphics[scale = 0.1]{img/robot.jpg}
+ \caption{Final design of the robot}
+ \label{fig:final_robot}
+\end{figure}
+
+\subsection{Sensing}
+In order to sense the world around it, the robot was fitted with three light sensors, the maximum number there was. Because there were only three light sensors, a decision had to be made on what to use the sensors for. All of the other types of sensors were deemed useless for this project.
+
+The problems that needed to be addressed in the project was turning exactly 90 $^{\circ}$, stopping with the can on the intersection and line following.
+
+It was quickly established that two sensors were needed for a line follow controller. The last sensor could then be used for a few things, e.g as indicator that a turn was completed or a detector of intersection. Both uses were tried and pros and cons were noted, and a decision was made on what was the best configuration.
+
+\begin{figure}[H]
  \begin{subfigure}{0.32\textwidth}
  \centering
     \begin{tikzpicture}
-      \draw[ultra thick] (0,-1.5) to (0,1.5);
-      \draw[ultra thick] (-1.5,0) to (1.5,0);
-      
-      \begin{scope}[rotate=-95]
-	\draw node[robot,rotate=-95] at (0,0) {};
+
+      \begin{scope}[rotate=-90]
+	\draw node[robot_plain,rotate=-90] at (0,0) {};
       \end{scope}
     \end{tikzpicture}
-  \caption{Negative error term.}
+  \caption{Plain robot configuration.}
+  \label{subfig:plain_robot}
  \end{subfigure}
  %
  \begin{subfigure}{0.32\textwidth}
  \centering
     \begin{tikzpicture}
-      \draw[ultra thick] (0,-1.5) to (0,1.5);
-      \draw[ultra thick] (-0.5,0) to (3.5,0);
-      \draw[ultra thick] (3,-1.5) to (3,1.5);
+
       \node[name=P_r] at (0.5,0) {};
-      \begin{scope}[rotate=-85]
-	\draw node[robot,rotate=-85] at (P_r) {};
+      \begin{scope}[rotate=-90]
+	\draw node[robot_back,rotate=-90] at (P_r) {};
       \end{scope}
     \end{tikzpicture}
-  \caption{Positive error term.}
+  \caption{Rotational strong robot.}
+  \label{subfig:rot_robot}
  \end{subfigure}
  %
  \begin{subfigure}{0.32\textwidth}
  \centering
     \begin{tikzpicture}
-      \draw[ultra thick] (0,-1.5) to (0,1.5);
-      \draw[ultra thick] (-0.5,0) to (3.5,0);
-      \draw[ultra thick] (3,-1.5) to (3,1.5);
       \node[name=P_r] at (1,0) {};
       
       \begin{scope}[rotate=-90]
 	\draw node[robot,rotate=-90] at (P_r) {};
       \end{scope}
     \end{tikzpicture}
-  \caption{Equilibrium.}
+  \caption{Final configuration.}
+  \label{subfig:final_robot}
  \end{subfigure}
-\caption{Error term as a result of the robot configuration.}
+\caption{Illustration of the different configuration that was used during the project.}
 \label{fig:line_follow}
 \end{figure}
 
+The first configuration, seen on figure \ref{subfig:plain_robot}, with no third sensor failed at turning properly, which led to the basis of the line following being poor. This made the line follow fail every now and then. Putting a sensor on the back solved this problem. The placement can be seen in figure \ref{subfig:rot_robot}. The problem of pushing the can too far off an intersection, giving the robot problems when having to move the same can from another direction, could be solve by putting the third sensor on the gripper so that the center of the can is in line with the sensor, see figure \ref{subfig:final_robot}. By doing this the can would always end on the intersection. 
 
-\subsection{Turning}
-To turn the robot a set of sub goals must be met.
-If both motors turn in opposite direction, the robot will turn around the axis between the wheel.
-This means the robot must be positioned with the axis over the intersection.
-Then the robot can turn until the sensors in the middle of the robot sees the line.
-As an extra calibration, the robot will then complete the turn by turning until the line is not visible anymore.
-In figure \ref{fig:left_turn} is a left turn shown.
-The final state of the turn is not perfect as the positioning of the sensors position cannot be placed in a perfect desired location.
-This is compensated by the line following that is guaranteed to follow a turn.
+It was assumed that the latter construction was the best, due to the severity of getting off the line in the line following, compared to having a bad starting point for it. Therefore this design was chosen as the final configuration.
 
-\begin{figure}
-\input{img/left_turn}
- \caption{A left turn for the robot.}
- \label{fig:left_turn}
-\end{figure}
+\subsubsection{External noise}
+When using a light sensor the world around it can effect the value of the sensor tremendously.
+A way to use the sensors is to just use thresholding on the intensity to indicate that a line has been met.
+This is not very robust.
+If one assume that the sensor is linear over the entire range, lines can be detected by looking at the change of intensity.
+This was implemented and was found very useful.
+
+\subsection{Sokoban execution}
+
+In order to execute the solution given by the solver, which is in game moves a translator needed to be implemented. This is due to the grid structure of the map, and a can push not being instantaneous in the real world.
+
+The translator is implemented by looking at the current and previous game move. These are put into a lookup table and the combination of robot moves found in the result from the lookup are executed. 
+
+\vspace{10pt}
+{\large \textit{Example:}} 
+
+\noindent
+Movestring ...Lu... (big characters are can pushes)
+
+\noindent
+Input to lookup: current = u, previous = L.
+
+\noindent
+Output from lookup: \textit{back, turn left, go forwards}
+
+\matthias{Skal vi have test afsnittet her eller for sig selv?}
