@@ -1,6 +1,11 @@
 \section{Sokoban Solver}
 \matthias{Hurtig intro, skal måske skrives om}
-Sokoban can be solved in a few different ways. This implementation uses a search algorithm in order to find the state of the puzzle, where all of the diamonds are on a goal.
+Sokoban can be solved in a few different ways. 
+This implementation uses an informed breadth first search algorithm in order to find the state of the puzzle, where all of the diamonds are on a goal.
+In order to limit the scope of the search, dead locks and optimization of the model has been implemented.
+
+Breadth first search algorithms take all neighboring moves and searches them before searching their children.
+Informed breadth first search uses a value, like the cost of moving from one place to the other, and sorts the search list so cheapest moves are searched first.
 
 \subsection{Model of World}
 The world of Sokoban consist of a map and a series of moves.
@@ -12,12 +17,13 @@ The map consist of a representation of the map, with walls and static dead lock 
 By having a representation of the map, finding the shortest path from the man to a diamond and detection of which diamonds is valid to push becomes possible.
 
 The notation for the map uses J for jewels, M for the man, X for walls and G for goals.
-To visualize the maps and the solutions, the maps is put into an existing application \cite{url:qml-sokoban} is used.
+The map using this notation can be seen in figure \ref{fig:map_notation}.
+To visualize the maps and the solutions, the map is put into an existing application\cite{url:qml-sokoban}.
 In figure \ref{fig:sokoban_map_2015_img} is the Sokoban map, which has been used in the competition and all tests, shown.
 
 \begin{figure}[h]
  \centering
- \begin{subfigure}{0.16\textwidth}
+ \begin{subfigure}[b]{0.16\textwidth}
    \begin{minipage}{\linewidth}
 \begin{verbatim}
 XXXXXXXXXXXX
@@ -30,8 +36,9 @@ XXXXXXXXXXXX
 \end{verbatim}
  \end{minipage}
  \caption{Map notation.}
+ \label{fig:map_notation}
  \end{subfigure}~~~
- \begin{subfigure}{0.3\textwidth}
+ \begin{subfigure}[b]{0.3\textwidth}
   \includegraphics[width=\linewidth]{img/sokoban_2015}
  \caption{Visualized map.}
  \label{fig:sokoban_map_2015_img}
@@ -39,26 +46,25 @@ XXXXXXXXXXXX
  \caption{Sokoban map used in competition.}
 \end{figure}
 
-The solver is made as an informed breadth first search.
+A well known algorithm for breadth first search is called Dijkstra.
+This algorithm was used to model to Sokoban solver.
 The general algorithm can be seen in code section \ref{code:sokoban_solver}.
 
 \begin{figure}[h]
+\renewcommand\figurename{Code Section}
 \centering
 \begin{tikzpicture}
  \node[text width = 0.43\textwidth] at (0,0) {
  \begin{verbatim}
 search_list.push(start)
-while( !search_list.empty() ){
-  N = search_list.pop()
-  if( game_won ){
-    print_path(N)
-  } else if( !closed_set.exist(N) ){
-    neighbors = valid_moves(N)
-    if( !closed_set.exist(neighbors) ){
-      search_list.push(neighbors)
-    }
-  }
-}
+while( search_list.is_not_empty() )
+    N = search_list.pop()
+    if( game_won )
+        print_path(N)
+    else if( closed_set.does_not_exist(N) )
+        neighbors = valid_moves(N)
+        if( closed_set.does_not_exist(neighbors) )
+            search_list.push(neighbors)
  \end{verbatim}
  };
 \end{tikzpicture}
@@ -190,6 +196,7 @@ To test if the solver could handle different types of maps, a set called microba
 This is a set of 155 small and simple maps with a difficulty at the level expected at the competition.
 In figure \ref{fig:microban_timing} is the timing of the microban levels shown.
 96\% of the microban maps is solvable, and 2.7\% of those takes more than 25 seconds for the computer to solve.
+In order to show the rest of the timing, these are cut off at 25 second and the timing for the test is written on the graph.
 There were 6 maps which could not be solved by the solver. These are marked with red, as the user manually aborted the program when the memory consumption became too big.
 The maps that was not solved have a large map and 8-16 diamonds. 
 This means a lot of moves are possible and it will take a lot of memory to solve with a breadth first approach.
