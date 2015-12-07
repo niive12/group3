@@ -1,9 +1,15 @@
 \section{Sokoban Solver}
-The game of Sokoban is a simple puzzle.
-The original game is a warehouse keeper who pushes boxes into the right locations.
-The player is allowed to move up, down, left and right and to push a box in a direction that is not obstructed by a wall or another box.
-Variations of this game have changed the warehouse boxes to jewels, but the problem remains unchanged.
-The variation for this project is pushing cans of tomato paste.
+\matthias{Hurtig intro, skal måske skrives om}
+Sokoban can be solved in a few different ways. This implementation uses a search algorithm in order to find the state of the puzzle, where all of the diamonds are on a goal.
+
+\subsection{Model of World}
+The world of Sokoban consist of a map and a series of moves.
+Each move is a node in a graph which consist of the position of the man and the position of the diamonds.
+To reduce the search space, only states where the position of the diamonds is known to the solver.
+Each node also contains the path length, so the solver can find the optimal solution, and a pointer to the parent node so a path is linked together.
+
+The map consist of a representation of the map, with walls and static dead lock positions.
+By having a representation of the map, finding the shortest path from the man to a diamond and detection of which diamonds is valid to push becomes possible.
 
 The notation for the map uses J for jewels, M for the man, X for walls and G for goals.
 To visualize the maps and the solutions, the maps is put into an existing application \cite{url:qml-sokoban} is used.
@@ -32,15 +38,6 @@ XXXXXXXXXXXX
  \end{subfigure}
  \caption{Sokoban map used in competition.}
 \end{figure}
-
-\subsection{Model of World}
-The world of Sokoban consist of a map and a series of moves.
-Each move is a node in a graph which consist of the position of the man and the position of the diamonds.
-To reduce the search space, only states where the position of the diamonds is known to the solver.
-Each node also contains the path length, so the solver can find the optimal solution, and a pointer to the parent node so a path is linked together.
-
-The map consist of a representation of the map, with walls and static dead lock positions.
-By having a representation of the map, finding the shortest path from the man to a diamond and detection of which diamonds is valid to push becomes possible.
 
 The solver is made as an informed breadth first search.
 The general algorithm can be seen in code section \ref{code:sokoban_solver}.

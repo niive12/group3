@@ -3,7 +3,7 @@
 The robot is made using a Lego Mindstorm kit, with a NXT brick and a few different sensors, like light sensors, push sensors, etc. There was also a lot of Lego at disposal so there were free reins, construction wise. Sensor wise there were more limitations, i.e. only sensors from the given kit could be used. The robot should implement some different behaviors in order to complete the task.
 
 \subsection{Behavior} \label{sec:behavior}
-The task of driving the around the map is solved by creating different simple behaviors and combine them to deal with different situations. For example pushing a can is divided into \textit{Go forward} and \textit{back}, where \textit{back} is a combination it self of \textit{turn left} and \textit{go forwards}. A complete list of behaviors can be seen in table \ref{tab:movset}. All of the behaviors are based on the reactive control principle. The different behaviors will be described in the next sections.
+The task of driving the around the map is solved by creating different simple behaviors and combine them to deal with different situations. For example pushing a can is divided into \textit{Go forward} and \textit{go back}, where \textit{go back} is a combination it self of \textit{turn left} and \textit{go forwards}. A complete list of behaviors can be seen in table \ref{tab:movset}. All of the behaviors are based on the reactive control principle. The different behaviors will be described in the next sections.
 
 \begin{table}[H]
 \centering
@@ -12,7 +12,7 @@ The task of driving the around the map is solved by creating different simple be
   Move set: &  Combined moves: \\
   \hline
    Detect intersection & Go forwards\\
-   Follow line & Back\\
+   Follow line & Go Back\\
    Turn left 90$^{\circ}$  &\\
    Turn right 90$^{\circ}$ & \\
    \hline
@@ -28,7 +28,7 @@ This is however solved in the turning.
 The choice of sensor placement is described later.
 
 \subsubsection{Follow line}
-
+Since the competition map is a combination of lines, line following is an essential task.
 To follow a line a proportional controller is used.
 The light sensors gives a value to the controller and the speed of the motors are modified to be proportional to the error term between the two sensors.
 The error term is calculated in equation \ref{eq:left_error}.
@@ -49,7 +49,6 @@ The error term is calculated in equation \ref{eq:left_error}.
 That error term is then multiplied by a constant, $P$, and added to the base speed, $V_\text{base}$.
 The right motor gets the error term subtracted.
 This allows for the motor to move at the base speed if the error term is zero and move towards the center of the line if it is not.
-The robot configuration which generates this error can be seen in figure \ref{fig:line_follow}.
 
 \subsubsection{Turning}
 Turning the robot is split up into a few steps.
@@ -70,7 +69,7 @@ This is compensated by the line following that is guaranteed to follow a turn.
 \end{figure}
 
 \subsection{Construction}
-The skeleton of the robot was designed to be as low as possible, in order to get the light sensors as close to the ground as possible. A side effect of the low construction is that it makes the robot more stable when turning. In front of the robot a gripper was placed, with room for two sensors in between the robot and the gripper. The final choice of design and sensor placement can be seen in figure \ref{fig:final_robot}. Other constructions was tried, but discarded for different reasons, explained in the following section.
+The skeleton of the robot was designed to be as low as possible, in order to get the light sensors as close to the ground as possible. A side effect of the low construction is that it makes the robot more stable when turning. In front of the robot a gripper was placed, with room for two sensors in between the robot and the gripper. The final choice of design and sensor placement can be seen in figure \ref{fig:final_robot}. Other constructions was tried, but discarded for different reasons, explained in the following section. The wheels on the robot was the smallest wheels that lifted the skeleton off the ground.
 
 \begin{figure}[H]
 \centering
@@ -84,7 +83,7 @@ In order to sense the world around it, the robot was fitted with three light sen
 
 The problems that needed to be addressed in the project was turning exactly 90 $^{\circ}$, stopping with the can on the intersection and line following.
 
-It was quickly established that two sensors were needed for a line follow controller. The last sensor could then be used for a few things, e.g as indicator that a turn was completed or a detector of intersection. Both uses were tried and pros and cons were noted, and a decision was made on what was the best configuration.
+It was quickly established that two sensors were needed for a line follow controller. The last sensor could then be used for a few things, e.g as indicator that a turn was completed or a detector of intersection. Both uses were tried and pros and cons were noted, and a decision was made on what was the best configuration. The two line following sensors were put as close together as it was possible with the chosen skeleton. It is worth noting that the distance between the sensors were bigger than the width of the line.
 
 \begin{figure}[H]
  \begin{subfigure}{0.32\textwidth}
