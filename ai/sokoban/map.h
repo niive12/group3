@@ -83,7 +83,7 @@ public:
     Map();
     Map(std::string file_name );
     ~Map() {
-        clear_hashtable(closed_set);
+//        clear_hashtable(closed_set);
         for(int i = 0; i < width; ++i){
             delete[] data[i];
         }

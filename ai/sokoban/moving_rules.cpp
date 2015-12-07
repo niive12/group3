@@ -116,8 +116,10 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
         }
     }
     wave(copy,new_man,J);
+#if optimize_for_robot_moves
     Map wave_map; /******** If we want to optimize for robot moves ********/
     std::vector<std::vector<float>> cost_map = find_robot_moves(wave_map, N);
+#endif
     char ans;
     for(size_t n=0; n < J.size(); ++n){
         if(direction == DIRECTION_PUSH){
