@@ -3,7 +3,7 @@
 The robot is made using a Lego Mindstorm kit, with a NXT brick and a few different sensors, like light sensors, push sensors, etc. There was also a lot of Lego at disposal so there were free reins, construction wise. Sensor wise there were more limitations, i.e. only sensors from the given kit could be used. The robot should implement some different behaviors in order to complete the task.
 
 \subsection{Behavior} \label{sec:behavior}
-The task of driving the around the map is solved by creating different simple behaviors and combine them to deal with different situations. For example pushing a can is divided into \textit{Go forward} and \textit{back}, where \textit{back} is a combination it self of \textit{turn left} and \textit{go forwards}. A complete list of behaviors can be seen in table \ref{tab:movset}. All of the behaviors are based on the reactive control principle. The different behaviors will be described in the next sections.
+The task of driving the around the map is solved by creating different simple behaviors and combine them to deal with different situations. For example pushing a can is divided into \textit{Go forward} and \textit{go back}, where \textit{go back} is a combination it self of \textit{turn left} and \textit{go forwards}. A complete list of behaviors can be seen in table \ref{tab:movset}. All of the behaviors are based on the reactive control principle. The different behaviors will be described in the next sections.
 
 \begin{table}[H]
 \centering
@@ -12,7 +12,7 @@ The task of driving the around the map is solved by creating different simple be
   Move set: &  Combined moves: \\
   \hline
    Detect intersection & Go forwards\\
-   Follow line & Back\\
+   Follow line & Go Back\\
    Turn left 90$^{\circ}$  &\\
    Turn right 90$^{\circ}$ & \\
    \hline
@@ -49,7 +49,6 @@ The error term is calculated in equation \ref{eq:left_error}.
 That error term is then multiplied by a constant, $P$, and added to the base speed, $V_\text{base}$.
 The right motor gets the error term subtracted.
 This allows for the motor to move at the base speed if the error term is zero and move towards the center of the line if it is not.
-The robot configuration which generates this error can be seen in figure \ref{fig:line_follow}.
 
 \subsubsection{Turning}
 Turning the robot is split up into a few steps.
