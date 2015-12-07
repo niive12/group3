@@ -18,6 +18,22 @@
 #define DIRECTION_PULL 1
 void clear_hashtable(std::unordered_map<std::string,node*> &table, std::string start_node_index = "n");
 
+struct robot_move{
+    float cost;
+    pos_t pos;
+    char  direction;
+    robot_move(){
+        cost = 0;
+        pos = pos_t(0,0);
+        direction = 'U';
+    }
+    robot_move(float c, pos_t p, char d){
+        cost = c;
+        pos = p;
+        direction = d;
+    }
+};
+
 class Map {
 private:
     //data:
@@ -25,6 +41,7 @@ private:
     std::queue<pos_t> wave_color( pos_t pos, int previous_color, Map &wave_map); //stored in wavefront.cpp
     std::string calculate_path(Map &wave_map, node *N);                          //stored in wavefront.cpp
     float robot_move_time(node* N);                                              //stored in robot_moving.cpp
+    std::queue<robot_move> add_connected_moves(robot_move m, std::vector<std::vector<float>> &cost_map); //stored in robot_moving.cpp
     std::queue<node*> add_all_possible_paths(node *N, Map &copy, char direction = DIRECTION_PUSH);
     bool locked_in(pos_t diamond);  //sees if a diamond is locked into a corner.
     bool dead_lock(pos_t diamond);  //sees if a diamond is in a dead lock.
@@ -35,6 +52,7 @@ private:
     bool boundry_check(const pos_t &pos);
     std::unordered_map<std::string,node*> closed_set;
 public:
+    std::vector<std::vector<float>> find_robot_moves(Map &copy_map, node* N);                   //stored in robot_moving.cpp
     //data:
     int width, height;
     char n_diamonds;

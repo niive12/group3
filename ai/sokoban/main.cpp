@@ -21,6 +21,17 @@ int main(int argc, char** argv){
 //    Map map("map_easy.txt");
     Map copy;
 
+    map.man.x = 8;
+    map.man.y = 2;
+    node start(map.man,map.diamond_pos);
+    std::vector<std::vector<float>> cost_map = map.find_robot_moves(copy, &start);
+    map.print();
+    for(size_t y = 0; y < cost_map.at(0).size(); ++y){
+        for(size_t x = 0; x < cost_map.size(); ++x){
+            std::cout << (int) cost_map[x][y] << "\t";
+        }
+        std::cout << "\n";
+    }
 //    node *goal;
 //    map.bff_search(copy);
     map.informed_bff_search(copy);

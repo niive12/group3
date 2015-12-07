@@ -116,6 +116,8 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
         }
     }
     wave(copy,new_man,J);
+    Map wave_map; /******** If we want to optimize for robot moves ********/
+    std::vector<std::vector<float>> cost_map = find_robot_moves(wave_map, N);
     char ans;
     for(size_t n=0; n < J.size(); ++n){
         if(direction == DIRECTION_PUSH){
@@ -129,7 +131,9 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + right; //move diamond
                 node *next = new node(new_man,J,par);      //create node
 #if optimize_for_robot_moves
-                next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;//based on robot moves in seconds
+                next->path_length = N->path_length + wave_map.get(new_man) -3;//based on robot moves in seconds
+
 #else
                 next->path_length = N->path_length + copy.get(new_man-right) - 2; //wavefront approach
 #endif
@@ -140,7 +144,8 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + left;
                 node *next = new node(new_man,J,par);
 #if optimize_for_robot_moves
-                next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;
+                next->path_length = N->path_length + wave_map.get(new_man) -3;
 #else
                 next->path_length = N->path_length + copy.get(new_man-left) - 2; //wavefront approach
 #endif
@@ -151,7 +156,8 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + above;
                 node *next = new node(new_man,J,par);
 #if optimize_for_robot_moves
-                next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;
+                next->path_length = N->path_length + wave_map.get(new_man) -3;
 #else
                 next->path_length = N->path_length + copy.get(new_man-above) - 2; //wavefront approach
 #endif
@@ -162,7 +168,8 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
                 J.at(n) = N->diamonds.at(n) + below;
                 node *next = new node(new_man,J,par);
 #if optimize_for_robot_moves
-                next->path_length = N->path_length + robot_move_time(next); //based on robot moves in seconds
+//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;
+                next->path_length = N->path_length + wave_map.get(new_man) -3;
 #else
                 next->path_length = N->path_length + copy.get(new_man-below) - 2; //wavefront approach
 #endif

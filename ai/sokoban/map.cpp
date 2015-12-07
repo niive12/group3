@@ -208,26 +208,26 @@ void Map::find_dead_lock_pos(Map &wave_map){
 }
 
 void Map::print(){
-//    data[man.x][man.y] = 'M';
+    data[man.x][man.y] = 'M';
     for(int h=0; h<height; ++h){
         for(int w=0; w<width; ++w){
             switch(data[w][h]){
-            case OBSTACLE:
-                std::cout << 'X';
-                break;
-            case FREE:
-                std::cout << '.';
-                break;
-            case DIAMOND:
-                std::cout << 'J';
-                break;
-            case 'M':
-                std::cout << 'M';
-                break;
-            default:
-                std::cout << std::hex << (int) data[w][h] - 3;
-                std::cout.unsetf(std::ios::hex);
-                break;
+                case OBSTACLE:
+                    std::cout << 'X';
+                    break;
+                case FREE:
+                    std::cout << '.';
+                    break;
+                case DIAMOND:
+                    std::cout << 'J';
+                    break;
+                case 'M':
+                    std::cout << 'M';
+                    break;
+                default:
+                    std::cout << std::hex << (int) data[w][h] - 3;
+                    std::cout.unsetf(std::ios::hex);
+                    break;
             }
         }
         std::cout << "\n";
