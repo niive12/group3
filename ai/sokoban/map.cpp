@@ -92,9 +92,9 @@ void Map::read_file(std::string file_name){
                 ++x;
         }
         data_file.close();
-//        std::cout << "file loaded\n";
     } else {
-//        std::cout << file_name << " does not exist\n";
+        std::cerr << file_name << " does not exist\n";
+        throw("404");
     }
     Map wave_map;
     find_dead_lock_pos(wave_map);
@@ -236,16 +236,16 @@ void Map::print(){
 }
 
 Map& Map::operator=(const Map& other ) {
-//    if(height != other.height || width != other.width){
-        for(int i = 0; i < width; ++i){
-            delete[] data[i];
-        }
-        delete[] data;
-//    }
+    for(int i = 0; i < width; ++i){
+        delete[] data[i];
+    }
+    delete[] data;
+
     height = other.height;
     width  = other.width;
     n_diamonds = other.n_diamonds;
     man = other.man;
+    dead_locked_wall = other.dead_locked_wall;
     data = new unsigned char*[width];
     for(int w=0;w<width;++w){
         data[w] = new unsigned char[height];
@@ -272,7 +272,7 @@ void Map::set(const pos_t &pos, const unsigned char &value){
         data[pos.x][pos.y] = value;
     else
 //        throw("ERROR: trying to set a value outside map\n");
-        std::cerr << "ERROR: trying to set a value outside map\n";
+        std::cerr << "ERROR: " << pos << "trying to set a value outside map\n";
 }
 
 unsigned char Map::get(const pos_t &pos){
@@ -289,15 +289,6 @@ std::string Map::to_string(const std::vector<pos_t> &J, const pos_t &man_pos){
     }
     std::sort(final_string.begin(), final_string.end()); //The order of the diamonds does not matter
     final_string += man_pos.x + man_pos.y * width;
-    return std::move(final_string);
-}
-
-std::string Map::to_string(node *N){
-    std::string final_string;
-    for(auto n : N->diamonds){
-        final_string += n.x;
-        final_string += n.y;
-    }
     return std::move(final_string);
 }
 

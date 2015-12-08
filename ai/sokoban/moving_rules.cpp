@@ -2,8 +2,6 @@
 #include <stack>
 #include <unordered_map>
 
-#define optimize_for_robot_moves 0
-
 char Map::valid_push(pos_t diamond){
     //a diamond is pushable if the diamond if the origin is reachable,
     //the destination is not a wall or diamond
@@ -94,7 +92,7 @@ bool Map::game_complete(node* N){
     }
 }
 
-std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction){
+std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy){
     std::queue<node*> neighbohrs;
     std::vector<pos_t> J = N->diamonds;
     node *par = N;
@@ -116,65 +114,57 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
         }
     }
     wave(copy,new_man,J);
-#if optimize_for_robot_moves
     Map wave_map; /******** If we want to optimize for robot moves ********/
-    std::vector<std::vector<float>> cost_map = find_robot_moves(wave_map, N);
-#endif
+    std::vector<std::vector<float>> cost_map;
+    if(optimize_for_robot_moves){
+        cost_map = find_robot_moves(wave_map, N);
+    }
     char ans;
     for(size_t n=0; n < J.size(); ++n){
-        if(direction == DIRECTION_PUSH){
-            ans = copy.valid_push(J.at(n)); //gets all the directions a diamond can be PUSHED
-        } else {
-            ans = copy.valid_pull(J.at(n)); //gets all the directions a diamond can be PULLED
-        }
+        ans = copy.valid_push(J.at(n)); //gets all the directions a diamond can be pushed
         if(ans){
             new_man = J.at(n); //New position where the man is where the diamond was
             if(ans & east){
                 J.at(n) = N->diamonds.at(n) + right; //move diamond
                 node *next = new node(new_man,J,par);      //create node
-#if optimize_for_robot_moves
-//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;//based on robot moves in seconds
-                next->path_length = N->path_length + wave_map.get(new_man) -3;//based on robot moves in seconds
-
-#else
-                next->path_length = N->path_length + copy.get(new_man-right) - 2; //wavefront approach
-#endif
+                if(optimize_for_robot_moves){
+                    next->path_length = N->path_length + wave_map.get(new_man) -3;//based on robot moves in seconds
+                } else {
+                    next->path_length = N->path_length + copy.get(new_man-right) - 2; //wavefront approach
+                }
                 J.at(n) = N->diamonds.at(n);         //reset diamond
                 neighbohrs.push(next);
             }
             if(ans & west){
                 J.at(n) = N->diamonds.at(n) + left;
                 node *next = new node(new_man,J,par);
-#if optimize_for_robot_moves
-//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;
-                next->path_length = N->path_length + wave_map.get(new_man) -3;
-#else
-                next->path_length = N->path_length + copy.get(new_man-left) - 2; //wavefront approach
-#endif
+                if(optimize_for_robot_moves){
+                    next->path_length = N->path_length + wave_map.get(new_man) -3;
+                } else {
+                    next->path_length = N->path_length + copy.get(new_man-left) - 2; //wavefront approach
+                }
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
             if(ans & north){
                 J.at(n) = N->diamonds.at(n) + above;
                 node *next = new node(new_man,J,par);
-#if optimize_for_robot_moves
-//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;
-                next->path_length = N->path_length + wave_map.get(new_man) -3;
-#else
-                next->path_length = N->path_length + copy.get(new_man-above) - 2; //wavefront approach
-#endif
+                if(optimize_for_robot_moves){
+                    next->path_length = N->path_length + wave_map.get(new_man) -3;
+                } else {
+                    next->path_length = N->path_length + copy.get(new_man-above) - 2; //wavefront approach
+                }
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
             if(ans & south){
                 J.at(n) = N->diamonds.at(n) + below;
                 node *next = new node(new_man,J,par);
-#if optimize_for_robot_moves
-//                next->path_length = N->path_length + cost_map[new_man.x][new_man.y] -3;
-                next->path_length = N->path_length + wave_map.get(new_man) -3;
-#else
-                next->path_length = N->path_length + copy.get(new_man-below) - 2; //wavefront approach
-#endif
+                if(optimize_for_robot_moves){
+                    next->path_length = N->path_length + wave_map.get(new_man) -3;
+                } else {
+                    next->path_length = N->path_length + copy.get(new_man-below) - 2; //wavefront approach
+                }
                 J.at(n) = N->diamonds.at(n);
                 neighbohrs.push(next);
             }
@@ -183,56 +173,7 @@ std::queue<node*> Map::add_all_possible_paths(node *N, Map &copy,char direction)
     return neighbohrs;
 }
 
-node* Map::bff_search(Map &copy_map){
-    std::queue<node*> search_list;                      //list of current search nodes.
-    std::queue<node*> neighbohrs;                       //result fra add_all_possible...
-    std::queue<node*> neighbohrs_neighbohrs;            //2nd list of search nodes.
-    node start(man,diamond_pos);
-    wave(copy_map,man,diamond_pos);
-    search_list.push(&start);                            //set first target
-    closed_set.clear();
-    std::unordered_map<std::string,node*>::const_iterator hash_ptr;
-    closed_set.emplace(to_string(start.diamonds,start.man),&start);
-    char runs = 0;
-    bool search_complete = false;
-    node *current_node;
-    while( !search_complete ) {
-        search_complete = true;
-        ++runs;
-        while( !search_list.empty()) {
-            search_complete = false; //prevent the loop to stop when there is more pixels to search for
-            current_node = search_list.front();
-            //            current_node = search_list.top();
-            search_list.pop();
-            neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
-            while( !neighbohrs.empty() ) {                       //append these nodes to the list.
-                current_node = neighbohrs.front();
-                neighbohrs.pop();
-                hash_ptr = closed_set.find(to_string(current_node->diamonds,current_node->man)); //check is visited;
-                if( hash_ptr == closed_set.end() ) {//current_node does not exist in map
-                    neighbohrs_neighbohrs.push( current_node );
-                    //                    search_list.push( current_node ); //if the search list sorts, it will take the best node
-                    closed_set.emplace(to_string(current_node->diamonds,current_node->man),current_node);
-                    if(game_complete(current_node)){
-                        std::cout << (int) runs << " found the goal. Size: " << current_node->path_length << "\n";
-                        print_path(copy_map,current_node);
-                        return current_node; //goal node;
-                    }
-                } else {
-                    delete current_node;
-                }
-            }
-        }
-        search_list = neighbohrs_neighbohrs; //append to search list
-        std::cout << "runs: " << (int) runs << " frontier:\t" << search_list.size() << "\tclosed_set: " << closed_set.size() <<"\n";
-        while(!neighbohrs_neighbohrs.empty()){ //clear the queue
-            neighbohrs_neighbohrs.pop();
-        }
-    }
-    return nullptr;
-}
-
-node* Map::informed_bff_search(Map &copy_map){
+void Map::informed_bff_search(Map &copy_map){
     std::priority_queue<node*,std::vector<node*>,comparator_functor> search_list; //list of current search nodes.
     std::queue<node*> neighbohrs;                       //results from add_all_possible
     node start(man,diamond_pos);
@@ -247,6 +188,8 @@ node* Map::informed_bff_search(Map &copy_map){
         current_node = search_list.top();
         if(game_complete(current_node)){
             std::cout << "//" << " found the goal. Number of nodes: " << closed_set.size() + search_list.size() << "\n";
+            //print the path as a string or as C code
+            //print_path(copy_map,current_node);
             print_path_as_C_code(copy_map,current_node);
             clear_hashtable(closed_set,start_node_index);
             while(!search_list.empty()){
@@ -254,7 +197,7 @@ node* Map::informed_bff_search(Map &copy_map){
                 delete current_node;
                 search_list.pop();
             }
-            return nullptr; //goal node;
+            return;
         }
         search_list.pop();
 
@@ -279,92 +222,5 @@ node* Map::informed_bff_search(Map &copy_map){
         }
     }
     std::cout << "no solution\n";
-    return nullptr;
-}
-
-node* Map::idf_search(Map &copy_map){
-    /*
-    idf:
-    find neighbohrs (b = up to 20)
-        stack.push neighbors
-        while(!finished)
-            current_node = stack.top
-            if(current_node == goal)
-                return current_node
-            depth++
-            closed_set.add current_node
-            if depth < max_depth then
-                stack.push neighbohrs...
-            else
-                depth--
-    */
-    std::stack<node*> search_list;                      //list of current search nodes.
-    std::queue<node*> neighbohrs;                       //result fra add_all_possible...
-    node start(man,diamond_pos);
-    search_list.push(&start);                            //set first target
-    std::unordered_map<std::string,node*>::const_iterator hash_ptr;
-    std::string start_node_index = to_string(start.diamonds,start.man);
-    node *current_node;
-    size_t depth = 0;
-    size_t n_children = 0;
-    size_t max_depth = 3;
-    bool finished = false;
-    std::string hash_index;
-    while( !finished ){
-        finished = true;
-        while( !search_list.empty()) {
-            current_node = search_list.top();
-            search_list.pop();
-            std::cout << depth << " ";//<< " closed set: " << closed_set.size()  << " open: " << search_list.size() << " \t";
-//            for(size_t i = 0; i <current_node->diamonds.size(); ++i)
-//                std::cout << start.diamonds.at(i)-current_node->diamonds.at(i) << "\t";
-//            std::cout << " \n";
-            print_path(copy_map,current_node);
-            if(game_complete(current_node)){
-                std::cout << " found the goal. Size: " << current_node->path_length << "\n";
-                print_path(copy_map,current_node);
-                return current_node; //goal node;
-            }
-            hash_index = to_string(current_node->diamonds,current_node->man);
-            hash_ptr = closed_set.find(hash_index);
-            if( hash_ptr == closed_set.end() ) {//current_node does not exist in map
-                closed_set.emplace(to_string(current_node->diamonds,current_node->man),current_node);
-                if(depth < max_depth ){
-                    ++depth;
-                    neighbohrs = add_all_possible_paths(current_node,copy_map); //this gives the possible paths
-                    n_children = neighbohrs.size();
-                    while( !neighbohrs.empty() ) {                       //append these nodes to the list.
-                        current_node = neighbohrs.front();
-                        neighbohrs.pop();
-                        //                    if( closed_set.emplace(to_string(current_node->diamonds,current_node->man),current_node).second ) {//current_node does not exist in map
-                        search_list.push( current_node ); //the search list stacks, it will take the newest node
-                    }
-                } else if(n_children > 0) {
-                    hash_index = to_string(current_node->diamonds,current_node->man);
-                    hash_ptr = closed_set.find(hash_index);
-                    if( hash_index != start_node_index){
-                        delete hash_ptr->second;
-                    }
-                    closed_set.erase(hash_ptr);
-                    --n_children;
-                    if(n_children == 0){
-                        --depth;
-                    }
-                }
-            } else { //if the node is in the closed set
-                delete current_node;
-            }
-        }
-        if(max_depth < 31){
-            clear_hashtable(closed_set,start_node_index);
-            search_list.push(&start);
-            depth = 0;
-            std::cout << "I got here: " << max_depth << "\n";
-            finished = false;
-            ++max_depth;
-        }
-    }
-    clear_hashtable(closed_set,start_node_index);
-    std::cout << "no solution\n";
-    return nullptr;
+    return;
 }
