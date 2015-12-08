@@ -191,6 +191,20 @@ Without any deadlock detection, the graph contained 217288 nodes.
 With deadlock detection, the graph contained 33160 nodes when the solution was found.
 This is a reduction of 86.76\%. 
 
+\subsection{Robot Movement}
+In order to find the optimal solution, the nodes are sorted by the path length.
+This path length can be measured in the number of moves the man in the game has to make.
+This will produce the shortest path between two points and the cost of moving between two places can be found by reading a single value from the wavefront map, used to detect if a diamond is movable.
+This approach ignores that the robot takes time to turn and move away from a diamond.
+To find the path optimal for the robot, the timing of each move is measured.
+A variation of the wavefront algorithm is then used to find the way around the map.
+At each cell, the orientation of the robot is noted and the neighboring moves are added.
+Then neighboring moves are selected, taking cheapest routes first.
+Then the places of the diamonds gets a cost, representing the cost in seconds it would take to move that diamond.
+As all nodes are calculated at a diamond move, the cost of moving back is added to all diamonds that are not currently being pushed.
+This ensures the solver knows the cost of pushing the diamond once is higher than several consecutive pushes. 
+This means the output is longer in man moves, but the robot should execute the path faster.
+
 \subsection{Performance}
 To test if the solver could handle different types of maps, a set called microban \cite{url:microban} was used.
 This is a set of 155 small and simple maps with a difficulty at the level expected at the competition.
