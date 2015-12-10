@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.00125" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -77,14 +77,14 @@ Source: http://ecommas.tycoelectronics.com .. ENG_CD_640456_W.pdf</description>
 <pad name="3V3" x="3.048" y="2.286" drill="0.8" diameter="1.778"/>
 <pad name="GND" x="1.27" y="4.064" drill="0.8" diameter="1.778"/>
 <pad name="SIG2" x="2.54" y="12.065" drill="0.8" diameter="1.778"/>
-<circle x="0" y="-0.127" radius="2.54" width="1.016" layer="17"/>
-<circle x="0" y="0" radius="5.589440625" width="1.016" layer="17"/>
-<circle x="0" y="0" radius="6.8326" width="1.016" layer="17"/>
 <pad name="CLK" x="4.699" y="6.604" drill="0.8" diameter="1.778"/>
 <pad name="SIG1" x="3.048" y="7.747" drill="0.8" diameter="1.778"/>
-<circle x="0" y="0" radius="9.652834375" width="1.016" layer="17"/>
-<circle x="0" y="0" radius="10.979440625" width="1.016" layer="17"/>
 <hole x="0" y="0" drill="0.6"/>
+<circle x="0" y="0" radius="11.057934375" width="1.016" layer="16"/>
+<circle x="0" y="0" radius="9.688953125" width="1.016" layer="16"/>
+<circle x="0" y="0" radius="6.753875" width="1.016" layer="16"/>
+<circle x="0" y="0" radius="5.52650625" width="1.016" layer="16"/>
+<circle x="0" y="0" radius="2.575665625" width="1.016" layer="16"/>
 </package>
 <package name="SLIP-RING-INVERSE">
 <pad name="GND" x="0" y="5.334" drill="0.8" diameter="1.778"/>
@@ -96,6 +96,22 @@ Source: http://ecommas.tycoelectronics.com .. ENG_CD_640456_W.pdf</description>
 <pad name="CLK" x="6.6675" y="0" drill="0.8" diameter="1.778"/>
 <pad name="SIG1.1" x="0" y="9.525" drill="0.8" diameter="1.778"/>
 <circle x="0" y="0" radius="11.981153125" width="0.127" layer="21"/>
+</package>
+<package name="CONNECTOR">
+<smd name="P$1" x="0" y="0" dx="6.4516" dy="3.2512" layer="1" rot="R90"/>
+<polygon width="0" layer="1">
+<vertex x="-1.6256" y="3.2258"/>
+<vertex x="-1.0668" y="3.7846"/>
+<vertex x="-0.9398" y="3.7846"/>
+<vertex x="1.0668" y="3.7846"/>
+<vertex x="1.6256" y="3.2258"/>
+</polygon>
+<polygon width="0" layer="1">
+<vertex x="-1.0668" y="3.7846"/>
+<vertex x="-0.9398" y="3.9116"/>
+<vertex x="0.9398" y="3.9116"/>
+<vertex x="1.0668" y="3.7846"/>
+</polygon>
 </package>
 </packages>
 <symbols>
@@ -122,6 +138,13 @@ Source: http://ecommas.tycoelectronics.com .. ENG_CD_640456_W.pdf</description>
 <pin name="SIG2" x="12.7" y="0" length="middle" rot="R180"/>
 <pin name="GND" x="-12.7" y="10.16" length="middle"/>
 <pin name="3V3" x="-12.7" y="5.08" length="middle"/>
+</symbol>
+<symbol name="CONNECTOR">
+<wire x1="-10.16" y1="2.54" x2="-2.54" y2="2.54" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="2.54" x2="-2.54" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-2.54" x2="-10.16" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-2.54" x2="-10.16" y2="2.54" width="0.254" layer="94"/>
+<pin name="PIN" x="-15.24" y="0" length="middle"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -175,6 +198,21 @@ Stationary part of a slip ring.</description>
 <connect gate="G$1" pin="GND" pad="GND"/>
 <connect gate="G$1" pin="SIG1" pad="SIG1.1 SIG1.2"/>
 <connect gate="G$1" pin="SIG2" pad="SIG2.1 SIG2.2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="CONNECTOR" uservalue="yes">
+<gates>
+<gate name="G$1" symbol="CONNECTOR" x="5.08" y="0"/>
+</gates>
+<devices>
+<device name="" package="CONNECTOR">
+<connects>
+<connect gate="G$1" pin="PIN" pad="P$1"/>
 </connects>
 <technologies>
 <technology name=""/>
