@@ -11,9 +11,9 @@ The world of Sokoban consist of a map and a series of moves.
 Each move is a node in a graph which consist of the position of the man and the position of the diamonds.
 To reduce the search space, only states where the position of the diamonds is known to the solver.
 Each node also contains the path length, so the solver can find the optimal solution, and a pointer to the parent node so a path is linked together.
-
+\matthias{The map consists of a map? Skal nok omformuleres}
 The map consist of a representation of the map, with walls and static dead lock positions.
-By having a representation of the map, finding the shortest path from the man to a diamond and detection of which diamonds is valid to push becomes possible.
+By having a representation of the map, finding the shortest path from the man to a diamond and detection of which diamonds are valid to push becomes possible.
 
 The notation for the map uses J for jewels, M for the man, X for walls and G for goals.
 The map using this notation can be seen in figure \ref{fig:map_notation}.
@@ -70,7 +70,7 @@ while( search_list.is_not_empty() )
  \caption{Sokoban solver algorithm.}
  \label{code:sokoban_solver}
 \end{figure}
-
+\matthias{Måske skal vi have med det om selve repræsentationen, med J1J2J3J4J5M og ikke det med at gemme hele mappet for at spare plads, og mappet er ligegyldigt. Det er måske logisk, men han har jo snakket om repræsentation til undervisning}
 In order to easily check the if a node exist in the closed list, the closed list was implemented as a hash table.
 The indexing was done as a string, using a hashing function for the diamond positions.
 Each position is described as the position in a one dimension array.
@@ -196,6 +196,8 @@ This path length can be measured in the number of moves the man in the game has 
 This will produce the shortest path between two points and the cost of moving between two places can be found by reading a single value from the wavefront map, used to detect if a diamond is movable.
 This approach ignores that the robot takes time to turn and move away from a diamond.
 To find the path optimal for the robot, the timing of each move is measured.
+The test can be seen in the appendix.
+\matthias{Tilføj test til appendix}
 A variation of the wavefront algorithm is then used to find the way around the map.
 At each cell, the orientation of the robot is noted and the neighboring moves are added.
 Then neighboring moves are selected, taking cheapest routes first.
@@ -215,6 +217,7 @@ The maps that was not solved have a large map and 8-16 diamonds.
 This means a lot of moves are possible and it will take a lot of memory to solve with a breadth first approach.
 In those situations, it would be better to add a heuristic like the A* algorithm or solve the maps with a iterative depth first approach like IDA*.
 It was evaluated that the informative breadth first approach is good enough for the competition.
+\matthias{Due to the low amount of diamonds?}
 
 \begin{figure}[h]
  \centering

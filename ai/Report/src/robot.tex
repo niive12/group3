@@ -1,10 +1,9 @@
 \section{Robot} 
 
 The robot is made using a Lego Mindstorm kit, with a NXT brick and a few different sensors, like light sensors, push sensors, etc. There was also a lot of Lego at disposal so there were free reins, construction wise. Sensor wise there were more limitations, i.e. only sensors from the given kit could be used. The robot should implement some different behaviors in order to complete the task.
-\nikolaj{We should add a list of bricks / sensors used to make the robot as well as references to the NXT brick.}
 
 \subsection{Behavior} \label{sec:behavior}
-The task of driving the around the map is solved by creating different simple behaviors and combine them to deal with different situations. For example pushing a can is divided into \textit{Go forward} and \textit{go back}, where \textit{go back} is a combination it self of \textit{turn left} and \textit{go forwards}. A complete list of behaviors can be seen in table \ref{tab:movset}. All of the behaviors are based on the reactive control principle. The different behaviors will be described in the following sections.
+The task of driving the around the map is solved by creating simple behaviors and combine them to deal with different situations. For example pushing a can is divided into \textit{Go forward} and \textit{go back}, where \textit{go back} is a combination it self of \textit{turn left} and \textit{go forwards}. A complete list of behaviors can be seen in table \ref{tab:movset}. All of the behaviors are based on the reactive control principle. The different behaviors will be described in the following sections.
 
 \begin{table}[H]
 \centering
@@ -32,6 +31,9 @@ The choice of sensor placement is described in section \ref{sec:sensing}.
 Since the competition map is a combination of lines, line following is an essential task.
 To follow a line, a proportional controller is used.
 The light sensors gives a value to the controller and the speed of the motors are modified to be proportional to the error term between the two sensors.
+It is important to notice that there is almost always a difference in the sensors. 
+Therefore a bias has to be put on one of the sensors in order to compare them.
+This can only be done if the assumption is made, that the only difference between the sensors is an offset.
 The error term is calculated in equation \ref{eq:left_error}.
 
 \begin{equation}
@@ -71,7 +73,9 @@ This is compensated by the line following that is guaranteed to follow a turn.
 
 \subsection{Construction}
 The skeleton of the robot was designed with a low center of gravity in order to achieve stability in when turning and to get the light sensors as close to the ground as possible.
-In front of the robot, a gripper was placed, with room for two sensors between the robot and the gripper. The final choice of design and sensor placement can be seen in figure \ref{fig:final_robot}. Other constructions was tried, but discarded for different reasons, explained in the following section. The wheels on the robot was the smallest wheels that lifted the skeleton off the ground.
+In front of the robot, a gripper was placed, with room for two sensors between the robot and the gripper. The final choice of design and sensor placement can be seen in figure \ref{fig:final_robot}. Other constructions was tried, but discarded for different reasons, explained in  section \ref{sec:sensing}. The wheels on the robot was the smallest wheels that lifted the skeleton off the ground.
+
+
 
 \begin{figure}[H]
 \centering
@@ -79,6 +83,27 @@ In front of the robot, a gripper was placed, with room for two sensors between t
  \caption{Final design of the robot}
  \label{fig:final_robot}
 \end{figure}
+
+\subsubsection{Lego kit}
+
+The lego kit used in this project contains a NXT brick and some sensors and actuators. A description of the sensors can be found in \cite{url:legosensors}. The number of different sensors and actuators in the kit can be seen in table \ref{tab:sensors}.
+
+\begin{table} [H]
+ \centering
+ \begin{tabular}{|c|c|}
+  \hline
+  Sensor &  \# \\ \hline
+  Light & 3 \\
+  Touch & 2 \\
+  Sound & 1 \\
+  Ultrasound & 1 \\
+  Motor & 3 \\
+  \hline
+ \end{tabular}
+  \caption{Sensor types and the number of them in the kit}
+  \label{tab:sensors}
+\end{table}
+
 
 \subsection{Sensing}\label{sec:sensing}
 In order to sense the world around it, the robot was fitted with three light sensors. There were only three light sensors, so a decision had to be made on what to use the sensors for. All of the other types of sensors were deemed useless for this project.
@@ -161,5 +186,3 @@ Input to lookup: current = u, previous = L.
 
 \noindent
 Output from lookup: \textit{back, turn left, go forwards}
-
-\matthias{Skal vi have test afsnittet her eller for sig selv?}
