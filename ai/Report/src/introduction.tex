@@ -1,0 +1,18 @@
+\section{Introduction}
+
+% This project is a description on how to make a robot that can solve the puzzle game Sokoban.
+
+The game of Sokoban is a simple puzzle.
+The original game is to control a warehouse keeper who pushes boxes into the right locations.
+The player is allowed to move up, down, left and right and to push a box in a direction that is not obstructed by a wall or another box.
+Variations of this game have changed the warehouse boxes to diamonds, but the problem remains unchanged.
+The variation for this project is pushing cans of tomato paste.
+In this paper, objects will be referred to as diamonds.
+
+Sokoban is interesting because it is a NP-hard problem, so making a solver that is good is quite a challenge, however the rules of the game are simple.
+With a concise description of the world, every possible situation can be simulated until a goal condition is met.
+But it is important to limit the scope of this search by knowing when to stop searching in one direction and when to favor another.
+
+The robot is made in Lego, using a Lego Mindstorm kit, and the solution generating code is written in C++. 
+The robot is supposed to execute the solution on a map , pushing cans around in the real world.
+Constructing in Lego makes it possible to make quick prototypes and modifying the robot is easy.

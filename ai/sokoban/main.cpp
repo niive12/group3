@@ -4,25 +4,32 @@
 #include "node.h"
 
 #include <unistd.h>
-using namespace std;
+
+//to meassure timing
+#include <ratio>
+#include <chrono>
+
 
 int main(int argc, char** argv){
-//    Map map("map_one.txt");
+    std::chrono::high_resolution_clock::time_point t1;
+    std::chrono::high_resolution_clock::time_point t2;
+
     Map map;
     if(argc == 2){
-//        std::cout << "argument: " << argv[1] << '\n';
         map.read_file(argv[1]);
     } else {
-//        map.read_file("map_2014.txt");
-//        map.read_file("solvertest03.txt");
-//        map.read_file("map_5.txt");
         map.read_file("map_2015.txt");
     }
-//    Map map("map_easy.txt");
     Map copy;
-//    node *goal;
-//    map.bff_search(copy);
+
+    t1 = std::chrono::high_resolution_clock::now();
     map.informed_bff_search(copy);
-//    map.idf_search(copy);
+    t2 = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count() << "\n";
+    map.optimize_for_robot_moves = true;
+    t1 = std::chrono::high_resolution_clock::now();
+    map.informed_bff_search(copy);
+    t2 = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count() << "\n";
     return 0;
 }

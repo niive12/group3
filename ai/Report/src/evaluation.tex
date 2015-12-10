@@ -1,0 +1,29 @@
+\section{Competition evaluation}
+On the competition day the robot ran, however it did not finish the map.
+The robot failed to turn enough at some points and the controller could not correct for it, and therefore the robot lost the line.
+Going forward and turning worked fine in the tests, but putting everything together was not successful.
+A thing that could help is to put the two line following sensors closer together.
+This would lead to the robot detecting the line before, and the corrections would not be as big. 
+
+Having an fourth sensor would also help, by making the turning better, however this was not possible.
+
+The choice of wheels meant that the max speed of the robot is slower that using the biggest wheels available.
+However it was assumed that changing construction was not needed and would take too much time.
+In hindsight this was perhaps a bad idea.
+
+\nikolaj{I don't think we should apologize for this stuff.
+Maybe we should conclude that the error accumulates and thus the robot is prone to lose the line.
+``Would take too much time'' is a bad excuse for not doing something. 
+We made a choice and we should stick with it. As far as we know, speed is not the problem, stability is.
+Alternative:
+}  
+
+A robot turn could not ensure the robot to be positioned directly over the line.
+This makes the robot unstable to several consecutive turns in the same direction.
+Having a forth sensor would make it possible to tell if the robot is directly above the line and thus make a stable turn.
+\matthias{Fin formulering}
+The line following sensors was not placed close enough to precisely follow a line.
+This made the robot move around the line rather than following it.
+Having the sensors closer together would make the system more stable. \nikolaj{Should we test that?} \matthias{Burde ikke være nødvendigt. Det er jo logik at hvis de sidder tættere sammen vil de reagere før}
+
+All parts were tested separately but when everything was put together, the robot would eventually turn too far and the robot would loose track of the line and fail.

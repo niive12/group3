@@ -92,9 +92,9 @@ void Map::read_file(std::string file_name){
                 ++x;
         }
         data_file.close();
-//        std::cout << "file loaded\n";
     } else {
-//        std::cout << file_name << " does not exist\n";
+        std::cerr << file_name << " does not exist\n";
+        throw("404");
     }
     Map wave_map;
     find_dead_lock_pos(wave_map);
@@ -109,7 +109,6 @@ void Map::find_dead_lock_pos(Map &wave_map){
 
     wave_map.set(man, reachable);             //set first value
     search_list.push(man);           //set first target
-//    --color;
     pos_t current_pos, testing_pos;
     //find walls
     while ( !search_list.empty() ) {
@@ -206,30 +205,29 @@ void Map::find_dead_lock_pos(Map &wave_map){
             dead_locked_wall.push_back(i->second);
         }
     }
-//    wave_map.print();
 }
 
 void Map::print(){
-//    data[man.x][man.y] = 'M';
+    data[man.x][man.y] = 'M';
     for(int h=0; h<height; ++h){
         for(int w=0; w<width; ++w){
             switch(data[w][h]){
-            case OBSTACLE:
-                std::cout << 'X';
-                break;
-            case FREE:
-                std::cout << '.';
-                break;
-            case DIAMOND:
-                std::cout << 'J';
-                break;
-            case 'M':
-                std::cout << 'M';
-                break;
-            default:
-                std::cout << std::hex << (int) data[w][h];
-                std::cout.unsetf(std::ios::hex);
-                break;
+                case OBSTACLE:
+                    std::cout << 'X';
+                    break;
+                case FREE:
+                    std::cout << '.';
+                    break;
+                case DIAMOND:
+                    std::cout << 'J';
+                    break;
+                case 'M':
+                    std::cout << 'M';
+                    break;
+                default:
+                    std::cout << std::hex << (int) data[w][h] - 3;
+                    std::cout.unsetf(std::ios::hex);
+                    break;
             }
         }
         std::cout << "\n";
@@ -237,67 +235,17 @@ void Map::print(){
     data[man.x][man.y] = FREE;
 }
 
-
-std::vector<pos_t> Map::find_all_general_positions(Map copy, node* N){
-    pos_t res(-1,-1);
-    pos_t old_res(-1,-1);
-    pos_t L;
-    pos_t R;
-    pos_t U;
-    pos_t D;
-    std::vector<pos_t> solve_states;
-    std::vector<pos_t> general_positions;
-    for(auto J : N->diamonds){
-        L = J+left;
-        R = J+right;
-        U = J+above;
-        D = J+below;
-        if( (get(L) == FREE) && (get(L+left) == FREE)){
-            solve_states.push_back(L);
-        }
-        if( (get(R) == FREE) && (get(R+right) == FREE)){
-            solve_states.push_back(R);
-        }
-        if( (get(U) == FREE) && (get(U+above) == FREE)){
-            solve_states.push_back(U);
-        }
-        if( (get(D) == FREE) && (get(D+below) == FREE)){
-            solve_states.push_back(D);
-        }
-    }
-    for(auto pos : solve_states){
-        wave(copy,pos,N->diamonds);
-        res = copy.find_general_position();
-        if( !((res == pos_t(-1,-1)) || (res == old_res)) ){
-            general_positions.push_back(res);
-            old_res = res;
-        }
-    }
-    return general_positions;
-}
-
-pos_t Map::find_general_position(){ //should be done on a already waved map
-    for(unsigned char x=1; x<width;++x){
-        for(unsigned char y=1;y<height;++y){
-            if(get(pos_t(x,y))>2){
-                return pos_t(x,y);
-            }
-        }
-    }
-    return pos_t(-1,-1); //failure
-}
-
 Map& Map::operator=(const Map& other ) {
-//    if(height != other.height || width != other.width){
-        for(int i = 0; i < width; ++i){
-            delete[] data[i];
-        }
-        delete[] data;
-//    }
+    for(int i = 0; i < width; ++i){
+        delete[] data[i];
+    }
+    delete[] data;
+
     height = other.height;
     width  = other.width;
     n_diamonds = other.n_diamonds;
     man = other.man;
+    dead_locked_wall = other.dead_locked_wall;
     data = new unsigned char*[width];
     for(int w=0;w<width;++w){
         data[w] = new unsigned char[height];
@@ -324,7 +272,7 @@ void Map::set(const pos_t &pos, const unsigned char &value){
         data[pos.x][pos.y] = value;
     else
 //        throw("ERROR: trying to set a value outside map\n");
-        std::cerr << "ERROR: trying to set a value outside map\n";
+        std::cerr << "ERROR: " << pos << "trying to set a value outside map\n";
 }
 
 unsigned char Map::get(const pos_t &pos){
@@ -334,25 +282,13 @@ unsigned char Map::get(const pos_t &pos){
     return OBSTACLE;
 }
 
-std::string Map::to_string(const std::vector<pos_t> &J,const pos_t &general_position){
+std::string Map::to_string(const std::vector<pos_t> &J, const pos_t &man_pos){
     std::string final_string;
     for(auto n : J){
         final_string += n.x + n.y * width;
     }
-    std::sort(final_string.begin(), final_string.end()); //lukas is a genius. The order of the diamonds does not matter
-    final_string += general_position.x + general_position.y * width;
-    return std::move(final_string);
-}
-
-std::string Map::to_string(node *N){
-    std::string final_string;
-    final_string += (int) N->path_length % 255;
-    final_string += N->general_pos.x;
-    final_string += N->general_pos.y;
-    for(auto n : N->diamonds){
-        final_string += n.x;
-        final_string += n.y;
-    }
+    std::sort(final_string.begin(), final_string.end()); //The order of the diamonds does not matter
+    final_string += man_pos.x + man_pos.y * width;
     return std::move(final_string);
 }
 
@@ -360,8 +296,6 @@ void clear_hashtable(std::unordered_map<std::string,node*> &table, const std::st
     for(std::unordered_map<std::string,node*>::iterator i =table.begin(); i != table.end() ; ++i){
         if( i->first != start_node_index ){ //Don't delete start node
             delete i->second;
-//            i->second = nullptr;
-//            table.erase(i);
         }
     }
     if(!table.empty()){

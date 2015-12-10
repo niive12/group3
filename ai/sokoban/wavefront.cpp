@@ -1,27 +1,5 @@
 #include "map.h"
 
-void Map::color_diamonds(std::vector<pos_t> diamonds, Map &wave_map){
-    unsigned char min;
-    pos_t testing_pos;
-    for(auto n : diamonds){
-        min = 99;
-        for(int x = -1; x <= 1; ++x){
-            for(int y = -1; y <= 1; ++y){
-                if((x == 0) || (y == 0)){
-                    testing_pos.x = n.x + x;
-                    testing_pos.y = n.y + y;
-                    if ( boundry_check(testing_pos) ) {
-                        if(wave_map.get( testing_pos ) > 2 && wave_map.get( testing_pos ) < min) {
-                           min = wave_map.get( testing_pos );
-                        }
-                    }
-                }
-            }
-        }
-        wave_map.set(n,min + 1);
-    }
-}
-
 std::queue<pos_t> Map::wave_color(pos_t pos, int previous_color, Map &wave_map){
     std::queue<pos_t> colored_positions;
     //color 4 surrounding pixels
@@ -80,7 +58,6 @@ unsigned char Map::wave(Map &wave_map, pos_t man_pos, const std::vector<pos_t> &
         }
         color++;
     }
-//    color_diamonds(diamonds,wave_map);
     return color;
 }
 
@@ -105,6 +82,7 @@ std::string Map::calculate_path(Map &wave_map, node *N){
             break;
         }
     }
+    std::string ans;
 
     //create a wavefront
     wave(wave_map,target_position,old_diamond_pos);
@@ -113,7 +91,6 @@ std::string Map::calculate_path(Map &wave_map, node *N){
     unsigned char current_distance = max_distance + 1;
     pos_t test_pos;
     pos_t next_move;
-    std::string ans;
     while( !(current_pos == target_position) ){
         for(int x = -1; x <= 1; ++x){
             for(int y = -1; y <= 1; ++y){
