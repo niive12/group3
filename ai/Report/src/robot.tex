@@ -176,13 +176,32 @@ In order to execute the solution given by the solver, which is in game moves a t
 The translator is implemented by looking at the current and previous game move. These are put into a look up table and the combination of robot moves found in the result from the look up is executed. 
 
 \vspace{10pt}
-{\large \textit{Example:}} 
+{\large \textit{Example:}}
 
 \noindent
-Movestring ...Lu... (big characters are can pushes)
+Movestring ...\textbf{Luur}... (big characters are can pushes)
 
 \noindent
-Input to lookup: current = u, previous = L.
+Input to lookup: current = \textbf{u}, previous = \textbf{L}.
 
 \noindent
 Output from lookup: \textit{back, turn left, go forwards}
+
+The next characters to be analyzed is then \textbf{uu}.
+A lookup is then performed again, and the result is then:
+
+\noindent
+Input to lookup: current = \textbf{u}, previous = \textbf{u}.
+
+\noindent
+Output from lookup: \textit{go forwards}
+
+The last sequence is \textbf{ur}. The lookup results in:
+
+\noindent
+Input to lookup: current = \textbf{r}, previous = \textbf{u}.
+
+\noindent
+Output from lookup: \textit{turn right, go forwards}
+
+The lookup table it self is a \lstinline|switch case| that executes the commands one by one, in the correct order.

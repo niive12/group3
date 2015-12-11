@@ -11,9 +11,8 @@ The world of Sokoban consist of a map and a series of moves.
 Each move is a node in a graph which consist of the position of the man and the position of the diamonds.
 To reduce the search space, only states where the position of the diamonds is known to the solver.
 Each node also contains the path length, so the solver can find the optimal solution, and a pointer to the parent node so a path is linked together.
-\matthias{The map consists of a map? Skal nok omformuleres}
-The map consist of a representation of the map, with walls and static dead lock positions.
-By having a representation of the map, finding the shortest path from the man to a diamond and detection of which diamonds are valid to push becomes possible.
+The map consist of all the free space, walls and static dead lock positions.
+By having a representation of the map like this, finding the shortest path from the man to a diamond and detection of which diamonds are valid to push becomes possible.
 
 The notation for the map uses J for jewels, M for the man, X for walls and G for goals.
 The map using this notation can be seen in figure \ref{fig:map_notation}.
@@ -197,7 +196,6 @@ This will produce the shortest path between two points and the cost of moving be
 This approach ignores that the robot takes time to turn and move away from a diamond.
 To find the path optimal for the robot, the timing of each move is measured.
 The test can be seen in the appendix.
-\matthias{Tilføj test til appendix}
 A variation of the wavefront algorithm is then used to find the way around the map.
 At each cell, the orientation of the robot is noted and the neighboring moves are added.
 Then neighboring moves are selected, taking cheapest routes first.
@@ -216,8 +214,7 @@ There were 6 maps which could not be solved by the solver. These are marked with
 The maps that was not solved have a large map and 8-16 diamonds. 
 This means a lot of moves are possible and it will take a lot of memory to solve with a breadth first approach.
 In those situations, it would be better to add a heuristic like the A* algorithm or solve the maps with a iterative depth first approach like IDA*.
-It was evaluated that the informative breadth first approach is good enough for the competition.
-\matthias{Due to the low amount of diamonds?}
+It was evaluated that the informative breadth first approach is good enough for the competition, due to the fairly low amount of diamonds, 5.
 
 \begin{figure}[h]
  \centering

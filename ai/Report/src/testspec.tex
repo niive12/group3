@@ -1,0 +1,146 @@
+\section{Tests}
+This section is describing the tests that was made in order to find out how long it takes the robot to do the different types of moves.
+These are used in the solver as heuristics.
+
+\subsection{Straight line test} \label{sec:line_time}
+The purpose of this test is to make an estimate of how long time it takes to go 1 square forward. 
+
+\subsubsection{Execution}
+The robot will be placed on a intersection. It is then told to go forward 1 intersection and stop for 1 second. This is done for the entire length of the test track (5 intersections). This is repeated 10 times and the times are calculated. The sleeps are put in, in order to give the robot time to decelerate to full stop before moving to the next intersection. This is maybe also going to be implemented on the final robot. The time it takes to go one intersection is calculated with equation \ref{eq:line_time}. 
+
+$t_i$:time of the i'th run through, $T_i$ runtime of i'th run through with delay, delay = 1, n = 5 , m = 10.
+
+\begin{equation} \label{eq:t_no_delay}
+t_i = T_i - n\cdot delay
+\end{equation}
+
+\begin{equation}\label{eq:line_time}
+ t_{line} =\frac{ \Sigma_{i=1}^n t_i}{n\cdot m}
+\end{equation}
+
+\subsubsection{Results}
+The results of the test can be seen in table \ref{tab:time_straight}
+
+\begin{table} [H]
+\centering
+ \begin{tabular}{|c|c|c|}
+  \hline Lap & Time  & $t_i$ \\ \hline
+  1 & 10.5  & 5.5 \\  \hline
+  2 & 10.4  & 5.4 \\  \hline
+  3 & 10.3  & 5.3 \\  \hline
+  4 & 10.5  & 5.5 \\  \hline
+  5 & 10.6  & 5.6 \\  \hline
+  6 & 10.6  & 5.6 \\  \hline
+  7 & 10.5  & 5.5 \\  \hline
+  8 & 10.2  & 5.2 \\  \hline
+  9 & 10.3  & 5.3 \\  \hline
+  10 & 10.7 &  5.7 \\ \hline
+ \end{tabular}
+ \caption{Times of the different runs. The third column shows the time without the delays, calculated using equation \ref{eq:t_no_delay}}
+ \label{tab:time_straight}
+\end{table}
+
+Now the time of each move, $t_{line}$ can be calculated using equation \ref{eq:line_time}:
+
+$$
+t_{line} = \frac{54.6\ s}{50} = 1.092\ s
+$$
+
+\subsection{Turning Test} \label{sec:turn_time}
+
+This test is done in order to get how much time it takes to make a turn. This test builds on the straight line test and results from that, found in section \ref{sec:line_time}.
+
+\subsubsection{Execution}
+It is done by putting the robot on a square and make it follow the lines around the square when it comes to an intersection the robot should sleep 1 second, make a turn, sleep 1 second and then go to the next intersection. This is done in order to fully isolate the different moves so they do not contribute to each other. The full square is repeated 10 times and the time is noted. 
+
+T = total time, delay = 1, t = time after delay and straight line, n = 3, m = 10.
+
+\begin{equation} \label{eq:time_delay_turn}
+t_i = T_i - \cdot delay\cdot 4 - 4\cdot t_{line} - 3 \cdot delay = T_i - 7 \cdot delay - 4.368
+\end{equation}
+
+\begin{equation} \label{eq:turn_time}
+t_{turn} = \frac{\sum_{i=1}^m t_i}{n\cdot m}
+\end{equation}
+
+The reason for not just turning on the spot for this test is that there is a risk that the map is extra slippery or have more friction at the specific point, so in order to get a more realistic measurement it was chosen to do the turn test over a square. 
+
+\subsubsection{Result}
+Table \ref{tab:time_left} shows the results from turning left.
+\begin{table} [H]
+\centering
+ \begin{tabular}{|c|c|c|}
+  \hline Lap & Time left & $t_i$ \\ \hline
+  1  & 13.9  & 2.532 \\  \hline
+  2  & 14.2  & 2.832 \\  \hline
+  3  & 13.5  & 2.132 \\  \hline
+  4  & 13.6  & 2.232 \\  \hline
+  5  & 14.2  & 2.832 \\  \hline
+  6  & 14.0  & 2.632 \\  \hline
+  7  & 14.0  & 2.632 \\  \hline
+  8  & 14.2  & 2.832 \\  \hline
+  9  & 14.0  & 2.632 \\  \hline
+  10 & 14.0  & 2.632 \\ \hline
+ \end{tabular}
+ \caption{Times of the different runs. The third column shows the time without the delays, calculated using equation \ref{eq:time_delay_turn}}
+ \label{tab:time_left}
+\end{table}
+
+
+
+The time for 1 turn is then calculated using equation \ref{eq:turn_time}.
+
+$$
+t_{turn}^{left} = \frac{\sum^{m}_{i=1}t_i}{n\cdot m} = \frac{28.552\ s}{30} = 0.9517\ s
+$$
+
+The same thing is then done for turning right, and the results are in table \ref{tab:time_right}.
+
+\begin{table} [H]
+\centering
+ \begin{tabular}{|c|c|c|}
+  \hline Lap & Time right & $t_i$ \\ \hline
+  1  & 13.4  & 2.032 \\  \hline
+  2  & 13.9  & 2.532 \\  \hline
+  3  & 13.8  & 2.432 \\  \hline
+  4  & 13.8  & 2.432 \\  \hline
+  5  & 13.9  & 2.532 \\  \hline
+  6  & 13.6  & 2.232 \\  \hline
+  7  & 13.5  & 2.132 \\  \hline
+  8  & 13.6  & 2.232 \\  \hline
+  9  & 13.7  & 2.332 \\  \hline
+  10 & 13.9  & 2.532 \\ \hline
+ \end{tabular}
+ \caption{Times of the different runs. The third column shows the time without the delays, calculated using equation \ref{eq:time_delay_turn}}
+ \label{tab:time_right}
+\end{table}
+
+The time for 1 turn is then calculated using equation \ref{eq:turn_time}.
+
+$$
+t_{turn}^{right} = \frac{\sum^{m}_{i=1}t_i}{n\cdot m} = \frac{23.42\ s}{30} = 0.78\ s
+$$
+
+\subsection{Reversing}
+The purpose of this test is to see how long time it takes to do a u-turn. The u-turn is needed in order to get away from a can when this has been pushed 1 square.
+
+\subsubsection{Execution}
+The robot is placed on a line and is set to follow this line until an intersection has been hit. The time is then started. The robot makes 11 u turns and stops. This procedure is repeated 3 times in order to get more than 30 data points, which should be sufficient in order to make a decent estimate.
+
+\subsubsection{Results}
+
+\begin{table} [H]
+\centering
+ \begin{tabular}{|c|c|}
+  \hline Lap & Time \\ \hline
+  1  & 29.2  \\  \hline
+  2  & 29.6  \\  \hline
+  3  & 29.9  \\  \hline
+ \end{tabular}
+ \caption{Times of the different runs}
+ \label{tab:time_uturn}
+\end{table}
+
+$$
+t_{uturn} = \frac{\sum_{t_i}}{n\cdot m} = \frac{88.7\ s}{33} = 2.687\ s
+$$
