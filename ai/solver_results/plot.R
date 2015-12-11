@@ -16,8 +16,10 @@ for( i in 1:length(timing) ){
 	if(timing[i] > lim && timing[i] < 99999){
 		text(mid_bar[i-2],lim-3, labels=paste(c(timing[i]," s"),collapse=""), srt=90)
 		print(i)
-	} else if(timing[i] == 99999){
+	} else if(timing[i] == 99999 ){
 		rect(mid_bar[i]-offset,0,mid_bar[i]+offset,lim,angle=90, col="red")
+	} else if(i == 155){
+		rect(mid_bar[i]-offset,0,mid_bar[i]+offset,timing[i],angle=90, col="red")
 	}
 }
 q = dev.off()

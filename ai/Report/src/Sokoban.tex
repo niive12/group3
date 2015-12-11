@@ -97,13 +97,7 @@ while( search_list.is_not_empty() )
 \end{figure}
 
 \subsection{Valid Moves}
-A valid move is where a diamond has a reachable position from one direction and the other direction is either reachable or free space.
-A breadth first search (wavefront) is used to this map to see all possible moves from the man's position.
-Wavefront is an algorithm which takes the nearest valid moves and adds the move cost to the positions.
-Consider all move directions as equal, the robot will add the cost of 1 to all neighboring fields.
-In figure \ref{fig:wavefront} is the values from the wavefront shown.
-
-\begin{figure}[h]
+\begin{wrapfigure}{r}{0.4\textwidth}
  \centering
  \begin{minipage}{0.1\textwidth}
 \begin{verbatim}
@@ -118,15 +112,22 @@ XXXXXXXXXXXX
  \end{minipage}
  \caption{Wavefront on map to find valid moves.}
  \label{fig:wavefront}
-\end{figure}
+\end{wrapfigure}
 
+A valid move is where a diamond has a reachable position from one direction and the other direction is either reachable or free space.
+A breadth first search (wavefront) is used to this map to see all possible moves from the man's position.
+Wavefront is an algorithm which takes the nearest valid moves and adds the move cost to the positions.
+Consider all move directions as equal, the robot will add the cost of 1 to all neighboring fields.
+In figure \ref{fig:wavefront} is the values from the wavefront shown.
+
+\clearpage
 \subsection{Complexity}
 The complexity of finding a solution to a Sokoban map is expected to be exponentially dependent on the number of diamonds.
 The number of potential children to a node is the product of valid moves and the number of diamonds.
 Assuming every diamond is movable in 4 directions and there is 4 diamonds, the number of children is 16.
 As this is also true for the children of the children, the graph size is up to $(m\cdot j)^n$, where n is the amount of diamond pushes, m is the number of valid moves and j is the number of diamonds.
 This is a very pessimistic model as moving the diamond back to a previously explored state is avoidable and not all diamonds would be able to be pushed in every direction at all times.
-To test if this is true, the competition map was used.
+To test if the complexity is as expected, the competition map was used.
 The number of diamonds was changed, so it contained from 1 to 5 diamonds, manually adding and removing diamonds.
 
 The time it took to solve the maps was measured and shown in figure \ref{fig:complexity_of_sokoban}.
@@ -197,19 +198,7 @@ There is several types of deadlocks in the game.
 \caption{Deadlocks which the solver detects.}
 \end{figure}
 
-If a diamond is pushed into a corner, the man is unable to pull it away.
-In figure \ref{fig:deadlock_corner} is a diamond locked into a corner.
-Another type of deadlock is when a diamond is at a wall from which it cannot escape as seen in figure \ref{fig:deadlock_wall}.
-
-Walls and corners can be detected when the map is loaded as they are static places it would be bad to push the diamond into.
-To find those, all corners are detected.
-Then a path in every direction is explored. 
-If this path leads to a clearing, the diamond can be pulled away.
-If the path leads to a goal, the diamond can reach a goal state.
-Directions which then can directly move from one corner to another is considered an inescapable wall.
-In figure \ref{fig:static_deadlocks} can the static deadlocks be seen in the map, marked with ``d''.
-
-\begin{figure}[h]
+\begin{wrapfigure}{r}{0.4\textwidth}
  \centering
  \begin{minipage}{0.1\textwidth}
 \begin{verbatim}
@@ -224,7 +213,27 @@ XXXXXXXXXXXX
  \end{minipage}
  \caption{Map of all static deadlocks marked with d.}
  \label{fig:static_deadlocks}
-\end{figure}
+\end{wrapfigure}
+
+If a diamond is pushed into a corner, the man is unable to pull it away.
+In figure \ref{fig:deadlock_corner} is a diamond locked into a corner.
+Another type of deadlock is when a diamond is at a wall from which it cannot escape as seen in figure \ref{fig:deadlock_wall}.
+
+Walls and corners can be detected when the map is loaded as they are static places it would be bad to push the diamond into.
+To find those, all corners are detected.
+Then a path in every direction is explored. 
+If this path leads to a clearing, the diamond can be pulled away.
+If the path leads to a goal, the diamond can reach a goal state.
+Directions which then can directly move from one corner to another is considered an inescapable wall.
+In figure \ref{fig:static_deadlocks} can the static deadlocks be seen in the map, marked with ``d''.
+
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+  \centering
+  \includegraphics[width=0.3\textwidth]{img/deadlock_hard}
+  \caption{Example for deadlocks which are harder to detect.}
+  \label{fig:deadlock_hard}
+\end{wrapfigure}
 
 Deadlocks which is created when diamonds is pushed into a cube, as seen in figure \ref{fig:deadlock_diamond} is not static places which can be avoided.
 These has to be searched for at every diamond push so such situations can be avoided.
@@ -237,12 +246,6 @@ These situations are not detected.
 
 Other types of deadlocks exist, but they are mostly combinations the deadlocks mentioned above, so these are ignored.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.3\textwidth]{img/deadlock_hard}
-  \caption{Example for deadlocks which are harder to detect.}
-  \label{fig:deadlock_hard}
-\end{figure}
 
 %%% To test this, comment out moving_rules.cpp:106 , dead_end = true; and deadlock would stop working
 To test the strength of using deadlock detection, the sum of nodes in search list and closed list was compared.
@@ -266,13 +269,17 @@ This ensures the solver knows the cost of pushing the diamond once is higher tha
 This means the output is longer in man moves, but the robot should execute the path faster.
 
 \subsection{Performance}
-To test if the solver could handle different types of maps, a set called microban \cite{url:microban} was used.
-This is a set of 155 small and simple maps with a difficulty at the level expected at the competition.
+The competition map was the initial benchmark for the solver.
+The solver can find a solution in 0.439 seconds.
+
+To test if the solver could handle different types of maps, the microban set was used.
 In figure \ref{fig:microban_timing} is the timing of the microban levels shown.
 96\% of the microban maps is solvable, and 2.7\% of those takes more than 25 seconds for the computer to solve.
 In order to show the rest of the timing, these are cut off at 25 second and the timing for the test is written on the graph.
 There were 6 maps which could not be solved by the solver. These are marked with red, as the user manually aborted the program when the memory consumption became too big.
-The maps that was not solved have a large map and 8-16 diamonds. 
+Maps with a large dimension was not solved as the optimization of the position reduced it to 8 bytes and thus can only represent up to 255 unique positions.
+This was only an issue with map 155 and the time it took to realize that no solution is possible was reached fast as there is only a single pushable diamond.
+The other maps that was not solved have a large map and 8-16 diamonds. 
 This means a lot of moves are possible and it will take a lot of memory to solve with a breadth first approach.
 In those situations, it would be better to add a heuristic like the A* algorithm or solve the maps with a iterative depth first approach like IDA*.
 It was evaluated that the informative breadth first approach is good enough for the competition, due to the fairly low amount of diamonds, 5.
