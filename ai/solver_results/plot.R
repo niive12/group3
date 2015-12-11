@@ -31,3 +31,16 @@ setEPS()
 postscript("../Report/img/time_vs_graph_size.eps",width=figwidth,height=figheight)
 plot(graph,timing, xlab="graph size [nodes]",ylab="time [s]")
 q = dev.off()
+
+graph_size  = read.csv('timing_inc_competetion.csv',header = FALSE)[,1]
+time = read.csv('timing_inc_competetion.csv',header = FALSE)[,2]
+
+
+setEPS()
+postscript("../Report/img/sokoban_complexity_graph_size.eps",width=figwidth,height=figheight)
+plot(1:length(graph_size), graph_size,type="b", ylab="Graph size [nodes]",xlab="Number of diamonds")
+q=dev.off()
+setEPS()
+postscript("../Report/img/sokoban_complexity_time.eps",width=figwidth,height=figheight)
+plot(1:length(time), time,type="b", ylab="Time [s]",xlab="Number of diamonds")
+q=dev.off()

@@ -19,7 +19,7 @@ By having a representation of the map, finding the shortest path from the man to
 The notation for the map uses J for jewels, M for the man, X for walls and G for goals.
 The map using this notation can be seen in figure \ref{fig:map_notation}.
 To visualize the maps and the solutions, the map is put into an existing application\cite{url:qml-sokoban}.
-In figure \ref{fig:sokoban_map_2015_img} is the Sokoban map, which has been used in the competition and all tests, shown.
+In figure \ref{fig:sokoban_map_2015_img} is the Sokoban map, which has been used in the competition, shown.
 
 \begin{figure}[h]
  \centering
@@ -74,15 +74,6 @@ while( search_list.is_not_empty() )
 
 In order to easily check the if a node exist in the closed list, the closed list was implemented as a hash table.
 The indexing was done as a string, using a hashing function for the diamond positions.
-Each position is described as the position in a one dimension array.
-% \( C = x + w \cdot y \).
-The ordering of the diamonds does not matter to the solution, so the string gets sorted before the mans position is added.
-
-%%% this can be tested by commenting out moving_rules.cpp:290; 
-To test if sorting the string has any impact on the size of the graph, the solver was tested on the competition map.
-Without the sorting, 467003 nodes were created before a solution was found.
-With the sorting, 33160 nodes were created. 
-This is a reduction of 93.37\%.
 
 \subsection{Valid Moves}
 A valid move is where a diamond has a reachable position from one direction and the other direction is either reachable or free space.
@@ -107,6 +98,54 @@ XXXXXXXXXXXX
  \caption{Wavefront on map to find valid moves.}
  \label{fig:wavefront}
 \end{figure}
+
+\subsection{Complexity}
+The complexity of finding a solution to a Sokoban map is expected to be exponentially dependent on the number of diamonds.
+The number of potential children to a node is the product of valid moves and the number of diamonds.
+Assuming every diamond is movable in 4 directions and there is 4 diamonds, the number of children is 16.
+As this is also true for the children of the children, the graph size is up to $(m\cdot j)^n$, where n is the amount of diamond pushes, m is the number of valid moves and j is the number of diamonds.
+This is a very pessimistic model as moving the diamond back to a previously explored state is avoidable and not all diamonds would be able to be pushed in every direction at all times.
+To test if this is true, the competition map was used.
+The number of diamonds was changed, so it contained from 1 to 5 diamonds, manually adding and removing diamonds.
+
+The time it took to solve the maps was measured and shown in figure \ref{fig:complexity_of_sokoban}.
+As it can be seen, the time it takes to solve the map rises exponentially.
+
+\begin{figure}[h]
+\centering
+ \includegraphics[width=0.7\textwidth]{img/sokoban_complexity_time}
+ \caption{Time to solve the competition map with different numbers of diamonds.}
+%  \includegraphics[width=0.7\textwidth]{img/sokoban_complexity_graph_size}
+%  \caption{Number of nodes in graph with different numbers of diamonds.}
+ \label{fig:complexity_of_sokoban}
+\end{figure}
+
+
+It is assumed that the time it takes to solve a sokoban map is linearly dependent on the number of diamonds.
+To test if this is true, the solver is tested on different types of maps.
+A set called microban \cite{url:microban} was used.
+This is a set of 155 maps with different types of problems.
+To see if the behaviour is linear, the graph size when the solver found a solution and the time it took to solve the map was measured.
+In figure \ref{fig:time_vs_graph_size} it can be seen that the relation is linear.
+
+\begin{figure}[h]
+\centering
+ \includegraphics[width=0.7\textwidth]{img/time_vs_graph_size}
+ \caption{Relation between graph size and time to complete a sokoban map.}
+ \label{fig:time_vs_graph_size}
+\end{figure}
+
+Knowing this, optimizing the solver means minimizing the number of nodes in the graph.
+One way to optimize is by optimizing the model.
+Each position is described as the position in a one dimension array.
+% \( C = x + w \cdot y \).
+The ordering of the diamonds does not matter to the solution, so the string gets sorted before the mans position is added.
+
+%%% this can be tested by commenting out moving_rules.cpp:290; 
+To test if sorting the string has any impact on the size of the graph, the solver was tested on the competition map.
+Without the sorting, 467003 nodes were created before a solution was found.
+With the sorting, 33160 nodes were created. 
+This is a reduction of 93.37\%.
 
 \subsection{Deadlock Detection}
 If a diamond is pushed into a position so the map cannot be solved with any future moves the game is in a deadlock.
@@ -173,10 +212,9 @@ For simplicity, a diamond is not considered in a deadlock position if the diamon
 This leads to certain situations which cannot be detected.
 Figure \ref{fig:deadlock_hard} is an example of such a situation.
 Because the diamond is locked in a goal, the free space needed to push other goals in is removed and the map cannot be solved.
-This situations are not detected.
+These situations are not detected.
 
-Other types of deadlocks exist, but is mostly combinations of those so this is ignored.
-
+Other types of deadlocks exist, but they are mostly combinations the deadlocks mentioned above, so these are ignored.
 
 \begin{figure}[h]
   \centering
