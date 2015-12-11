@@ -267,10 +267,13 @@ Then the places of the diamonds gets a cost, representing the cost in seconds it
 As all nodes are calculated at a diamond move, the cost of moving back is added to all diamonds that are not currently being pushed.
 This ensures the solver knows the cost of pushing the diamond once is higher than several consecutive pushes. 
 This means the output is longer in man moves, but the robot should execute the path faster.
+The estimated time to complete the map for the robot is 168 seconds, or 2 minutes, 48 seconds.
+The solver can find a solution in 0.778 seconds optimizing for robot moves where the path length is 139 man moves.
+The solver can find a solution in 0.386 seconds optimizing for man moves where the length of the path is 119 man moves.
 
 \subsection{Performance}
 The competition map was the initial benchmark for the solver.
-The solver can find a solution in 0.439 seconds.
+The solver can find a solution in 0.386 seconds, optimizing for man moves.
 
 To test if the solver could handle different types of maps, the microban set was used.
 In figure \ref{fig:microban_timing} is the timing of the microban levels shown.
@@ -286,7 +289,7 @@ It was evaluated that the informative breadth first approach is good enough for 
 
 \begin{figure}[h]
  \centering
- \includegraphics[width=\textwidth]{img/micoban_timing.eps}
+ \includegraphics[width=0.93\textwidth]{img/micoban_timing.eps}
  \caption{Timing of the microban levels. The unsolved maps are marked red.}
  \label{fig:microban_timing}
 \end{figure}

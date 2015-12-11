@@ -188,6 +188,7 @@ void Map::informed_bff_search(Map &copy_map){
         current_node = search_list.top();
         if(game_complete(current_node)){
             std::cout << "//" << " found the goal. Number of nodes: " << closed_set.size() + search_list.size() << "\n";
+            std::cout << "//" << " move length: " << current_node->path_length << "\n";
             //print the path as a string or as C code
             //print_path(copy_map,current_node);
             print_path_as_C_code(copy_map,current_node);
