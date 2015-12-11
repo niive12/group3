@@ -26,10 +26,10 @@ int main(int argc, char** argv){
     map.informed_bff_search(copy);
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count() << "\n";
-    map.optimize_for_robot_moves = true;
-    t1 = std::chrono::high_resolution_clock::now();
-    map.informed_bff_search(copy);
-    t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count() << "\n";
+//    map.optimize_for_robot_moves = true;
+//    t1 = std::chrono::high_resolution_clock::now();
+//    map.informed_bff_search(copy);
+//    t2 = std::chrono::high_resolution_clock::now();
+//    std::cout << std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count() << "\n";
     return 0;
 }
