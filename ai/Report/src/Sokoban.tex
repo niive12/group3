@@ -11,8 +11,34 @@ The world of Sokoban consist of a map and a series of moves.
 Each move is a node in a graph which consist of the position of the man and the position of the diamonds.
 To reduce the search space, only states where the position of the diamonds is known to the solver.
 Each node also contains the path length, so the solver can find the optimal solution, and a pointer to the parent node so a path is linked together.
+
+In table \ref{fig:model_node} is the model of the diamond move shown.
+The size of each node depends on the number of diamonds in the map.
+The diamonds are represented as a vector of positions.
+This gives an overhead of 24 bytes as the container keeps track of the size and a pointer to the start and end of the data.
+The size of a node with 4 diamonds would be 46 bytes.
+
+\begin{table}
+\centering
+ \begin{tabular}{l|l}
+    object                         & size [bytes]\\ \hline
+    node *parent                   & 8 \\ 
+    float path\_length             & 4 \\
+    pos\_t man                     & 2 \\
+    std::vector<pos\_t> diamonds   & 24 + 2*n \\
+ \end{tabular}
+ \caption{Model of diamond move.}
+ \label{fig:model_node}
+\end{table}
+
 The map consist of all the free space, walls and static dead lock positions.
 By having a representation of the map like this, finding the shortest path from the man to a diamond and detection of which diamonds are valid to push becomes possible.
+In order to easily check the if a node exist in the closed list, the closed list was implemented as a hash table.
+The indexing was done as a string, using a hashing function for the diamond positions.
+This gives an extra overhead of one byte per diamond for the indexing string, and 8 bytes for the container and 8 bytes a pointer, 20 bytes in total.
+Testing for competition map with a tool called massif, an extension to valgrind, which shows the peak heap consumption of the solver is 2.2Mb.
+There is 33160 nodes at completion, so if the heap only consisted of nodes, the size of a node would be 66.3 bytes.
+This is consistent with the 46 bytes for the node and 20 bytes for the hash table.
 
 The notation for the map uses J for jewels, M for the man, X for walls and G for goals.
 The map using this notation can be seen in figure \ref{fig:map_notation}.
@@ -69,9 +95,6 @@ while( search_list.is_not_empty() )
  \caption{Sokoban solver algorithm.}
  \label{code:sokoban_solver}
 \end{figure}
-\matthias{Måske skal vi have med det om selve repræsentationen, med J1J2J3J4J5M og ikke det med at gemme hele mappet for at spare plads, og mappet er ligegyldigt. Det er måske logisk, men han har jo snakket om repræsentation til undervisning}
-In order to easily check the if a node exist in the closed list, the closed list was implemented as a hash table.
-The indexing was done as a string, using a hashing function for the diamond positions.
 
 \subsection{Valid Moves}
 A valid move is where a diamond has a reachable position from one direction and the other direction is either reachable or free space.
@@ -80,7 +103,6 @@ Wavefront is an algorithm which takes the nearest valid moves and adds the move 
 Consider all move directions as equal, the robot will add the cost of 1 to all neighboring fields.
 In figure \ref{fig:wavefront} is the values from the wavefront shown.
 
-\matthias{A}
 \begin{figure}[h]
  \centering
  \begin{minipage}{0.1\textwidth}
