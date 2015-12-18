@@ -43,6 +43,7 @@ The speed is can be calculated by counting up a counter between getting logic hi
 
 % \subsubsection{Bottom board}
 The schematic for the pcb can be seen in figure \ref{fig:botm_schematic}.
+
 On the board is as mentioned the three hall sensors with a Schmitt trigger for each, as well as the bottom of the slip ring. The slip ring setup and design can be seen in section \ref{sec:ring_connector}. 
 
 
@@ -53,3 +54,15 @@ If this is not implemented, either an aggressive controller has to be implemente
 
 Instead of this, another controller is implemented, which is basically just an integrator.
 When the integrator reaches a specified speed, the regular controller takes over. 
+
+
+\subsection{Driving the motor}
+
+The motor, a normal dc motor, is controlled using pulse width modulation(PWM). The duty cycle is calculated by the controllers as seen in equation \ref{eq:duty}. The maximum speed is defined by the gearing of the motor, and the max RPS at the given voltage, see datasheet \cite{datasheet:motor}. 
+
+\begin{equation}\label{eq:duty}
+ \text{duty} = \frac{\text{output}}{\text{max\_speed}}\cdot 100 = \frac{\text{output}}{100\cdot \text{gearing\_ratio}}\cdot 100
+\end{equation}
+
+The PWM output is put out on an I/O pin and fed into a transistor capable of sourcing enough current.
+A NTD5867NL MOSFET should be able to do this since it can source up to 20 A\cite{datasheet:mosfet}.
