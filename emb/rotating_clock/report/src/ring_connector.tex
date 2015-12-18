@@ -1,0 +1,41 @@
+\section{Slip Ring Connector}
+The board with the LEDs will be rotating, making the communication to this board a problem.
+Existing solutions called slip rings exist, but the ones in the price range of this project is rated for 250 rpm, which will be too slow for this project.
+So a custom solution will be devised to combat this.
+
+To make communication between the rotating board and the stationary FPGA, a slip ring connector is made.
+This was made as two Eagle components so the sizes are identical.
+In figure \ref{fig:slip_ring_eagle} is the slip ring shown.
+The bottom layer contains rings where the signal is sent to.
+The top layer has pads directly over the rings and by having a wire that touches the ring, the connection can be made.
+The outer layers are used for signals.
+This allows for multiple wires to have contact with the ring.
+The power supply is stabilized with a $220 \mu F$ capacitor.
+This is done to stabilize the power signal and to make sure the LED drivers does not disconnect if the wire loses contact for a moment.
+The duration of this disconnect is hard to determine, so the a large capacitor is chosen to maximize the lifespan in case of a disconnect.
+
+The LED driver requires a signal for power, ground, input signal, a clock and a latch.
+Having multiple drivers does not increase the number of wires.
+
+\begin{figure}[h]
+ \centering
+ \begin{subfigure}{0.4\linewidth}
+  \includegraphics[width=\linewidth]{img/slip_ring_top}
+ \caption{Top layer.}
+ \label{fig:slip_ring_top}
+ \end{subfigure}
+ \begin{subfigure}{0.4\linewidth}
+  \includegraphics[width=\linewidth]{img/slip_ring_bot}
+ \caption{Bottom layer.}
+ \label{fig:slip_ring_bot}
+ \end{subfigure}
+ \caption{Slip ring component made in Eagle.}
+ \label{fig:slip_ring_eagle}
+\end{figure}
+
+% \begin{figure}[h]
+%     \centering
+%     \input{img/slip_ring}
+%     \caption{Sketch of the schematic side of the slip ring.}
+%     \label{fig:slip_ring_tikz}
+% \end{figure}
