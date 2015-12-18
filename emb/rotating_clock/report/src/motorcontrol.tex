@@ -1,13 +1,15 @@
 \section{Motor control}
-As mentioned in the introduction, the target rotating speed is 30 rps.
-In order to ensure this, a PID controller is implemented to keep the speed constant.
-Since the motor chosen for the project does not have encoders build in, so in order to get some feedback for the controller, 3 hall sensors are implemented.
+The motor controller should keep the speed of the motor consistent.
+In order to ensure this, a P controller is implemented to keep the speed constant of 30 rps.
+The motor does not have inbuilt encoders, so in order to get some feedback for the controller, 3 Hall effect sensors are implemented.
 A ramp up function is also implemented.
 
 \subsection{Controller}
 
 To ensure a smooth picture the pcb should rotate at a constant speed.
 This is done using a P controller, with a gain that is not too big since overshoot is not desirable.
+
+\nikolaj{Maybe a PI controller would be better as we wish to eliminate steady state error.}
 
 \subsection{Encoders} \label{sec:encoders}
 %trim = left botm right top
@@ -18,11 +20,16 @@ This is done using a P controller, with a gain that is not too big since oversho
  \includegraphics[scale = 0.5,trim = 0 14.5cm 8cm 0,clip = true]{img/bottompcb_schematic}
 \end{wrapfigure}
 
-In order to calculate the current speed of the pcb, 3 hall sensor are mounted on the board located under the rotating pcb, and a magnet is mounted on the rotating pcb.
-The hall sensors have been placed with $120^{\circ}$ between them.
+Hall effect sensors responds to magnetic fields.
+By mounting a magnet in the rotating board, the Hall sensors will respond when the board is above the sensors, indicating where the board is.
+In order to calculate the current speed of the rotating pcb, 3 hall sensor are mounted on the board located under the rotating pcb.
+The Hall sensors have been equally distributed with $120^{\circ}$ between them.
 
-In order to get a binary from the analog hall sensor, a schmitt trigger is added on the output of the hall sensor.
-The choice of using a schmitt trigger instead of a standard comparator is to reduce sensor noise when the magnet is moving over the sensor.
+In order to get a binary from the analog hall sensor, a Schmitt trigger is added on the output of the hall sensor.
+Schmitt trigger is a common amplifier circuit with positive feedback to create hysteresis.
+The choice of using a Schmitt trigger instead of a standard comparator is to reduce sensor noise when the magnet is moving over the sensor.
+This ensures the signal goes high when the magnet approaches and not going below before the magnet has left.
+\nikolaj{We could add a section about how the Schmitt trigger works, with equations and measurements from a breadboard.}
 
 The speed is can be calculated by counting up a counter between getting logic high from one of the hall sensors to  logic high on one of the others, using equations  \ref{eq:calc_time} and \ref{eq:calc_speed}.
 
@@ -34,9 +41,9 @@ The speed is can be calculated by counting up a counter between getting logic hi
  \text{speed} = \frac{1}{3\cdot t}
 \end{equation}
 
-\subsubsection{Bottom board}
+% \subsubsection{Bottom board}
 The schematic for the pcb can be seen in figure \ref{fig:botm_schematic}.
-On the board is as mentioned the three hall sensors with a schmitt trigger for each, as well as the bottom of the slip ring. The slip \ref{sec:ring_connector}. 
+On the board is as mentioned the three hall sensors with a Schmitt trigger for each, as well as the bottom of the slip ring. The slip \ref{sec:ring_connector}. 
 
 
 \subsection{Ramp up}
