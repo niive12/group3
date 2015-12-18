@@ -1,0 +1,28 @@
+\begin{tikzpicture}[scale = 0.4, every node/.style={scale=0.4}]
+      \def\ringwidth{0.15}
+      \def\offA{0.3}	
+      \def\offB{-0.5}
+
+      %rings
+      \node[draw, circle, line width=\ringwidth cm, rotate=0  ,  color = red    , minimum width=2.0cm, name=3v3    ] at (0,0) {}; 
+      \node[draw, circle, line width=\ringwidth cm, rotate=45 ,  color = blue   , minimum width=4.0cm, name=gnd    ] at (0,0) {}; 
+      \node[draw, circle, line width=\ringwidth cm, rotate=50 ,  color = green  , minimum width=5.0cm, name=clk    ] at (0,0) {}; 
+      \node[draw, circle, line width=\ringwidth cm, rotate=75 ,  color = orange , minimum width=7.0cm, name=signal1] at (0,0) {}; 
+      \node[draw, circle, line width=\ringwidth cm, rotate=100,  color = purple , minimum width=8.0cm, name=signal2] at (0,0) {}; 
+      
+      %pads
+      \draw[red    , line width=\ringwidth cm, rotate=0  ]     (3v3.0) -- ++(\offA,0) node[draw, circle, fill= red    , minimum width=0.25cm] {};
+      \draw[blue   , line width=\ringwidth cm, rotate=45 ]     (gnd.0) -- ++(\offB,0) node[draw, circle, fill= blue   , minimum width=0.25cm] {};
+      \draw[green  , line width=\ringwidth cm, rotate=50 ]     (clk.0) -- ++(\offA,0) node[draw, circle, fill= green  , minimum width=0.25cm] {};
+      \draw[orange , line width=\ringwidth cm, rotate=75 ] (signal1.0) -- ++(\offB,0) node[draw, circle, fill= orange , minimum width=0.25cm] {};
+      \draw[purple , line width=\ringwidth cm, rotate=100] (signal2.0) -- ++(\offA,0) node[draw, circle, fill= purple , minimum width=0.25cm] {};
+      
+      %legend
+      \draw 
+      (0,0) ++( 5  ,-2) node[draw, circle, right, fill = red   ] {} ++(0.5,0) node[right] {\huge 3v3    }
+	    ++(-0.5, 1) node[draw, circle, right, fill = blue  ] {} ++(0.5,0) node[right] {\huge gnd    }
+	    ++(-0.5, 1) node[draw, circle, right, fill = green ] {} ++(0.5,0) node[right] {\huge clk    }
+	    ++(-0.5, 1) node[draw, circle, right, fill = orange] {} ++(0.5,0) node[right] {\huge signal1}
+	    ++(-0.5, 1) node[draw, circle, right, fill = purple] {} ++(0.5,0) node[right] {\huge signal2}
+      ;
+\end{tikzpicture}
