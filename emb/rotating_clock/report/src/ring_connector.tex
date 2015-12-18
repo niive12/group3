@@ -20,12 +20,14 @@ Having multiple drivers does not increase the number of wires.
 \begin{figure}[h]
  \centering
  \begin{subfigure}{0.4\linewidth}
-  \includegraphics[width=\linewidth]{img/slip_ring_top}
+ \centering
+  \includegraphics[width=0.8\linewidth]{img/slip_ring_top}
  \caption{Top layer.}
  \label{fig:slip_ring_top}
  \end{subfigure}
  \begin{subfigure}{0.4\linewidth}
-  \includegraphics[width=\linewidth]{img/slip_ring_bot}
+ \centering
+  \includegraphics[width=0.8\linewidth]{img/slip_ring_bot}
  \caption{Bottom layer.}
  \label{fig:slip_ring_bot}
  \end{subfigure}
@@ -39,3 +41,34 @@ Having multiple drivers does not increase the number of wires.
 %     \caption{Sketch of the schematic side of the slip ring.}
 %     \label{fig:slip_ring_tikz}
 % \end{figure}
+
+\nikolaj{We should make the pcb and measure how low fast we can go and maintain a stable communication.}
+\nikolaj{we should make the board smaller and the wires bigger}
+\subsection{Testing}
+Testing the communication is done by mounting the FPGA on the rotating board, using a battery as power supply, the FPGA will transmit the signal and receiving the signal on the base.
+This is done to avoid having probes spinning around, damaging the probes.
+The FPGA is placed as close to the center as possible in order minimize effecting the system.
+
+The speed is controlled by regulating the voltage to find a maximum speed for each step of tested transmission frequencies.
+A signal is considered stable if the waveform is distinct enough to carry the signal.
+The minimum transfer frequency, $T_f$, is calculated in equation \ref{eq:min_clock_speed}.
+
+\begin{equation}
+  T_f = {RPS \cdot \text{Msg}_\text{length} \cdot Divisions }
+ \label{eq:min_clock_speed}
+\end{equation}
+
+The minimum acceptable number of divisions is 60, one for each second.
+The $\text{Msg}_\text{length}$ is set at 33, one for each LED and a latch signal.
+This means the slip ring should deliver at least $59400 Hz$ signal when the motor is spinning at 30 RPS.
+If this requirement is not met, the slip ring is not useable for the task.
+
+Assumming linearity in the motor:
+
+The board rotates at 15/36 the speed of the motor.
+6v = 6000 rpm for motor = 2500 rpm for board = 41.67 rps
+4.32 V = 30 RPS
+
+
+\nikolaj{test 2:
+increment pwm and print out rps over tosnet}
