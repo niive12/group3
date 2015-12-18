@@ -16,7 +16,13 @@ In figure \ref{fig:clock_face} can an illustration of what the clock would look 
 \begin{tikzpicture}
  \node[circle,minimum width=3.2cm,name=clock] at (0,0) {};
  \node[circle,minimum width=2.9cm,name=detail] at (0,0) {};
- \foreach \deg in {0,30,...,60} {
+ \foreach \deg in {60,30,...,-30} {
+    \draw[very thick] (clock.\deg) -- (detail.\deg);
+ }
+ \foreach \deg in {330,300,...,210} {
+    \draw[very thick] (clock.\deg) -- (detail.\deg);
+ }
+ \foreach \deg in {210,180,...,120} {
     \draw[very thick] (clock.\deg) -- (detail.\deg);
  }
  \foreach \deg in {120,150,...,360} {
