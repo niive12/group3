@@ -5,15 +5,15 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity led_driver_comm is
 Port (
-  s_clk  		: out STD_LOGIC; -- Serial clock.
-  s_out        	: out STD_LOGIC; -- Signal.
-  latch        	: out STD_LOGIC; -- Latch signal to signal end of signal.
-  data         	: in STD_LOGIC_VECTOR(31 downto 0);
+  s_clk         : out STD_LOGIC; -- Serial clock.
+  s_out         : out STD_LOGIC; -- Signal.
+  latch         : out STD_LOGIC; -- Latch signal to signal end of signal.
+  data          : in STD_LOGIC_VECTOR(31 downto 0);
   
   send_complete : out STD_LOGIC; -- Signal to indicate that a transaction is complete.
-  start_data  	: in STD_LOGIC;  -- Signal to indicate that transaction should start
+  start_data    : in STD_LOGIC;  -- Signal to indicate that transaction should start
   
-  clk        	: in STD_LOGIC
+  clk           : in STD_LOGIC
 );
 end led_driver_comm;
 
