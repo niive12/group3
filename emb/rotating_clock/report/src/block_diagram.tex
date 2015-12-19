@@ -1,0 +1,52 @@
+\usetikzlibrary{arrows,automata}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows, decorations.markings}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{automata} %state machine stuff
+\usetikzlibrary{positioning} %midway
+\tikzstyle{vecArrow} = [thick, decoration={markings,mark=at position
+   1 with {\arrow[semithick]{open triangle 60}}},
+   double distance=1.4pt, shorten >= 5.5pt,
+   preaction = {decorate},
+   postaction = {draw,line width=1.4pt, white,shorten >= 4.5pt}]
+\tikzstyle{module} = [rectangle, minimum width = 2 cm,minimum height = 2 cm, draw]
+
+% New tikz stuff
+
+
+\begin{figure}[h]
+\centering
+ \begin{tikzpicture}[node distance=4 cm]
+ 
+ \node[module,name=pid] {PID};
+ \node[module,name=motor,right of = pid] {Motor Control};
+ \node[module,name=display, below of = pid] {Display};  
+ \node[module,name=led_com, right =2 cm of display] {LED\_communicator};
+ \node[module,name=clock,left of = display] {Clock};
+ \node[name=hall,left of = pid] {Encoders};
+                      
+ \draw[vecArrow] (hall) to node[anchor=south]{\scriptsize Hall[2:0]} (pid);
+ \draw[vecArrow] (hall.south) to ++(0,-1.7) -| node[anchor=south,xshift=-2cm]{\scriptsize Hall[2:0]} (display);
+ \draw[->] (clock.30)  to node[anchor=south]{\scriptsize Hour} (display.150);
+ \draw[->] (clock)  to node[anchor=south]{\scriptsize Minute} (display);
+ \draw[->] (clock.-30)  to node[anchor=south]{\scriptsize Second} (display.210);
+ \draw[vecArrow] (display) to node[anchor=south]{\scriptsize Data[31:0]} (led_com);
+ \draw[->] (led_com.161)  to node[anchor=south]{\scriptsize Send Complete}   (display.30);
+ \draw[<-] (led_com.200)  to node[anchor=south]{\scriptsize Send Ready}   (display.-30);
+ \draw[vecArrow] (pid) to  node[anchor=south]{\scriptsize duty[6:0]} (motor);
+ \draw[->] (motor) -- node [ann,xshift=0.5cm] {\scriptsize PWM} + (\edgedist,0)node [right] {};
+ \draw[->] (led_com.20) -- node [ann,xshift=0.5cm] {\scriptsize SCLK} + (\edgedist,0)node [right] {};
+ \draw[->] (led_com.0) -- node [ann,xshift=0.5cm] {\scriptsize S\_DATA} + (\edgedist,0)node [right] {};
+ \draw[->] (led_com.-20) -- node [ann,xshift=0.5cm] {\scriptsize LATCH} + (\edgedist,0)node [right] {};
+
+ 
+ \end{tikzpicture}
+ \caption{Block diagram of the system}
+ \label{fig::block_dia}
+\end{figure}
+ 
