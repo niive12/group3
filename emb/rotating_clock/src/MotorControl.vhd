@@ -23,7 +23,7 @@ if rising_edge(clk) then
   if duty > "1100100" then
 	temp_val := 100;
   else 
-	temp_value := to_integer(unsigned(duty));
+	temp_val := to_integer(unsigned(duty));
   end if;
   pwm_value <= temp_val*125;
 end if;

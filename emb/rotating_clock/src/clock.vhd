@@ -13,7 +13,7 @@ Port (
 end clock;
 
 architecture Behavioral of clock is
-  signal clk_1s : STD_LOGIC := 0; --to be counted up to delay for one second.
+  signal clk_1s : std_logic := '0'; --to be counted up to delay for one second.
 begin
 
 second_interval: process(clk)
@@ -35,12 +35,12 @@ clock_counter: process(clk_1s)
 	variable t_hour : integer range 0 to 12 := 0;
 begin
 	if rising_edge(clk_1s) then
-		if t_sec = 60 then
+		if t_sec = 59 then
 			t_sec := 0;
-			if t_min = 60 then
+			if t_min = 59 then
 				t_min := 0;
-				if t_hour = 12 then
-					t_hour = 0;
+				if t_hour = 11 then
+					t_hour := 0;
 				else
 					t_hour := t_hour + 1;
 				end if;
@@ -54,4 +54,5 @@ begin
 		minute <= t_min;
 		hour   <= t_hour;
 	end if;
+end process;	
 end Behavioral;

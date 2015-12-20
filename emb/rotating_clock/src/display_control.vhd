@@ -14,22 +14,24 @@ Port (
     
     -- led_driver_comm
     led_driver_rdy  : in  std_logic;
-    send_data       : out std_logic;
+    send_data       : out std_logic_vector(1 downto 0);
     data            : out std_logic_vector(31 downto 0);
                     
     clk             : in  std_logic
 );
+-- attribute period: string;
+-- attribute period of clk : signal is "20 ns";
 end display_control;
 
 architecture Behavioral of display_control is
     constant time_divider      : integer := 27777; -- 50*10^6 HZ /(30 rps * 60 divisions)
-    constant watch_detail      : std_logic_vector(31 downto 0) := ( (2 downto 0)   => '1', others => '0');
-    constant watch_noon_detail : std_logic_vector(31 downto 0) := ( (5 downto 0)   => '1', others => '0');
-    constant watch_hand_hour   : std_logic_vector(31 downto 0) := ( (31 downto 16) => '1', others => '0');
-    constant watch_hand_min    : std_logic_vector(31 downto 0) := ( (31 downto 8)  => '1', others => '0');
-    constant watch_hand_sec    : std_logic_vector(31 downto 0) := ( others => '1');
+    constant watch_detail      : std_logic_vector(31 downto 0) := "0000" & "0000" & "0000" & "0000" & "0000" & "0000" & "0000" & "0111";
+    constant watch_noon_detail : std_logic_vector(31 downto 0) := "0000" & "0000" & "0000" & "0000" & "0000" & "0000" & "0011" & "1111";
+    constant watch_hand_hour   : std_logic_vector(31 downto 0) := "1111" & "1111" & "1111" & "1111" & "0000" & "0000" & "0000" & "0000";
+    constant watch_hand_min    : std_logic_vector(31 downto 0) := "1111" & "1111" & "1111" & "1111" & "1111" & "1111" & "0000" & "0000";
+    constant watch_hand_sec    : std_logic_vector(31 downto 0) := "1111" & "1111" & "1111" & "1111" & "1111" & "1111" & "1111" & "1111";
     signal   rising_encoder    : std_logic_vector(2 downto 0)  := "000";
-    signal   send_led_data     : std_logic := '0';
+    signal   send_led_data     : std_logic_vector(1 downto 0)  := "00";
 begin
 
 send_data <= send_led_data;
@@ -94,21 +96,20 @@ begin
                 position := 40;
             end if;
             
-            -- add hands of the clock
-            if position = hour then
-                data_out := data_out OR watch_hand_hour;
-            end if;
-            if position = minute then
-                data_out := data_out OR watch_hand_min;
-            end if;
+            -- add hands of the clock 
+            -- long hands overshadows the shorter so no reason to check them
             if position = second then
                 data_out := data_out OR watch_hand_sec;
+            elsif position = minute then
+                data_out := data_out OR watch_hand_min;
+            elsif position = hour then
+                data_out := data_out OR watch_hand_hour;
             end if;
             
             -- send the data to the led driver
             if led_driver_rdy = '1' then
                 data <= data_out;
-                send_led_data <= not send_led_data;
+                send_led_data <= std_logic_vector(unsigned(send_led_data)+1);
             end if;
         else
             time_counter := time_counter + 1;
