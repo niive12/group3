@@ -1,0 +1,8 @@
+\section{Implementation}
+The clock is as mentioned implemented on an FPGA with code written in VHDL.
+The code is split up into different modules to keep a high abstraction level, and introduce the possibility to reuse code for other projects.
+An overview of how the modules are put together and how they communicate can be seen in figure \ref{fig::block_dia}.
+\input{src/block_diagram}
+
+The Encoder block is not a VHDL module.
+It is to show the input of 3 wires, from the hall sensors.

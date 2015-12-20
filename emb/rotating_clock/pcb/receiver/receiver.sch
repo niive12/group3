@@ -3602,7 +3602,7 @@ type 0309, grid 2.5 mm</description>
 <part name="U$8" library="slip_ring" deviceset="CONNECTOR" device=""/>
 <part name="U$9" library="slip_ring" deviceset="CONNECTOR" device=""/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="R0805" value="200K"/>
-<part name="R2" library="resistor" deviceset="R-EU_" device="R0805" value="200K"/>
+<part name="R2" library="resistor" deviceset="R-EU_" device="R0805" value="1M"/>
 <part name="3.75" library="supply1" deviceset="VCC" device="" value="3.75V"/>
 <part name="P+1" library="supply1" deviceset="VCC" device="" value="5V"/>
 <part name="IC1" library="linear" deviceset="LM358" device="D"/>
@@ -3612,7 +3612,7 @@ type 0309, grid 2.5 mm</description>
 <part name="5V1" library="supply1" deviceset="+3V3" device="" value="5V"/>
 <part name="U$3" library="slip_ring" deviceset="CONNECTOR" device=""/>
 <part name="R3" library="resistor" deviceset="R-EU_" device="R0805" value="200K"/>
-<part name="R4" library="resistor" deviceset="R-EU_" device="R0805" value="200K"/>
+<part name="R4" library="resistor" deviceset="R-EU_" device="R0805" value="1M"/>
 <part name="3.1" library="supply1" deviceset="VCC" device="" value="3.75V"/>
 <part name="P+2" library="supply1" deviceset="VCC" device="" value="5V"/>
 <part name="IC4" library="linear" deviceset="LM358" device="D"/>
@@ -3622,7 +3622,7 @@ type 0309, grid 2.5 mm</description>
 <part name="5V2" library="supply1" deviceset="+3V3" device="" value="5V"/>
 <part name="U$4" library="slip_ring" deviceset="CONNECTOR" device=""/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="R0805" value="200K"/>
-<part name="R6" library="resistor" deviceset="R-EU_" device="R0805" value="200K"/>
+<part name="R6" library="resistor" deviceset="R-EU_" device="R0805" value="1M"/>
 <part name="3.2" library="supply1" deviceset="VCC" device="" value="3.75V"/>
 <part name="P+3" library="supply1" deviceset="VCC" device="" value="5V"/>
 <part name="P+4" library="supply1" deviceset="VCC" device="" value="5V"/>
