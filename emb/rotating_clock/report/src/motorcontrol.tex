@@ -17,12 +17,13 @@ In order to calculate the current speed of the rotating pcb, 3 hall sensor are m
 The Hall sensors have been equally distributed with $120^{\circ}$ between them.
 
 %trim = left botm right top
-\begin{wrapfigure}{r}{0.7\textwidth}
+\begin{figure}
  \centering
  \includegraphics[scale = 0.5,trim = 0 14.5cm 8cm 0,clip = true]{img/bottompcb_schematic}
  \caption{Schematic of the board that is mounted under the spinning board}
  \label{fig:botm_schematic}
-\end{wrapfigure}
+\end{figure}
+
 \matthias{update figure with non inverting amplifier and voltage divider for V\_ref}
 In order to get a binary from the analog hall sensor, a Schmitt trigger\cite[p. 655]{book:prac_ele} is added on the output of the hall sensor.
 Schmitt trigger is a common amplifier circuit with positive feedback to create hysteresis.

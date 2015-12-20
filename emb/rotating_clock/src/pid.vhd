@@ -6,7 +6,6 @@ use IEEE.NUMERIC_STD.ALL;
 entity pid is
 Port (
   duty 	      	: out STD_LOGIC_VECTOR(6 downto 0); --  Duty cycle 0 - 100 % if the value exceds 100 the motorcontroller will correct.
-  dir         	: out STD_LOGIC;                    --  Direction for the H-bridge
   encoder   	: in STD_LOGIC_VECTOR(2 downto 0);  --  Signal with the three hallsensors.
   clk        	: in STD_LOGIC
 );
