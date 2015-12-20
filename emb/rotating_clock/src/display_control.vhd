@@ -4,20 +4,20 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity display_control is
 Port (
-    -- input from clock
-    minute        : in  integer range 0 to 60;
-    second        : in  integer range 0 to 60;
-    hour          : in  integer range 0 to 12;
+-- input from clock
+    minute          : in  integer range 0 to 60;
+    second          : in  integer range 0 to 60;
+    hour            : in  integer range 0 to 12;
     
     -- reading the encoders to reset positions to make sure the watch doesn't drift.
-    encoder       : in  std_logic_vector(2 downto 0);
+    encoder         : in  std_logic_vector(2 downto 0);
     
     -- led_driver_comm
-    led_driver_rdy: in  std_logic;
-    send_data     : out std_logic;
-    data          : out std_logic_vector(31 downto 0);
-    
-    clk           : in  std_logic
+    led_driver_rdy  : in  std_logic;
+    send_data       : out std_logic;
+    data            : out std_logic_vector(31 downto 0);
+                    
+    clk             : in  std_logic
 );
 end display_control;
 
@@ -29,7 +29,10 @@ architecture Behavioral of display_control is
     constant watch_hand_min    : std_logic_vector(31 downto 0) := ( (31 downto 8)  => '1', others => '0');
     constant watch_hand_sec    : std_logic_vector(31 downto 0) := ( others => '1');
     signal   rising_encoder    : std_logic_vector(2 downto 0)  := "000";
+    signal   send_led_data     : std_logic := '0';
 begin
+
+send_data <= send_led_data;
 
 encoder_debounce: process(clk)
     variable last_encoder      : std_logic_vector(2 downto 0) := "000";
@@ -61,7 +64,6 @@ begin
         end if;
         if time_counter = time_divider then
             time_counter := 0;
-            send_data <= '0';
             if position = 59 then
                 position := 0; 
             else
@@ -106,7 +108,7 @@ begin
             -- send the data to the led driver
             if led_driver_rdy = '1' then
                 data <= data_out;
-                send_data <= '1';
+                send_led_data <= not send_led_data;
             end if;
         else
             time_counter := time_counter + 1;
