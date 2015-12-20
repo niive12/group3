@@ -3629,8 +3629,6 @@ type 0309, grid 2.5 mm</description>
 <part name="R7" library="resistor" deviceset="R-EU_" device="R0805" value="3.75k"/>
 <part name="R8" library="resistor" deviceset="R-EU_" device="R0805" value="1.25k"/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
-<part name="P+5" library="supply1" deviceset="VCC" device="" value="5V"/>
-<part name="GND7" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3680,8 +3678,6 @@ type 0309, grid 2.5 mm</description>
 <instance part="R7" gate="G$1" x="137.16" y="25.4" rot="R90"/>
 <instance part="R8" gate="G$1" x="137.16" y="10.16" rot="R90"/>
 <instance part="GND6" gate="1" x="137.16" y="-5.08"/>
-<instance part="P+5" gate="VCC" x="165.1" y="40.64" rot="R90"/>
-<instance part="GND7" gate="1" x="177.8" y="25.4"/>
 </instances>
 <busses>
 </busses>
