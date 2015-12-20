@@ -26,9 +26,26 @@ The Hall sensors have been equally distributed with $120^{\circ}$ between them.
 
 \matthias{update figure with non inverting amplifier and voltage divider for V\_ref}
 In order to get a binary from the analog hall sensor, a Schmitt trigger\cite[p. 655]{book:prac_ele} is added on the output of the hall sensor.
-Schmitt trigger is a common amplifier circuit with positive feedback to create hysteresis.
+
+\subsubsection{Schmitt Trigger}
+A Schmitt trigger is a common amplifier circuit with positive feedback to create hysteresis.
 The choice of using a Schmitt trigger instead of a standard comparator is to reduce sensor noise when the magnet is moving over the sensor.
 This ensures the signal goes high when the magnet approaches and not going below before the magnet has left.
+
+\subsubsection{Schmitt trigger calibration}
+In order to find at what the hysteresis voltages, a test was done on the output of the hall sensor as function of distance from sensor.
+The test was done by moving a magnet over the hall sensor, so the hall sensor is gradually covered and uncovered again. The magnet was kept at the height over the hall sensor that it would have in the final product, 2 mm. 
+The result can be seen in figure \ref{fig:hall_out}.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.6\textwidth]{img/hall_out}
+ \caption{Output of the hall sensor as function of distance from the sensor. The dashed lines represent where the hysteresis thresholds lie.}
+ \label{fig:hall_out}
+\end{figure}
+
+From figure \ref{fig:hall_out} the low and high hysteresis thresholds are chosen to be 4.5 V for the high, and 3.5 V for the low threshold.
+
 \nikolaj{We could add a section about how the Schmitt trigger works, with equations and measurements from a breadboard.}
 
 The speed is can be calculated by counting up a counter between getting logic high from one of the hall sensors to  logic high on one of the others, using equations  \ref{eq:calc_time} and \ref{eq:calc_speed}.
