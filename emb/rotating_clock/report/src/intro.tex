@@ -3,10 +3,8 @@ In this project a the design of a rotating clock is described.
 Using a series of LEDs, mounted on a PCB which rotates, the system will display what would look like the dial on a watch.
 The system will be controlled by an FPGA, which is in a fixed position.
 
-% This project is about creating a watch, using a LED strip mounted on a pcb, that then rotates, creating the sense that the watch dial is fixed. 
 Since change in images appears smooth after around 30 Hz \cite{article:rpm}, the goal is to get the PCB to rotate with at least 30 RPS.
 To estimate the speed of the rotating arm, the arm will be equipped with a magnet and the position is estimated by meassuring the Hall effect on sensors on the ground.
 One of the biggest challenges of the project is to get a stationary FPGA to control a rotating board with LEDs.
 A custom slip ring is made to deal with this problem.
 
-% \nikolaj{More detail}

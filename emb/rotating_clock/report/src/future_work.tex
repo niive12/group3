@@ -26,9 +26,9 @@ If this requirement is not met, the slip ring is not usable for the task.
 \subsection{Controller test}
 This test is important because, if the controller does not keep the desired speed, the clock process will output data at times where it is not suppose to.
 
-It is therefore wanted to test whether the controller can keep the desired speed $\pm$ 1 rps. 
+It is therefore wanted to test whether the controller can keep the desired speed $\pm$ 1 RPS. 
 This is done by running the motor, with everything mounted on it to make the test as real as possible, and make it spin for 5 minutes.
-$\mu$TosNet is used to extract data from the FPGA every 0.1 second and a C++ program will then count the number of times the speed is below the desired speed $\pm$ 1 rps.
+$\mu$TosNet is used to extract data from the FPGA every 0.1 second and a C++ program will then count the number of times the speed is below the desired speed $\pm$ 1 RPS.
 This should of course not start till after the ramp up function has finished.
 
 The success criteria is that the number of times the speed is to low is below 100.

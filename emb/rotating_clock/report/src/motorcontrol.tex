@@ -1,6 +1,6 @@
 \section{Motor control}
 The motor controller should keep the speed of the motor consistent.
-In order to ensure this, a PI controller is implemented to keep the speed constant of 30 rps.
+In order to ensure this, a PI controller is implemented to keep the speed constant of 30 RPS.
 The motor does not have inbuilt encoders, so in order to get some feedback for the controller, 3 Hall effect sensors are implemented.
 A ramp up function is also implemented.
 
@@ -13,7 +13,7 @@ This is done using a PI controller, with a gain that is not too big since oversh
 
 Hall effect sensors responds to magnetic fields.
 By mounting a magnet in the rotating board, the Hall sensors will respond when the board is above the sensors, indicating where the board is.
-In order to calculate the current speed of the rotating pcb, 3 Hall effect sensors are mounted on the board located under the rotating PCB.
+In order to calculate the current speed of the rotating PCB, 3 Hall effect sensors are mounted on the board located under the rotating PCB.
 The Hall sensors have been equally distributed with $120^{\circ}$ between them.
 
 In order to get a binary from the analog Hall effect sensor, a Schmitt trigger\cite[p. 655]{book:prac_ele} is added on the output of the Hall effect sensor.
@@ -67,5 +67,5 @@ The motor, a normal dc motor, is controlled using pulse width modulation (PWM). 
  \text{duty} = \frac{\text{output}}{\text{max\_speed}}\cdot 100 = \frac{\text{output}}{100\cdot \text{gearing\_ratio}}\cdot 100
 \end{equation}
 
-The PWM output is put out on an I/O pin and fed into a mosfet capable of sourcing enough current.
-A NTD5867NL MOSFET is chosen for this since it can source up to 20 A\cite{datasheet:mosfet} and is available in the component storage.
+The PWM output is put out on an I/O pin and fed into a MOSFET capable of sourcing enough current.
+A NTD5867NL MOSFET is chosen for this since it can source up to 20 A\cite{datasheet:MOSFET} and is available in the component storage.
