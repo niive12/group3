@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="sim_motorcontrol.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="my_library" />
+            <top_module name="numeric_std" />
+            <top_module name="sim_motorcontrol" />
+            <top_module name="std_logic_1164" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="6" />
+   <wvobject fp_name="/sim_motorcontrol/test_bench/dp_m/encoder" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">encoder[2:0]</obj_property>
+      <obj_property name="ObjectShortName">encoder[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_motorcontrol/test_bench/dp_m/sig_position" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">sig_position</obj_property>
+      <obj_property name="ObjectShortName">sig_position</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_motorcontrol/test_bench/dp_m/data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_motorcontrol/test_bench/time_h" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">time_h</obj_property>
+      <obj_property name="ObjectShortName">time_h</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_motorcontrol/test_bench/time_m" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">time_m</obj_property>
+      <obj_property name="ObjectShortName">time_m</obj_property>
+   </wvobject>
+   <wvobject fp_name="/sim_motorcontrol/test_bench/time_s" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">time_s</obj_property>
+      <obj_property name="ObjectShortName">time_s</obj_property>
+   </wvobject>
+</wave_config>

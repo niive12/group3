@@ -1,11 +1,12 @@
 \section{Clock Control}
-The time is kept in a process which increments the time from the variables.
+The time is kept in a process which increments the time.
+This is fed into the the clock controller.
 
-The clock control reads the time and displays lines where the hands of the watch should be.
+The clock controller keeps track of the position.
+The time is read and lines where the hands of the watch should be is displayed.
 A predefined bit vector is given, so the second hand is 32 LEDs, the minute hand is 24 LEDs, and the hour hand is 16 LEDs.
 The motor controller maintains time between Hall effect sensors, so the clock controller can assume this is always true.
-To keep the clock rotated correctly, the first hall sensor is read to reset the controller.
-\matthias{To keep the position of the details in the same place, the first hall sensor is read to reset the clock controller}
+To keep the position of the details in the same place, the Hall effect sensors is read to override the position in the clock controller.
 To make details on the clock, every multiple of 5 is marked with 3 LEDs.
 The exception to this is the top where the line is made 6 LEDs long, make the detail more visible.
 In figure \ref{fig:clock_face} can an illustration of what the clock would look like.
