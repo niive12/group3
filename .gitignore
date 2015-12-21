@@ -3,6 +3,11 @@
 *.user
 *.o
 
+#eagle
+*.b#*
+*.l#*
+*.s#*
+
 #These should be added manually:
 *.xsl
 *.xwbt
