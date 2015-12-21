@@ -6,20 +6,22 @@ A ramp up function is also implemented.
 
 \subsection{Controller}
 
-To ensure a smooth picture the pcb should rotate at a constant speed.
+To ensure a smooth picture the PCB should rotate at a constant speed.
 This is done using a PI controller, with a gain that is not too big since overshoot is not desirable and an integrator in order to reduce the steady state error.
 
 \subsection{Encoders} \label{sec:encoders}
 
 Hall effect sensors responds to magnetic fields.
 By mounting a magnet in the rotating board, the Hall sensors will respond when the board is above the sensors, indicating where the board is.
-In order to calculate the current speed of the rotating pcb, 3 Hall effect sensors are mounted on the board located under the rotating pcb.
+In order to calculate the current speed of the rotating pcb, 3 Hall effect sensors are mounted on the board located under the rotating PCB.
 The Hall sensors have been equally distributed with $120^{\circ}$ between them.
 
 In order to get a binary from the analog Hall effect sensor, a Schmitt trigger\cite[p. 655]{book:prac_ele} is added on the output of the Hall effect sensor.
 It is worth noting that the supply voltage is for the Hall effect sensor is 5V, which means that the output will be between 0 and 5 V, making the Schmitt trigger, go from 0 to 5 V.
 The problem with this is that the FPGA cannot handle 5V, since it is a 3.3 V device.
-This can be fixed by using a SparkFun Logic Level Converter - Bi-Directional, which is a 4 pin logic level converter. 
+This can be fixed by using a logic level converter. 
+
+The for the logic level converter 
 
 The speed is can be calculated by counting up a counter between getting logic high from one of the Hall effect sensors to  logic high on one of the others, using equations  \ref{eq:calc_time} and \ref{eq:calc_speed}.
 
