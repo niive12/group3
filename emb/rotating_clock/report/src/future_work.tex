@@ -1,0 +1,38 @@
+\section{Future work}
+Since it was not possible to finish the project due to inability to solder the components, there is a lot of work to be done in the future.
+ 
+The most crucial are to test the slip ring, to see if the connection is good enough for sending data, and to test the controller.
+
+\subsection{Slip ring test}
+
+Testing the communication is done by mounting the FPGA on the rotating board, using a battery as power supply, the FPGA will transmit the signal and receiving the signal on the base.
+This is done to avoid having probes spinning around, damaging the probes.
+The FPGA is placed as close to the center as possible in order minimize effecting the system.
+
+The speed is controlled by regulating the voltage to find a maximum speed for each step of tested transmission frequencies.
+A signal is considered stable if the waveform is distinct enough to carry the signal.
+The minimum transfer frequency, $T_f$, is calculated in equation \ref{eq:min_clock_speed}.
+
+\begin{equation}
+  T_f = {RPS \cdot \text{Msg}_\text{length} \cdot Divisions }
+ \label{eq:min_clock_speed}
+\end{equation}
+
+The minimum acceptable number of divisions is 60, one for each second.
+The $\text{Msg}_\text{length}$ is set at 33, one for each LED and a latch signal.
+This means the slip ring should deliver at least $59400 Hz$ signal when the motor is spinning at 30 RPS.
+If this requirement is not met, the slip ring is not usable for the task.
+
+\subsection{Controller test}
+This test is important because, if the controller does not keep the desired speed, the clock process will output data at times where it is not suppose to.
+
+It is therefore wanted to test whether the controller can keep the desired speed $\pm$ 1 rps. 
+This is done by running the motor, with everything mounted on it to make the test as real as possible, and make it spin for 5 minutes.
+$\mu$TosNet is used to extract data from the FPGA every 0.1 second and a C++ program will then count the number of times the speed is below the desired speed $\pm$ 1 rps.
+This should of course not start till after the ramp up function has finished.
+
+The success criteria is that the number of times the speed is to low is below 100.
+If it is higher it should be considered tuning the controller to be more aggressive.
+
+\subsection{Other work}
+If the tests above have the desired outcome, further steps can be made, implementing $\mu$TosNet into the project, so it is possible to set the time, and possibly load in a picture to be displayed on the LEDs
