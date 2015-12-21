@@ -1,4 +1,11 @@
 \section{Conclusion} 
-Due to the lack of equipment available, the project was not nearly finished.
+Due to the lack of equipment available, the project was not finished.
 The construction for the clock was made, and a slip ring for transferring data was designed.
-None of this could be tested however, so nothing can be said about the performance of the system.
+None of this could be tested, so nothing can be said about the performance of the system.
+
+The Hall effect sensor signals was digitized and debounced with a Schmitt trigger circuit and turned into a 3.3 V signal with a logic level converter.
+The hardware design in VHDL was tested and it was found that the clock controller could successfully generate the data for the LED drivers.
+The speed of the motor is controlled by a PI controller which will ensure the motor maintains a speed of 30 RPS.
+The speed of the motor could not be tested without the finished system.
+
+The housing and the shaft for the motor was designed and constructed with a 3D printer.
