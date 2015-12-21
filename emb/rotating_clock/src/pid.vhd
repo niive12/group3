@@ -19,7 +19,7 @@ constant min_duty_cycle   : std_logic_vector(6 downto 0) := std_logic_vector(to_
 constant max_duty_cycle   : std_logic_vector(6 downto 0) := std_logic_vector(to_unsigned(90,7));          
 
 constant 	p : integer := 1;
-constant 	i : integer := 0;
+constant 	i : integer := 1;
 constant  	d : integer := 0;
 constant    desired : integer := 30;
 signal  	vel : integer range 0 to 45 := 0;
