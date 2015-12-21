@@ -30,6 +30,12 @@ This is obtained by a voltage divider.
  V_{ref} = \frac{V_{in1}}{1+\frac{R_1}{R_2}} = \frac{4.5V}{1V+0.2V} = 3.75 V
 \end{equation}
 
+\subsubsection*{Logic level converter}
+
+The logic level converters are MOSFETs that take the 5 V on the gate and 3.3 V over the drain-source.
+The MOSFET chosen to be the NDT5867NLT4G, because it was in stock in the component storage, and it meets the rise and fall time requirements, i.e faster than 1 clock period, which is 20 ns.
+The rise time, which is the worst is at 12.6 ns.
+
 \subsection{Slip Ring Connector}\label{sec:ring_connector}
 The board with the LEDs will be rotating, making the communication to this board a problem.
 Existing solutions called slip rings exist, but the ones in the price range of this project is rated for 250 rpm, which will be too slow for this project.

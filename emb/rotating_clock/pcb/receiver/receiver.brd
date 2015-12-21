@@ -1626,15 +1626,15 @@ design rules under a new name.</description>
 <element name="R8" library="resistor" package="R0805" value="1.25k" x="-21.59" y="-88.9"/>
 <element name="Q1" library="adafruit" package="TO220V" value="NTD5867NL" x="-17.78" y="-92.71"/>
 <element name="PWM" library="slip_ring" package="CONNECTOR" value="PWM" x="-30.48" y="-96.52"/>
-<element name="Q2" library="SparkFun" package="SOT23-3" value="BSS138" x="-30.48" y="-104.14"/>
+<element name="Q2" library="SparkFun" package="SOT23-3" value="NDT5867NLT4G" x="-30.48" y="-104.14"/>
 <element name="R9" library="SparkFun" package="0603-RES" value="10K" x="-26.67" y="-102.87"/>
 <element name="R10" library="SparkFun" package="0603-RES" value="10K" x="-30.48" y="-107.95"/>
 <element name="U$2" library="slip_ring" package="CONNECTOR" value="" x="-30.48" y="-114.3"/>
-<element name="Q3" library="SparkFun" package="SOT23-3" value="BSS138" x="-26.67" y="-113.03"/>
+<element name="Q3" library="SparkFun" package="SOT23-3" value="NDT5867NLT4G" x="-26.67" y="-113.03"/>
 <element name="R11" library="SparkFun" package="0603-RES" value="10K" x="-30.48" y="-119.38"/>
 <element name="R12" library="SparkFun" package="0603-RES" value="10K" x="-26.67" y="-119.38"/>
 <element name="U$3" library="slip_ring" package="CONNECTOR" value="" x="-30.48" y="-125.73"/>
-<element name="Q4" library="SparkFun" package="SOT23-3" value="BSS138" x="-26.67" y="-124.46"/>
+<element name="Q4" library="SparkFun" package="SOT23-3" value="NDT5867NLT4G" x="-26.67" y="-124.46"/>
 <element name="R13" library="SparkFun" package="0603-RES" value="10K" x="-30.48" y="-130.81"/>
 <element name="R14" library="SparkFun" package="0603-RES" value="10K" x="-26.67" y="-130.81"/>
 </elements>
