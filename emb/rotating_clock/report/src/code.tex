@@ -6,3 +6,16 @@ An overview of how the modules are put together and how they communicate can be 
 
 The Encoder block is not a VHDL module.
 It is to show the input of 3 wires, from the hall sensors.
+
+Since the implementation is could not be tested on the real system, it is tested in simulation.
+In figure \ref{fig:simulation_wave} can the waveform for the system be seen.
+The data is the bus which is sent to the led drivers.
+It can be seen that the system responds to the position and sends data out.
+The time is set to 1 minute and 4 seconds over 1 so the hands does not overlap.
+
+\begin{figure}
+ \centering
+ \includegraphics[scale=0.7]{img/waveform}
+ \caption[Waveform of the simulation.]{Waveform of the simulation. The data pins signify the hands on the watch.}
+ \label{fig:simulation_wave}
+\end{figure}
