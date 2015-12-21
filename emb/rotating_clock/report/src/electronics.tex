@@ -1,13 +1,12 @@
 \section{Electronics}
-\matthias{Write introduction}
- 
+
 \subsection{Bottom board}
 The bottom board can be seen in figure \ref{fig:botm_schematic}.
 It contains the hall sensors together with the Schmitt trigger for each, the slip ring, a voltage divider of for reference voltage for the Schmitt triggers, and a mosfet circuit to drive the motor. 
 %trim = left botm right top
 \begin{figure}
  \centering
- \includegraphics[scale=0.7,trim = 0 9cm 0 8cm,clip = true]{img/bottompcb_schematic}
+ \includegraphics[scale=0.7,trim = 0 7cm 0 7cm,clip = true]{img/bottompcb_schematic}
  \caption{Schematic of the board that is mounted under the spinning board}
  \label{fig:botm_schematic}
 \end{figure}
@@ -67,38 +66,14 @@ Having multiple drivers does not increase the number of wires.
  \label{fig:slip_ring_eagle}
 \end{figure}
 
-% \begin{figure}[h]
-%     \centering
-%     \input{img/slip_ring}
-%     \caption{Sketch of the schematic side of the slip ring.}
-%     \label{fig:slip_ring_tikz}
-% \end{figure}
+\subsection{Top board}
+On the top board all of the LEDs are placed, together with the most essential things needed in order to drive them.
+The schematic can be seen in figure \ref{fig:top_board}
+\begin{figure}
+ \centering
+ \includegraphics[width=\textwidth,trim=0 10cm 0 10cm,clip = true]{img/top_board}
+ \caption{Schematic of the top board, made in Eagle CAD.}
+ \label{fig:top_board}
+\end{figure}
 
-\subsubsection{Testing}
-Testing the communication is done by mounting the FPGA on the rotating board, using a battery as power supply, the FPGA will transmit the signal and receiving the signal on the base.
-This is done to avoid having probes spinning around, damaging the probes.
-The FPGA is placed as close to the center as possible in order minimize effecting the system.
-
-The speed is controlled by regulating the voltage to find a maximum speed for each step of tested transmission frequencies.
-A signal is considered stable if the waveform is distinct enough to carry the signal.
-The minimum transfer frequency, $T_f$, is calculated in equation \ref{eq:min_clock_speed}.
-
-\begin{equation}
-  T_f = {RPS \cdot \text{Msg}_\text{length} \cdot Divisions }
- \label{eq:min_clock_speed}
-\end{equation}
-
-The minimum acceptable number of divisions is 60, one for each second.
-The $\text{Msg}_\text{length}$ is set at 33, one for each LED and a latch signal.
-This means the slip ring should deliver at least $59400 Hz$ signal when the motor is spinning at 30 RPS.
-If this requirement is not met, the slip ring is not useable for the task.
-
-Assumming linearity in the motor:
-
-The board rotates at 15/36 the speed of the motor.
-6v = 6000 rpm for motor = 2500 rpm for board = 41.67 rps
-4.32 V = 30 RPS
-
-
-\nikolaj{test 2:
-increment pwm and print out rps over tosnet}
+C2, the capacitor located on the VDD of the first LED driver is there in order to keep the LED drivers on even if there is a small period of time that the slip ring connector looses connection of VCC and GND.
