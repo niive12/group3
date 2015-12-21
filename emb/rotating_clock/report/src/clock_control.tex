@@ -3,7 +3,7 @@ The time is kept in a process which increments the time from the variables.
 
 The clock control reads the time and displays lines where the hands of the watch should be.
 A predefined bit vector is given, so the second hand is 32 LEDs, the minute hand is 24 LEDs, and the hour hand is 16 LEDs.
-The motor controller maintains time between hall sensors, so the clock controller can assume this is always true.
+The motor controller maintains time between Hall effect sensors, so the clock controller can assume this is always true.
 To keep the clock rotated correctly, the first hall sensor is read to reset the controller.
 
 To make details on the clock, every multiple of 5 is marked with 3 LEDs.

@@ -30,9 +30,9 @@ begin
 end process;
 
 clock_counter: process(clk_1s)
-	variable t_min  : integer range 0 to 60 := 0;
-	variable t_sec  : integer range 0 to 60 := 0;
-	variable t_hour : integer range 0 to 12 := 0;
+	variable t_min  : integer range 0 to 60 := 1;
+	variable t_sec  : integer range 0 to 60 := 3;
+	variable t_hour : integer range 0 to 12 := 1;
 begin
 	if rising_edge(clk_1s) then
 		if t_sec = 59 then

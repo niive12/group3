@@ -26,6 +26,9 @@ signal  	vel : integer range 0 to 45 := 0;
 signal    	ramp_up : std_logic := '0';
 signal     	control_out : std_logic_vector(6 downto 0) := (others => '0');
 signal     	ramp_up_out : std_logic_vector(6 downto 0) := (others => '0');
+signal sig_counter           : integer range 0 to 67000;
+signal sig_counter_v           : std_logic_vector(16 downto 0) := (others => '0');
+
 begin
 
 encoder_debounce: process(clk)
@@ -39,16 +42,22 @@ begin
             ramp_up <= '1';
             vel <= 25;
         elsif encoder(0) = '1' AND last_encoder(0) = '0' then
+        sig_counter <= counter;
+        sig_counter_v <= std_logic_vector(to_unsigned(counter, 17));
             vel <= get_rps(counter); 
             ramp_up <= '0';
             counter := 0;
             last_encoder(0) := '1';
         elsif encoder(1) = '1' AND last_encoder(1) = '0' then
+        sig_counter <= counter;
+        sig_counter_v <= std_logic_vector(to_unsigned(counter, 17));
             vel <= get_rps(counter);
             ramp_up <= '0';
             counter := 0;
             last_encoder(1) := '1';
         elsif encoder(2) = '1' AND last_encoder(2) = '0' then
+        sig_counter <= counter;
+        sig_counter_v <= std_logic_vector(to_unsigned(counter, 17));
             vel <= get_rps(counter);
             ramp_up <= '0';
             counter := 0;

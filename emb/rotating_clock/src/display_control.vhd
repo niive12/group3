@@ -32,6 +32,7 @@ architecture Behavioral of display_control is
     constant watch_hand_sec    : std_logic_vector(31 downto 0) := "1111" & "1111" & "1111" & "1111" & "1111" & "1111" & "1111" & "1111";
     signal   rising_encoder    : std_logic_vector(2 downto 0)  := "000";
     signal   send_led_data     : std_logic_vector(1 downto 0)  := "00";
+    signal   sig_position      : integer range 0 to 59 := 0;
 begin
 
 send_data <= send_led_data;
@@ -59,6 +60,7 @@ clock_state_machine: process(clk)
 	variable detail_cnt   : integer range 1 to 5 := 1;
 	variable data_out     : std_logic_vector(31 downto 0);
 	variable t_encoder    : std_logic_vector(2 downto 0) := "000";
+	variable h_pos        : integer range 0 to 12 := 0;
 begin
     if rising_edge(clk) then
         if rising_encoder /= "000" then
@@ -78,6 +80,10 @@ begin
             if detail_cnt = 5 then
                 detail_cnt := 1;
                 data_out := data_out OR watch_detail;
+                h_pos := h_pos + 1;
+                if h_pos = hour then
+                    data_out := data_out OR watch_hand_hour;
+                end if;
             else 
                 detail_cnt := detail_cnt + 1;
             end if;
@@ -86,14 +92,17 @@ begin
             if t_encoder(0) = '1' then
                 t_encoder := "000";
                 position := 0; 
+                h_pos := 0;
                 data_out := data_out OR watch_noon_detail;
                 detail_cnt := 1;
             elsif t_encoder(1) = '1' then
                 t_encoder := "000";
                 position := 20;
+                h_pos := 4;
             elsif t_encoder(2) = '1' then
                 t_encoder := "000";
                 position := 40;
+                h_pos := 8;
             end if;
             
             -- add hands of the clock 
@@ -102,10 +111,8 @@ begin
                 data_out := data_out OR watch_hand_sec;
             elsif position = minute then
                 data_out := data_out OR watch_hand_min;
-            elsif position = hour then
-                data_out := data_out OR watch_hand_hour;
             end if;
-            
+            sig_position <= position;
             -- send the data to the led driver
             if led_driver_rdy = '1' then
                 data <= data_out;

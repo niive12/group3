@@ -5,7 +5,7 @@
 The bottom board can be seen in figure \ref{fig:botm_schematic}.
 It contains the hall sensors together with the Schmitt trigger for each, the slip ring, a voltage divider of for reference voltage for the Schmitt triggers, and a mosfet circuit to drive the motor. 
 %trim = left botm right top
-\begin{figure}
+\begin{figure}[h]
  \centering
  \includegraphics[scale=0.7,trim = 0 9cm 0 8cm,clip = true]{img/bottompcb_schematic}
  \caption{Schematic of the board that is mounted under the spinning board}
@@ -24,7 +24,8 @@ Chose 1 of the values, here $R_2$ = 1\ M$\Omega$
  R_1 = 0.2\cdot R_2 = 0.2\cdot 1 \text{M} \Omega = 200 \text{k}\Omega
 \end{equation}
 
-The reference voltage then has to be calculated in order to shift the hysteresis to the wanted values
+The reference voltage then has to be calculated in order to shift the hysteresis to the wanted values.
+This is obtained by a voltage divider.
 
 \begin{equation}
  V_{ref} = \frac{V_{in1}}{1+\frac{R_1}{R_2}} = \frac{4.5V}{1V+0.2V} = 3.75 V
@@ -35,7 +36,6 @@ The board with the LEDs will be rotating, making the communication to this board
 Existing solutions called slip rings exist, but the ones in the price range of this project is rated for 250 rpm, which will be too slow for this project.
 So a custom solution will be devised to combat this.
 
-To make communication between the rotating board and the stationary FPGA, a slip ring connector is made.
 This was made as two Eagle components so the sizes are identical.
 In figure \ref{fig:slip_ring_eagle} is the slip ring shown.
 The bottom layer contains rings where the signal is sent to.

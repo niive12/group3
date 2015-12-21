@@ -1,0 +1,13 @@
+Net "S_DATA"      LOC = "P44";
+Net "SCLK"        LOC = "P45";
+Net "LATCH"       LOC = "P49";
+Net "PWM"         LOC = "P50";
+Net "Encoders<2>" LOC = "P51";
+Net "Encoders<1>" LOC = "P54";
+Net "Encoders<0>" LOC = "P57";
+NET "CLK"         LOC = "P60";
+
+#NET "CLK" TNM_NET = "SYS_CLK";
+#TIMESPEC "TS_SYS_CLK" = PERIOD "SYS_CLK" 20 ns HIGH 50 %;
+
+    

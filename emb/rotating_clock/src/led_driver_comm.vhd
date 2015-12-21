@@ -34,6 +34,7 @@ variable t_data : std_logic_vector(31 downto 0) := (others => '0');
 begin
     if rising_edge(clk) then
         if send_state = '0' then
+            send_complete <= '1';
             if start_data = n_id then
                 send_complete <= '0';
                 send_state := '1';

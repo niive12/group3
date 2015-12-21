@@ -83,9 +83,9 @@ signal serial_send  : std_logic_vector(1 downto 0);
 signal serial_ready : std_logic;
 signal serial_data  : std_logic_vector(31 downto 0);
 
-signal time_h       : integer range 0 to 12;
-signal time_m       : integer range 0 to 60;
-signal time_s       : integer range 0 to 60;
+signal time_h       : integer range 0 to 12 := 1;
+signal time_m       : integer range 0 to 60 := 3;
+signal time_s       : integer range 0 to 60 := 1;
 
 signal clk_pid      : std_logic := '0';
 
