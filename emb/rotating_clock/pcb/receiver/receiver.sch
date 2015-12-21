@@ -4318,19 +4318,19 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <part name="P+5" library="supply1" deviceset="VCC" device="" value="6V"/>
 <part name="GND7" library="supply1" deviceset="GND" device=""/>
 <part name="PWM" library="slip_ring" deviceset="CONNECTOR" device="" value="PWM"/>
-<part name="Q2" library="SparkFun" deviceset="MOSFET-NCHANNEL" device="SMD" value="BSS138"/>
+<part name="Q2" library="SparkFun" deviceset="MOSFET-NCHANNEL" device="SMD" value="NDT5867NLT4G"/>
 <part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="P+6" library="SparkFun" deviceset="VCC" device="" value="3.3V"/>
 <part name="P+7" library="SparkFun" deviceset="VCC" device="" value="5V"/>
 <part name="U$2" library="slip_ring" deviceset="CONNECTOR" device=""/>
-<part name="Q3" library="SparkFun" deviceset="MOSFET-NCHANNEL" device="SMD" value="BSS138"/>
+<part name="Q3" library="SparkFun" deviceset="MOSFET-NCHANNEL" device="SMD" value="NDT5867NLT4G"/>
 <part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="R12" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="P+8" library="SparkFun" deviceset="VCC" device="" value="3.3V"/>
 <part name="P+9" library="SparkFun" deviceset="VCC" device="" value="5V"/>
 <part name="U$3" library="slip_ring" deviceset="CONNECTOR" device=""/>
-<part name="Q4" library="SparkFun" deviceset="MOSFET-NCHANNEL" device="SMD" value="BSS138"/>
+<part name="Q4" library="SparkFun" deviceset="MOSFET-NCHANNEL" device="SMD" value="NDT5867NLT4G"/>
 <part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="R14" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="P+10" library="SparkFun" deviceset="VCC" device="" value="3.3V"/>
